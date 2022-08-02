@@ -21,8 +21,6 @@ void test() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_TriviallyDestructible);
   }
   {
     decltype(&call_func) ptr     = nullptr;
@@ -30,32 +28,24 @@ void test() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(!f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
   }
   {
     std::move_only_function<T> f = TriviallyDestructible{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_TriviallyDestructible);
   }
   {
     std::move_only_function<T> f = TriviallyDestructibleSqueezeFit{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_TriviallyDestructible);
   }
   {
     std::move_only_function<T> f = TriviallyDestructibleTooLarge{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_Heap);
   }
 #ifdef TEST_COMPILER_CLANG
   {
@@ -63,24 +53,18 @@ void test() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_TriviallyRelocatable);
   }
   {
     std::move_only_function<T> f = TriviallyRelocatableSqueezeFit{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_TriviallyRelocatable);
   }
   {
     std::move_only_function<T> f = TriviallyRelocatableTooLarge{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_Heap);
   }
 #endif
   {
@@ -88,8 +72,6 @@ void test() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_Heap);
   }
 }
 
@@ -104,8 +86,6 @@ void test_member_function_pointer() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_TriviallyDestructible);
   }
   {
     decltype(&S::func) ptr       = nullptr;
@@ -113,8 +93,6 @@ void test_member_function_pointer() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(!f2);
-    LIBCPP_ASSERT(f.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
-    LIBCPP_ASSERT(f2.__get_status() == std::__move_only_function_storage::_Status::_NotEngaged);
   }
 }
 

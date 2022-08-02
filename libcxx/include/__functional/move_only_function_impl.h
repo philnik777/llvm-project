@@ -18,6 +18,7 @@
 #include <__utility/forward.h>
 #include <__utility/in_place.h>
 #include <__utility/move.h>
+#include <array>
 #include <climits>
 #include <cstddef>
 #include <cstring>
@@ -65,85 +66,6 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 //
 // is put into the small buffer, even though sizeof(A) == 32.
 
-union __move_only_function_storage {
-  using _DestroyFn = void(void*);
-  using _CallFn    = void;
-
-  static constexpr auto __target_size = 6 * sizeof(void*);
-
-  enum class _Status : uint8_t {
-    _NotEngaged,
-    _TriviallyRelocatable,
-    _TriviallyDestructible,
-    _Heap,
-  };
-
-  struct _HeapObject {
-    _CallFn* __call_;
-    _DestroyFn* __destroy_;
-    std::byte* __heap_;
-    std::byte __padding_[__target_size - 3 * sizeof(void*) - 1];
-    _Status __status_;
-  } __large_;
-  static_assert(sizeof(_HeapObject) == __target_size);
-  static_assert(offsetof(_HeapObject, __status_) == __target_size - 1);
-
-  struct _TriviallyRelocatableObject {
-    _CallFn* __call_;
-    _DestroyFn* __destroy_;
-    alignas(void*) std::byte __data_[__target_size - 2 * sizeof(void*) - 1];
-    _Status __status_;
-  } __trivially_relocatable_;
-  static_assert(sizeof(_TriviallyRelocatableObject) == __target_size);
-  static_assert(offsetof(_TriviallyRelocatableObject, __status_) == __target_size - 1);
-
-  struct _TriviallyDestructibleObject {
-    _CallFn* __call_;
-    alignas(void*) std::byte __data_[__target_size - 1 * sizeof(void*) - 1];
-    _Status __status_;
-  } __trivially_destructible_;
-  static_assert(sizeof(_TriviallyDestructibleObject) == __target_size);
-  static_assert(offsetof(_TriviallyDestructibleObject, __status_) == __target_size - 1);
-
-private:
-  // try to squeeze in another char to see if we can use the last byte for our own purposes
-  template <class _Func>
-  struct _Compact {
-    _LIBCPP_NO_UNIQUE_ADDRESS _Func __func;
-    char __c;
-  };
-
-  template <class _Func, size_t _BufferSize, size_t BufferAlignment>
-  static constexpr bool __fits_in_buffer =
-      sizeof(_Compact<_Func>) <= _BufferSize + 1 && alignof(_Func) <= BufferAlignment;
-
-  template <class _Func>
-  static constexpr bool __fits_in_trivially_relocatable_buffer_impl =
-      __libcpp_is_trivially_relocatable_v<_Func> &&
-      __fits_in_buffer<_Func,
-                       sizeof(_TriviallyRelocatableObject::__data_),
-                       alignof(_TriviallyRelocatableObject::__data_)>;
-
-  template <class _Func>
-  static constexpr bool __fits_in_trivially_destructible_buffer_impl =
-      __libcpp_is_trivially_relocatable_v<_Func> && is_trivially_destructible_v<_Func> &&
-      __fits_in_buffer<_Func,
-                       sizeof(_TriviallyDestructibleObject::__data_),
-                       alignof(_TriviallyDestructibleObject::__data_)>;
-
-public:
-  template <class _Func>
-  static constexpr bool __fits_in_trivially_relocatable_buffer =
-      __fits_in_trivially_relocatable_buffer_impl<remove_cvref_t<_Func>>;
-
-  template <class _Func>
-  static constexpr bool __fits_in_trivially_destructible_buffer =
-      __fits_in_trivially_destructible_buffer_impl<remove_cvref_t<_Func>>;
-};
-
-static_assert(alignof(__move_only_function_storage) == alignof(void*));
-static_assert(sizeof(__move_only_function_storage) == __move_only_function_storage::__target_size);
-
 template <class...>
 class move_only_function;
 
@@ -165,16 +87,16 @@ _LIBCPP_END_NAMESPACE_STD
 
 #ifndef _LIBCPP_MOVE_ONLY_FUNCTION_REF
 #  define _LIBCPP_MOVE_ONLY_FUNCTION_REF
-#  define _LIBCPP_MOVE_ONLY_FUNCTION_INV_QUALS _LIBCPP_MOVE_ONLY_FUNCTION_CV&
+#  define _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS _LIBCPP_MOVE_ONLY_FUNCTION_CV&
 #else
-#  define _LIBCPP_MOVE_ONLY_FUNCTION_INV_QUALS _LIBCPP_MOVE_ONLY_FUNCTION_CV _LIBCPP_MOVE_ONLY_FUNCTION_REF
+#  define _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS _LIBCPP_MOVE_ONLY_FUNCTION_CV _LIBCPP_MOVE_ONLY_FUNCTION_REF
 #endif
 
 #ifndef _LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT
 #  define _LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT false
 #endif
 
-#define _LIBCPP_MOVE_ONLY_FUNCTION_CV_REF _LIBCPP_MOVE_ONLY_FUNCTION_CV _LIBCPP_MOVE_ONLY_FUNCTION_REF
+#define _LIBCPP_MOVE_ONLY_FUNCTION_CVREF _LIBCPP_MOVE_ONLY_FUNCTION_CV _LIBCPP_MOVE_ONLY_FUNCTION_REF
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -186,23 +108,33 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _ReturnT, class... _ArgTypes>
 class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
-    _ArgTypes...) _LIBCPP_MOVE_ONLY_FUNCTION_CV_REF noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT)> {
-  using _Store = __move_only_function_storage;
-
+    _ArgTypes...) _LIBCPP_MOVE_ONLY_FUNCTION_CVREF noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT)> {
   template <class _Functor>
   struct __function_wrappers_impl {
-    __function_wrappers_impl() = delete;
+    __function_wrappers_impl()                                = delete;
     __function_wrappers_impl(const __function_wrappers_impl&) = delete;
     __function_wrappers_impl(__function_wrappers_impl&&)      = delete;
 
     _LIBCPP_HIDE_FROM_ABI static void __destroy(void* __store) noexcept {
-      std::destroy_at(static_cast<_Functor*>(__store));
+      if constexpr (!__fits_in_buffer<_Functor>) {
+        std::destroy_at(*static_cast<_Functor**>(__store));
+        ::operator delete(*static_cast<void**>(__store));
+      } else {
+        std::destroy_at(static_cast<_Functor*>(__store));
+      }
     }
 
     _LIBCPP_HIDE_FROM_ABI static _ReturnT
-    __call(void* __functor, _ArgTypes&&... __args) noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT) {
-      return std::invoke(static_cast<_Functor _LIBCPP_MOVE_ONLY_FUNCTION_INV_QUALS>(*static_cast<_Functor*>(__functor)),
-                         std::forward<_ArgTypes>(__args)...);
+    __call(_LIBCPP_MOVE_ONLY_FUNCTION_CV std::byte* __functor, _ArgTypes... __args) {
+      if constexpr (!__fits_in_buffer<_Functor>) {
+        return std::invoke(static_cast<_Functor _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS>(
+                               **reinterpret_cast<_Functor * _LIBCPP_MOVE_ONLY_FUNCTION_CV*>(__functor)),
+                           std::forward<_ArgTypes>(__args)...);
+      } else {
+        return std::invoke(static_cast<_Functor _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS>(
+                               *reinterpret_cast<_LIBCPP_MOVE_ONLY_FUNCTION_CV _Functor*>(__functor)),
+                           std::forward<_ArgTypes>(__args)...);
+      }
     }
   };
 
@@ -212,13 +144,12 @@ class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
   template <class _VT>
   consteval static bool __is_callable_from_impl() {
     if (_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT) {
-      return is_nothrow_invocable_r_v< _ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_CV_REF, _ArgTypes...> &&
-             is_nothrow_invocable_r_v<_ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_INV_QUALS, _ArgTypes...>;
+      return is_nothrow_invocable_r_v< _ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_CVREF, _ArgTypes...> &&
+             is_nothrow_invocable_r_v<_ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS, _ArgTypes...>;
     } else {
-      return is_invocable_r_v<_ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_CV_REF, _ArgTypes...> &&
-             is_invocable_r_v<_ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_INV_QUALS, _ArgTypes...>;
+      return is_invocable_r_v<_ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_CVREF, _ArgTypes...> &&
+             is_invocable_r_v<_ReturnT, _VT _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS, _ArgTypes...>;
     }
-    return false;
   }
 
   template <class _VT>
@@ -231,43 +162,27 @@ class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
     using _FuncWraps = __function_wrappers<_Func>;
     using _UnRefFunc = remove_reference_t<_Func>;
 
-    if constexpr (_Store::__fits_in_trivially_destructible_buffer<_Func>) {
-      auto& __data   = __storage_.__trivially_destructible_;
-      __data.__call_ = std::bit_cast<void*>(&_FuncWraps::__call);
-      std::construct_at(reinterpret_cast<_UnRefFunc*>(__data.__data_), std::forward<_Args>(__args)...);
-      __data.__status_ = _Store::_Status::_TriviallyDestructible;
-    } else if constexpr (_Store::__fits_in_trivially_relocatable_buffer<_Func>) {
-      auto& __data      = __storage_.__trivially_relocatable_;
-      __data.__call_    = std::bit_cast<void*>(&_FuncWraps::__call);
-      __data.__destroy_ = &_FuncWraps::__destroy;
-      std::construct_at(reinterpret_cast<_UnRefFunc*>(__data.__data_), std::forward<_Args>(__args)...);
-      __data.__status_ = _Store::_Status::_TriviallyRelocatable;
+    __call_ = &_FuncWraps::__call;
+    if constexpr (!is_trivially_destructible_v<decay_t<_Func>>) {
+      __destroy_ = &_FuncWraps::__destroy;
+    }
+
+    if constexpr (__fits_in_buffer<_Func>) {
+      std::construct_at(reinterpret_cast<_UnRefFunc*>(__buffer_.data()), std::forward<_Args>(__args)...);
     } else {
-      auto& __data      = __storage_.__large_;
-      __data.__call_    = std::bit_cast<void*>(&_FuncWraps::__call);
-      __data.__destroy_ = &_FuncWraps::__destroy;
-      __data.__heap_    = static_cast<std::byte*>(::operator new(sizeof(_Func), std::align_val_t(alignof(_Func))));
-      std::construct_at(reinterpret_cast<_UnRefFunc*>(__data.__heap_), std::forward<_Args>(__args)...);
-      __data.__status_ = _Store::_Status::_Heap;
+      unique_ptr<std::byte[]> __ptr{
+          static_cast<std::byte*>(::operator new(sizeof(_Func), std::align_val_t(alignof(_Func))))};
+      std::construct_at(reinterpret_cast<_UnRefFunc*>(__ptr.get()), std::forward<_Args>(__args)...);
+      std::construct_at(reinterpret_cast<std::byte**>(__buffer_.data()), __ptr.release());
     }
   }
 
   _LIBCPP_HIDE_FROM_ABI void __reset() {
-    using enum _Store::_Status;
-    switch (__storage_.__large_.__status_) {
-    case _NotEngaged:
-    case _TriviallyDestructible:
-      break;
-
-    case _TriviallyRelocatable:
-      __storage_.__trivially_relocatable_.__destroy_(&__storage_.__trivially_relocatable_.__data_);
-      break;
-    case _Heap:
-      __storage_.__large_.__destroy_(__storage_.__large_.__heap_);
-      ::operator delete(__storage_.__large_.__heap_);
-      break;
+    if (__destroy_ != nullptr) {
+      __destroy_(__buffer_.data());
     }
-    __storage_.__large_.__status_ = _NotEngaged;
+    __call_    = nullptr;
+    __destroy_ = nullptr;
   }
 
 public:
@@ -275,9 +190,11 @@ public:
 
   // [func.wrap.move.ctor]
   move_only_function() noexcept = default;
-  _LIBCPP_HIDE_FROM_ABI move_only_function(nullptr_t) noexcept : __storage_({}) {}
-  _LIBCPP_HIDE_FROM_ABI move_only_function(move_only_function&& __other) noexcept : __storage_(__other.__storage_) {
-    __other.__storage_ = {};
+  _LIBCPP_HIDE_FROM_ABI move_only_function(nullptr_t) noexcept {}
+  _LIBCPP_HIDE_FROM_ABI move_only_function(move_only_function&& __other) noexcept
+      : __call_(__other.__call_), __destroy_(__other.__destroy_), __buffer_(__other.__buffer_) {
+    __other.__call_    = {};
+    __other.__destroy_ = {};
   }
 
   template <class _Func>
@@ -290,31 +207,24 @@ public:
     if constexpr ((is_pointer_v<_UnRefFunc> && is_function_v<remove_pointer_t<_UnRefFunc>>) ||
                   is_member_function_pointer_v<_UnRefFunc>) {
       if (__func == nullptr) {
-        __storage_ = {};
-        return;
+        __call_    = {};
+        __destroy_ = {};
       } else {
-        auto& __data   = __storage_.__trivially_destructible_;
-        __data.__call_ = std::bit_cast<void*>(&_FuncWraps::__call);
-        std::construct_at(reinterpret_cast<_UnRefFunc*>(__data.__data_), std::forward<_Func>(__func));
-        __data.__status_ = _Store::_Status::_TriviallyDestructible;
+        __call_ = &_FuncWraps::__call;
+        std::construct_at(reinterpret_cast<_UnRefFunc*>(__buffer_.data()), std::forward<_Func>(__func));
       }
+      return;
     } else if constexpr (__is_move_only_function<remove_cvref_t<_Func>>::value) {
       if (!__func) {
-        __storage_ = {};
+        __call_    = {};
+        __destroy_ = {};
       } else {
-        auto& __data      = __storage_.__large_;
-        __data.__call_    = std::bit_cast<void*>(&_FuncWraps::__call);
-        __data.__destroy_ = &_FuncWraps::__destroy;
-        __data.__heap_    = static_cast<std::byte*>(::operator new(sizeof(_Func), std::align_val_t(alignof(_Func))));
-        std::construct_at(reinterpret_cast<_UnRefFunc*>(__data.__heap_), std::forward<_Func>(__func));
-        __data.__status_ = _Store::_Status::_Heap;
+        __construct<_Func>(std::forward<_Func>(__func));
       }
     } else {
       __construct<_Func>(std::forward<_Func>(__func));
     }
   }
-
-  _LIBCPP_HIDE_FROM_ABI _Store::_Status __get_status() noexcept { return __storage_.__large_.__status_; }
 
   template <class _Func, class... _Args>
     requires is_constructible_v<decay_t<_Func>, _Args...> && __is_callable_from<_Func>
@@ -350,32 +260,19 @@ public:
   _LIBCPP_HIDE_FROM_ABI ~move_only_function() { __reset(); }
 
   // [func.wrap.move.inv]
-  _LIBCPP_HIDE_FROM_ABI explicit operator bool() const noexcept {
-    return __storage_.__large_.__status_ != _Store::_Status::_NotEngaged;
-  }
+  _LIBCPP_HIDE_FROM_ABI explicit operator bool() const noexcept { return __call_ != nullptr; }
 
-  _LIBCPP_HIDE_FROM_ABI _ReturnT operator()(_ArgTypes... __args) _LIBCPP_MOVE_ONLY_FUNCTION_CV_REF
+  _LIBCPP_HIDE_FROM_ABI _ReturnT operator()(_ArgTypes... __args) _LIBCPP_MOVE_ONLY_FUNCTION_CVREF
       noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT) {
-    auto __call = [&](auto&& __callable, auto&& __data) {
-      return std::bit_cast<void (*)(_LIBCPP_MOVE_ONLY_FUNCTION_CV void*, _ArgTypes...)>(__callable)(
-          __data, std::forward<_ArgTypes>(__args)...);
-    };
-
-    using enum _Store::_Status;
-    switch (__storage_.__large_.__status_) {
-    case _NotEngaged:
-      _LIBCPP_ASSERT(false, "Tried to call move_only_function which doesn't hold a callable object");
-    case _TriviallyDestructible:
-      return __call(__storage_.__trivially_destructible_.__call_, &__storage_.__trivially_destructible_.__data_);
-    case _TriviallyRelocatable:
-      return __call(__storage_.__trivially_relocatable_.__call_, &__storage_.__trivially_relocatable_.__data_);
-    case _Heap:
-      return __call(__storage_.__large_.__call_, &__storage_.__large_.__heap_);
-    }
+    __call_(__buffer_.data(), std::forward<_ArgTypes>(__args)...);
   }
 
   // [func.wrap.move.util]
-  _LIBCPP_HIDE_FROM_ABI void swap(move_only_function& __other) noexcept { std::swap(__storage_, __other.__storage_); }
+  _LIBCPP_HIDE_FROM_ABI void swap(move_only_function& __other) noexcept {
+    std::swap(__call_, __other.__call_);
+    std::swap(__destroy_, __other.__destroy_);
+    std::swap(__buffer_, __other.__buffer_);
+  }
 
   _LIBCPP_HIDE_FROM_ABI friend void swap(move_only_function& __lhs, move_only_function& __rhs) noexcept {
     __lhs.swap(__rhs);
@@ -384,17 +281,32 @@ public:
   _LIBCPP_HIDE_FROM_ABI friend bool operator==(const move_only_function& __func, nullptr_t) noexcept { return !__func; }
 
 private:
-  _Store __storage_ = {};
+  using _CallFn    = _ReturnT(_LIBCPP_MOVE_ONLY_FUNCTION_CV std::byte*, _ArgTypes...);
+  using _DestroyFn = void(void*);
+
+  static constexpr size_t __buffer_size_ = 4 * sizeof(void*);
+
+  _CallFn* __call_ = nullptr;
+  _DestroyFn* __destroy_ = nullptr;
+  alignas(void*) array<byte, __buffer_size_> __buffer_;
+
+  template <class _Func>
+  static constexpr bool __fits_in_buffer_impl =
+      __libcpp_is_trivially_relocatable_v<_Func> && sizeof(_Func) <= __buffer_size_ &&
+      alignof(_Func) <= alignof(void*);
+
+  template <class _Func>
+  static constexpr bool __fits_in_buffer = __fits_in_buffer_impl<remove_cvref_t<_Func>>;
 };
 
 template <class _ReturnT, class... _Args>
 struct __libcpp_is_trivially_relocatable<move_only_function<_ReturnT(
-    _Args...) _LIBCPP_MOVE_ONLY_FUNCTION_CV_REF noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT)>> : true_type {};
+    _Args...) _LIBCPP_MOVE_ONLY_FUNCTION_CVREF noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT)>> : true_type {};
 
 #undef _LIBCPP_MOVE_ONLY_FUNCTION_CV
 #undef _LIBCPP_MOVE_ONLY_FUNCTION_REF
 #undef _LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT
-#undef _LIBCPP_MOVE_ONLY_FUNCTION_INV_QUALS
-#undef _LIBCPP_MOVE_ONLY_FUNCTION_CV_REF
+#undef _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS
+#undef _LIBCPP_MOVE_ONLY_FUNCTION_CVREF
 
 _LIBCPP_END_NAMESPACE_STD

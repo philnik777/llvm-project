@@ -43,7 +43,7 @@ using __libcpp_is_trivially_relocatable =
 
 #if _LIBCPP_STD_VER > 14
 template <class _Type>
-constexpr bool __libcpp_is_trivially_relocatable_v = __libcpp_is_trivially_relocatable<_Type>::value;
+inline constexpr bool __libcpp_is_trivially_relocatable_v = __libcpp_is_trivially_relocatable<_Type>::value;
 #endif
 
 _LIBCPP_END_NAMESPACE_STD
