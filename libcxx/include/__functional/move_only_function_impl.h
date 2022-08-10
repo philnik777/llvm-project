@@ -9,23 +9,22 @@
 // This header is only partially guarded on purpose. This header is an implementation detail of move_only_function.h
 // and generates multiple versions of std::move_only_function
 
-#include <__bit/bit_cast.h>
 #include <__config>
 #include <__functional/invoke.h>
 #include <__memory/construct_at.h>
 #include <__memory/unique_ptr.h>
-#include <__type_traits/is_trivially_relocatable.h>
+#include <__type_traits/is_trivially_move_constructible.h>
+#include <__type_traits/is_trivially_destructible.h>
 #include <__utility/forward.h>
 #include <__utility/in_place.h>
 #include <__utility/move.h>
+#include <__utility/swap.h>
 #include <array>
 #include <climits>
 #include <cstddef>
 #include <cstring>
 #include <initializer_list>
 #include <new>
-
-#include <cassert>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #  pragma GCC system_header
@@ -39,32 +38,6 @@
 #  define _LIBCPP___FUNCTIONAL_MOVE_ONLY_FUNCTION_IMPL_H
 
 _LIBCPP_BEGIN_NAMESPACE_STD
-
-// The storage for move_only_functions may be one of 3 things:
-// - A pointer to a heap object
-// - A trivially relocatable object
-// - A trivially relocatable object that also has a trivial destructor
-//
-// If the object is too large or not trivially relocatable it is stored on the heap.
-// (on 64-bit platforms) an object fits into the small buffer if
-// - it is trivially relocatable and has a size of less than 32 bytes and an alignment of no more than 8 bytes, or
-// - it is trivially destructible and has a size of less than 40 bytes and an alignment of no more than 8 bytes.
-//
-// "size of" in this case doesn't mean "sizeof". Objects which have padding bytes at the end may also be put into
-// the small buffer if the padding byte can be detected by [[no_unique_address]]. For example
-//
-//   class [[clang::trivial_abi]] A {
-//     int* begin;
-//     int* end;
-//     int* cap;
-//     int flags;
-//   public:
-//     A(A&&);
-//     ~A();
-//     void operator()() {}
-//   };
-//
-// is put into the small buffer, even though sizeof(A) == 32.
 
 template <class...>
 class move_only_function;
@@ -292,16 +265,12 @@ private:
 
   template <class _Func>
   static constexpr bool __fits_in_buffer_impl =
-      __libcpp_is_trivially_relocatable_v<_Func> && sizeof(_Func) <= __buffer_size_ &&
-      alignof(_Func) <= alignof(void*);
+      is_trivially_move_constructible_v<_Func> && is_trivially_destructible_v<_Func> &&
+      sizeof(_Func) <= __buffer_size_ && alignof(_Func) <= alignof(void*);
 
   template <class _Func>
   static constexpr bool __fits_in_buffer = __fits_in_buffer_impl<remove_cvref_t<_Func>>;
 };
-
-template <class _ReturnT, class... _Args>
-struct __libcpp_is_trivially_relocatable<move_only_function<_ReturnT(
-    _Args...) _LIBCPP_MOVE_ONLY_FUNCTION_CVREF noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT)>> : true_type {};
 
 #undef _LIBCPP_MOVE_ONLY_FUNCTION_CV
 #undef _LIBCPP_MOVE_ONLY_FUNCTION_REF
