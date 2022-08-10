@@ -9,6 +9,7 @@
 // UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
 
 #include <cassert>
+#include <concepts>
 #include <functional>
 
 #include "test_macros.h"
@@ -16,37 +17,37 @@
 
 template <class T>
 void test() {
-  static_assert(!std::is_assignable_v<std::move_only_function<T>, int>);
+  static_assert(!std::is_nothrow_assignable_v<std::move_only_function<T>&, NonTrivial>);
   {
-    std::move_only_function<T> f = &call_func;
-    std::move_only_function<T> f2;
-    f2 = std::move(f);
-    assert(f2);
+    std::move_only_function<T> f;
+    std::same_as<std::move_only_function<T>&> decltype(auto) ret = (f = &call_func);
+    assert(&ret == &f);
+    assert(f);
   }
   {
-    decltype(&call_func) ptr     = nullptr;
-    std::move_only_function<T> f = ptr;
-    std::move_only_function<T> f2;
-    f2 = std::move(f);
-    assert(!f2);
+    std::move_only_function<T> f;
+    decltype(&call_func) ptr                                     = nullptr;
+    std::same_as<std::move_only_function<T>&> decltype(auto) ret = (f = ptr);
+    assert(&ret == &f);
+    assert(!f);
   }
   {
-    std::move_only_function<T> f = TriviallyDestructible{};
-    std::move_only_function<T> f2;
-    f2 = std::move(f);
-    assert(f2);
+    std::move_only_function<T> f;
+    std::same_as<std::move_only_function<T>&> decltype(auto) ret = (f = TriviallyDestructible{});
+    assert(&ret == &f);
+    assert(f);
   }
   {
-    std::move_only_function<T> f = TriviallyDestructibleTooLarge{};
-    std::move_only_function<T> f2;
-    f2 = std::move(f);
-    assert(f2);
+    std::move_only_function<T> f;
+    std::same_as<std::move_only_function<T>&> decltype(auto) ret = (f = TriviallyDestructibleTooLarge{});
+    assert(&ret == &f);
+    assert(f);
   }
   {
-    std::move_only_function<T> f = NonTrivial{};
-    std::move_only_function<T> f2;
-    f2 = std::move(f);
-    assert(f2);
+    std::move_only_function<T> f;
+    std::same_as<std::move_only_function<T>&> decltype(auto) ret = (f = NonTrivial{});
+    assert(&ret == &f);
+    assert(f);
   }
 }
 

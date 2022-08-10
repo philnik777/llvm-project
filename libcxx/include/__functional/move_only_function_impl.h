@@ -179,14 +179,10 @@ public:
 
     if constexpr ((is_pointer_v<_UnRefFunc> && is_function_v<remove_pointer_t<_UnRefFunc>>) ||
                   is_member_function_pointer_v<_UnRefFunc>) {
-      if (__func == nullptr) {
-        __call_    = {};
-        __destroy_ = {};
-      } else {
+      if (__func != nullptr) {
         __call_ = &_FuncWraps::__call;
         std::construct_at(reinterpret_cast<_UnRefFunc*>(__buffer_.data()), std::forward<_Func>(__func));
       }
-      return;
     } else if constexpr (__is_move_only_function<remove_cvref_t<_Func>>::value) {
       if (!__func) {
         __call_    = {};
@@ -207,13 +203,13 @@ public:
   }
 
   template <class _Func, class _InitListType, class... _Args>
-    requires is_constructible_v<decay_t<_Func>, initializer_list<_InitListType>, _Args...> && __is_callable_from<_Func>
+    requires is_constructible_v<decay_t<_Func>, initializer_list<_InitListType>&, _Args...> && __is_callable_from<_Func>
   _LIBCPP_HIDE_FROM_ABI explicit move_only_function(
       in_place_type_t<_Func>, initializer_list<_InitListType> __il, _Args&&... __args) {
+    static_assert(is_same_v<decay_t<_Func>, _Func>);
     __construct<_Func>(__il, std::forward<_Args>(__args)...);
   }
 
-  // TODO: Do we want to make this `noexcept` as an extensions?
   _LIBCPP_HIDE_FROM_ABI move_only_function& operator=(move_only_function&& __other) noexcept {
     move_only_function(std::move(__other)).swap(*this);
     return *this;
@@ -224,10 +220,12 @@ public:
     return *this;
   }
 
-  // TODO: Do we want to make this `noexcept` as an extensions?
   template <class _Func>
-  _LIBCPP_HIDE_FROM_ABI move_only_function& operator=(_Func&& __func) noexcept {
+    requires(!is_same_v<remove_cvref_t<_Func>, move_only_function> && !__is_inplace_type<_Func>::value &&
+             __is_callable_from<_Func>)
+  _LIBCPP_HIDE_FROM_ABI move_only_function& operator=(_Func&& __func) {
     move_only_function(std::forward<_Func>(__func)).swap(*this);
+    return *this;
   }
 
   _LIBCPP_HIDE_FROM_ABI ~move_only_function() { __reset(); }
@@ -259,7 +257,7 @@ private:
 
   static constexpr size_t __buffer_size_ = 4 * sizeof(void*);
 
-  _CallFn* __call_ = nullptr;
+  _CallFn* __call_       = nullptr;
   _DestroyFn* __destroy_ = nullptr;
   alignas(void*) array<byte, __buffer_size_> __buffer_;
 

@@ -33,40 +33,13 @@ void test() {
     swap(f, f2);
   }
   {
-    std::move_only_function<T> f = TriviallyDestructibleSqueezeFit{};
-    std::move_only_function<T> f2;
-    swap(f, f2);
-  }
-  {
     std::move_only_function<T> f = TriviallyDestructibleTooLarge{};
     std::move_only_function<T> f2;
     swap(f, f2);
   }
-#ifdef TEST_COMPILER_CLANG
-  {
-    std::move_only_function<T> f = TriviallyRelocatable{};
-    std::move_only_function<T> f2;
-    swap(f, f2);
-  }
-  {
-    std::move_only_function<T> f = TriviallyRelocatableSqueezeFit{};
-    std::move_only_function<T> f2;
-    swap(f, f2);
-  }
-  {
-    std::move_only_function<T> f = TriviallyRelocatableTooLarge{};
-    std::move_only_function<T> f2;
-    swap(f, f2);
-  }
-#endif
   {
     std::move_only_function<T> f = NonTrivial{};
     std::move_only_function<T> f2;
-    swap(f, f2);
-  }
-  {
-    std::move_only_function<T> f = TriviallyDestructibleSqueezeFit{};
-    std::move_only_function<T> f2 = NonTrivial{};
     swap(f, f2);
   }
 }

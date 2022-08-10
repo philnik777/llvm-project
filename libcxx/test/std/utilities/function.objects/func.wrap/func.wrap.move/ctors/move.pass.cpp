@@ -33,32 +33,10 @@ void test() {
     assert(f2);
   }
   {
-    std::move_only_function<T> f = TriviallyDestructibleSqueezeFit{};
-    std::move_only_function<T> f2 = std::move(f);
-    assert(f2);
-  }
-  {
     std::move_only_function<T> f = TriviallyDestructibleTooLarge{};
     std::move_only_function<T> f2 = std::move(f);
     assert(f2);
   }
-#ifdef TEST_COMPILER_CLANG
-  {
-    std::move_only_function<T> f = TriviallyRelocatable{};
-    std::move_only_function<T> f2 = std::move(f);
-    assert(f2);
-  }
-  {
-    std::move_only_function<T> f = TriviallyRelocatableSqueezeFit{};
-    std::move_only_function<T> f2 = std::move(f);
-    assert(f2);
-  }
-  {
-    std::move_only_function<T> f = TriviallyRelocatableTooLarge{};
-    std::move_only_function<T> f2 = std::move(f);
-    assert(f2);
-  }
-#endif
   {
     std::move_only_function<T> f = NonTrivial{};
     std::move_only_function<T> f2 = std::move(f);

@@ -41,36 +41,10 @@ void test() {
   }
   {
     called                                            = false;
-    std::move_only_function<void() const& noexcept> f = TriviallyDestructibleSqueezeFit{};
-    f();
-    assert(called);
-  }
-  {
-    called                                            = false;
     std::move_only_function<void() const& noexcept> f = TriviallyDestructibleTooLarge{};
     f();
     assert(called);
   }
-#ifdef TEST_COMPILER_CLANG
-  {
-    called                                            = false;
-    std::move_only_function<void() const& noexcept> f = TriviallyRelocatable{};
-    f();
-    assert(called);
-  }
-  {
-    called                                            = false;
-    std::move_only_function<void() const& noexcept> f = TriviallyRelocatableSqueezeFit{};
-    f();
-    assert(called);
-  }
-  {
-    called                                            = false;
-    std::move_only_function<void() const& noexcept> f = TriviallyRelocatableTooLarge{};
-    f();
-    assert(called);
-  }
-#endif
   {
     called                                            = false;
     std::move_only_function<void() const& noexcept> f = NonTrivial{};

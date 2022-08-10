@@ -55,17 +55,6 @@ struct TriviallyDestructible {
   void operator()() const noexcept { called = true; }
 };
 
-struct TriviallyDestructibleSqueezeFit {
-  TriviallyDestructibleSqueezeFit() = default;
-  TriviallyDestructibleSqueezeFit(MoveCounter) {}
-  TriviallyDestructibleSqueezeFit(std::initializer_list<int>, MoveCounter) {}
-  void operator()() const noexcept { called = true; }
-
-private:
-  [[maybe_unused]] void* ptr;
-  [[maybe_unused]] char a[4 * sizeof(void*) - 1];
-};
-
 struct TriviallyDestructibleTooLarge {
   TriviallyDestructibleTooLarge() = default;
   TriviallyDestructibleTooLarge(MoveCounter) {}
@@ -74,49 +63,11 @@ struct TriviallyDestructibleTooLarge {
   char a[5 * sizeof(void*)];
 };
 
-#ifdef TEST_COMPILER_CLANG
-struct [[clang::trivial_abi]] TriviallyRelocatable {
-  TriviallyRelocatable() = default;
-  TriviallyRelocatable(MoveCounter) {}
-  TriviallyRelocatable(std::initializer_list<int>, MoveCounter) {}
-  TriviallyRelocatable(TriviallyRelocatable&&) {}
-  ~TriviallyRelocatable() {}
-
-  void operator()() const noexcept { called = true; }
-};
-
-struct [[clang::trivial_abi]] TriviallyRelocatableSqueezeFit {
-  TriviallyRelocatableSqueezeFit() = default;
-  TriviallyRelocatableSqueezeFit(MoveCounter) {}
-  TriviallyRelocatableSqueezeFit(std::initializer_list<int>, MoveCounter) {}
-  TriviallyRelocatableSqueezeFit(TriviallyRelocatableSqueezeFit&&) {}
-  ~TriviallyRelocatableSqueezeFit() {}
-
-  void operator()() const noexcept { called = true; }
-
-private:
-  [[maybe_unused]] void* ptr;
-  [[maybe_unused]] char a[3 * sizeof(void*) - 1];
-};
-
-struct [[clang::trivial_abi]] TriviallyRelocatableTooLarge {
-  TriviallyRelocatableTooLarge() = default;
-  TriviallyRelocatableTooLarge(MoveCounter) {}
-  TriviallyRelocatableTooLarge(std::initializer_list<int>, MoveCounter) {}
-  ~TriviallyRelocatableTooLarge() {}
-
-  void operator()() const noexcept { called = true; }
-
-private:
-  [[maybe_unused]] char a[4 * sizeof(void*)];
-};
-#endif
-
 struct NonTrivial {
   NonTrivial() = default;
   NonTrivial(MoveCounter) {}
-  NonTrivial(std::initializer_list<int>, MoveCounter) {}
-  NonTrivial(NonTrivial&&) {}
+  NonTrivial(std::initializer_list<int>&, MoveCounter) {}
+  NonTrivial(NonTrivial&&) noexcept(false) {}
   ~NonTrivial() {}
 
   void operator()() const noexcept { called = true; }
@@ -135,8 +86,8 @@ struct CallTypeChecker {
   using enum CallType;
   void operator()() & { *type = LValue; }
   void operator()() && { *type = RValue; }
-  void operator()() const & { *type = ConstLValue; }
-  void operator()() const && { *type = ConstRValue; }
+  void operator()() const& { *type = ConstLValue; }
+  void operator()() const&& { *type = ConstRValue; }
 };
 
 struct CallTypeCheckerNoexcept {
@@ -144,8 +95,8 @@ struct CallTypeCheckerNoexcept {
   using enum CallType;
   void operator()() & noexcept { *type = LValue; }
   void operator()() && noexcept { *type = RValue; }
-  void operator()() const & noexcept { *type = ConstLValue; }
-  void operator()() const && noexcept { *type = ConstRValue; }
+  void operator()() const& noexcept { *type = ConstLValue; }
+  void operator()() const&& noexcept { *type = ConstRValue; }
 };
 
 #endif // MOVE_ONLY_FUNCTION_COMMON_H
