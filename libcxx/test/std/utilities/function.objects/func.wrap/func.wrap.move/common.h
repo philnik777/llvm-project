@@ -53,6 +53,7 @@ struct TriviallyDestructible {
   TriviallyDestructible(MoveCounter) {}
   TriviallyDestructible(std::initializer_list<int>, MoveCounter) {}
   void operator()() const noexcept { called = true; }
+  int operator()(int i) const noexcept { return i; }
 };
 
 struct TriviallyDestructibleTooLarge {
@@ -60,6 +61,7 @@ struct TriviallyDestructibleTooLarge {
   TriviallyDestructibleTooLarge(MoveCounter) {}
   TriviallyDestructibleTooLarge(std::initializer_list<int>, MoveCounter) {}
   void operator()() const noexcept { called = true; }
+  int operator()(int i) const noexcept { return i; }
   char a[5 * sizeof(void*)];
 };
 
@@ -71,7 +73,10 @@ struct NonTrivial {
   ~NonTrivial() {}
 
   void operator()() const noexcept { called = true; }
+  int operator()(int i) const noexcept { return i; }
 };
+
+inline int get_val(int i) noexcept { return i; }
 
 enum class CallType {
   None,

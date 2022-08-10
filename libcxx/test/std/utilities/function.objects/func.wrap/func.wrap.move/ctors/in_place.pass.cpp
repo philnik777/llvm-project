@@ -38,4 +38,5 @@ void test() {
 
 int main(int, char**) {
   call_test<void()>([]<class T> { test<T>(); });
+  call_test<int(int)>([]<class T> { test<T>(); });
 }

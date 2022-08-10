@@ -68,8 +68,36 @@ void test() {
   }
 }
 
+void test_return() {
+  {
+    called                                = false;
+    std::move_only_function<int(int)&&> f = &get_val;
+    assert(std::move(f)(3) == 3);
+    assert(!called);
+  }
+  {
+    called                                = false;
+    std::move_only_function<int(int)&&> f = TriviallyDestructible{};
+    assert(std::move(f)(3) == 3);
+    assert(!called);
+  }
+  {
+    called                                = false;
+    std::move_only_function<int(int)&&> f = TriviallyDestructibleTooLarge{};
+    assert(std::move(f)(3) == 3);
+    assert(!called);
+  }
+  {
+    called                                = false;
+    std::move_only_function<int(int)&&> f = NonTrivial{};
+    assert(std::move(f)(3) == 3);
+    assert(!called);
+  }
+}
+
 int main(int, char**) {
   test();
+  test_return();
 
   return 0;
 }

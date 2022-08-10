@@ -56,7 +56,33 @@ void test_member_function_pointer() {
   }
 }
 
+template <class T>
+void test_value_return_type() {
+  {
+    std::move_only_function<T> f = &get_val;
+    assert(f);
+  }
+  {
+    decltype(&get_val) ptr     = nullptr;
+    std::move_only_function<T> f = ptr;
+    assert(!f);
+  }
+  {
+    std::move_only_function<T> f = TriviallyDestructible{};
+    assert(f);
+  }
+  {
+    std::move_only_function<T> f = TriviallyDestructibleTooLarge{};
+    assert(f);
+  }
+  {
+    std::move_only_function<T> f = NonTrivial{};
+    assert(f);
+  }
+}
+
 int main(int, char**) {
   call_test<void()>([]<class T> { test<T>(); });
   call_test<void(S)>([]<class T> { test_member_function_pointer<T>(); });
+  call_test<int(int)>([]<class T> { test_value_return_type<T>(); });
 }

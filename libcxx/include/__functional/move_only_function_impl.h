@@ -100,6 +100,7 @@ class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
     _LIBCPP_HIDE_FROM_ABI static _ReturnT
     __call(_LIBCPP_MOVE_ONLY_FUNCTION_CV std::byte* __functor, _ArgTypes... __args) {
       if constexpr (!__fits_in_buffer<_Functor>) {
+        // TODO: Use std::invoke_r
         return std::invoke(static_cast<_Functor _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS>(
                                **reinterpret_cast<_Functor * _LIBCPP_MOVE_ONLY_FUNCTION_CV*>(__functor)),
                            std::forward<_ArgTypes>(__args)...);
@@ -235,7 +236,7 @@ public:
 
   _LIBCPP_HIDE_FROM_ABI _ReturnT operator()(_ArgTypes... __args) _LIBCPP_MOVE_ONLY_FUNCTION_CVREF
       noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT) {
-    __call_(__buffer_.data(), std::forward<_ArgTypes>(__args)...);
+    return __call_(__buffer_.data(), std::forward<_ArgTypes>(__args)...);
   }
 
   // [func.wrap.move.util]
