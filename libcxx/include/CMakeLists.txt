@@ -316,6 +316,7 @@ set(files
   __functional/mem_fn.h
   __functional/mem_fun_ref.h
   __functional/move_only_function.h
+  __functional/move_only_function_common.h
   __functional/move_only_function_impl.h
   __functional/not_fn.h
   __functional/operations.h

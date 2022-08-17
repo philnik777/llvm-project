@@ -11,10 +11,11 @@
 
 #include <__config>
 #include <__functional/invoke.h>
+#include <__functional/move_only_function_common.h>
 #include <__memory/construct_at.h>
 #include <__memory/unique_ptr.h>
-#include <__type_traits/is_trivially_move_constructible.h>
 #include <__type_traits/is_trivially_destructible.h>
+#include <__type_traits/is_trivially_move_constructible.h>
 #include <__utility/forward.h>
 #include <__utility/in_place.h>
 #include <__utility/move.h>
@@ -33,26 +34,6 @@
 #ifndef _LIBCPP_IN_MOVE_ONLY_FUNCTION_H
 #  error This header should only be included from move_only_function.h
 #endif
-
-#ifndef _LIBCPP___FUNCTIONAL_MOVE_ONLY_FUNCTION_IMPL_H
-#  define _LIBCPP___FUNCTIONAL_MOVE_ONLY_FUNCTION_IMPL_H
-
-_LIBCPP_BEGIN_NAMESPACE_STD
-
-template <class...>
-class move_only_function;
-
-template <class...>
-struct __is_move_only_function : false_type {};
-
-template <class _ReturnT, class... _ArgTypes>
-struct __is_move_only_function<move_only_function<_ReturnT(_ArgTypes...)>> : true_type {};
-
-_LIBCPP_END_NAMESPACE_STD
-
-// This header is only partially guarded on purpose. This header is an implementation detail of move_only_function.h
-// and generates multiple versions of std::move_only_function
-#endif // _LIBCPP___FUNCTIONAL_MOVE_ONLY_FUNCTION_IMPL_H
 
 #ifndef _LIBCPP_MOVE_ONLY_FUNCTION_CV
 #  define _LIBCPP_MOVE_ONLY_FUNCTION_CV
@@ -79,6 +60,9 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 #  define _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI
 #endif
 
+template <class...>
+class move_only_function;
+
 template <class _ReturnT, class... _ArgTypes>
 class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
     _ArgTypes...) _LIBCPP_MOVE_ONLY_FUNCTION_CVREF noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT)> {
@@ -98,9 +82,9 @@ class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
     }
 
     _LIBCPP_HIDE_FROM_ABI static _ReturnT
-    __call(_LIBCPP_MOVE_ONLY_FUNCTION_CV std::byte* __functor, _ArgTypes... __args) {
+    __call(std::byte* __functor, _ArgTypes... __args) noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT) {
       if constexpr (!__fits_in_buffer<_Functor>) {
-        // TODO: Use std::invoke_r
+        // TODO: Use std::invoke_r once P2136 is implemented
         return std::invoke(static_cast<_Functor _LIBCPP_MOVE_ONLY_FUNCTION_INVOKE_QUALS>(
                                **reinterpret_cast<_Functor * _LIBCPP_MOVE_ONLY_FUNCTION_CV*>(__functor)),
                            std::forward<_ArgTypes>(__args)...);
@@ -133,8 +117,8 @@ class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
   _LIBCPP_HIDE_FROM_ABI void __construct(_Args&&... __args) {
     static_assert(is_constructible_v<decay_t<_Func>, _Func>);
 
-    using _FuncWraps = __function_wrappers<_Func>;
-    using _UnRefFunc = remove_reference_t<_Func>;
+    using _FuncWraps  = __function_wrappers<_Func>;
+    using _StoredFunc = decay_t<_Func>;
 
     __call_ = &_FuncWraps::__call;
     if constexpr (!is_trivially_destructible_v<decay_t<_Func>>) {
@@ -142,11 +126,11 @@ class _LIBCPP_MOVE_ONLY_FUNCTION_TRIVIAL_ABI move_only_function<_ReturnT(
     }
 
     if constexpr (__fits_in_buffer<_Func>) {
-      std::construct_at(reinterpret_cast<_UnRefFunc*>(__buffer_.data()), std::forward<_Args>(__args)...);
+      std::construct_at(reinterpret_cast<_StoredFunc*>(__buffer_.data()), std::forward<_Args>(__args)...);
     } else {
       unique_ptr<std::byte[]> __ptr{
           static_cast<std::byte*>(::operator new(sizeof(_Func), std::align_val_t(alignof(_Func))))};
-      std::construct_at(reinterpret_cast<_UnRefFunc*>(__ptr.get()), std::forward<_Args>(__args)...);
+      std::construct_at(reinterpret_cast<_StoredFunc*>(__ptr.get()), std::forward<_Args>(__args)...);
       std::construct_at(reinterpret_cast<std::byte**>(__buffer_.data()), __ptr.release());
     }
   }
@@ -175,21 +159,20 @@ public:
     requires(!is_same_v<remove_cvref_t<_Func>, move_only_function> && !__is_inplace_type<_Func>::value &&
              __is_callable_from<_Func>)
   _LIBCPP_HIDE_FROM_ABI move_only_function(_Func&& __func) noexcept {
-    using _FuncWraps = __function_wrappers<_Func>;
-    using _UnRefFunc = remove_reference_t<_Func>;
+    using _FuncWraps  = __function_wrappers<_Func>;
+    using _StoredFunc = decay_t<_Func>;
 
-    if constexpr ((is_pointer_v<_UnRefFunc> && is_function_v<remove_pointer_t<_UnRefFunc>>) ||
-                  is_member_function_pointer_v<_UnRefFunc>) {
+    if constexpr ((is_pointer_v<_StoredFunc> && is_function_v<remove_pointer_t<_StoredFunc>>) ||
+                  is_member_function_pointer_v<_StoredFunc>) {
       if (__func != nullptr) {
         __call_ = &_FuncWraps::__call;
-        std::construct_at(reinterpret_cast<_UnRefFunc*>(__buffer_.data()), std::forward<_Func>(__func));
+        std::construct_at(reinterpret_cast<_StoredFunc*>(__buffer_.data()), std::forward<_Func>(__func));
       }
-    } else if constexpr (__is_move_only_function<remove_cvref_t<_Func>>::value) {
-      if (!__func) {
-        __call_    = {};
-        __destroy_ = {};
-      } else {
-        __construct<_Func>(std::forward<_Func>(__func));
+    } else if constexpr (__is_move_only_function<_StoredFunc>::value) {
+      if (__func) {
+        __call_    = std::exchange(__func.__call_, nullptr);
+        __destroy_ = std::exchange(__func.__destroy_, nullptr);
+        __buffer_  = std::exchange(__func.__buffer_, array<byte, __buffer_size_>{});
       }
     } else {
       __construct<_Func>(std::forward<_Func>(__func));
@@ -236,7 +219,8 @@ public:
 
   _LIBCPP_HIDE_FROM_ABI _ReturnT operator()(_ArgTypes... __args) _LIBCPP_MOVE_ONLY_FUNCTION_CVREF
       noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT) {
-    return __call_(__buffer_.data(), std::forward<_ArgTypes>(__args)...);
+    _LIBCPP_ASSERT(static_cast<bool>(*this), "Tried to call a disengaged move_only_function");
+    return __call_(const_cast<std::byte*>(__buffer_.data()), std::forward<_ArgTypes>(__args)...);
   }
 
   // [func.wrap.move.util]
@@ -253,8 +237,8 @@ public:
   _LIBCPP_HIDE_FROM_ABI friend bool operator==(const move_only_function& __func, nullptr_t) noexcept { return !__func; }
 
 private:
-  using _CallFn    = _ReturnT(_LIBCPP_MOVE_ONLY_FUNCTION_CV std::byte*, _ArgTypes...);
-  using _DestroyFn = void(void*);
+  using _CallFn    = _ReturnT(std::byte*, _ArgTypes...) noexcept(_LIBCPP_MOVE_ONLY_FUNCTION_NOEXCEPT);
+  using _DestroyFn = void(void*) noexcept;
 
   static constexpr size_t __buffer_size_ = 4 * sizeof(void*);
 
@@ -269,6 +253,9 @@ private:
 
   template <class _Func>
   static constexpr bool __fits_in_buffer = __fits_in_buffer_impl<remove_cvref_t<_Func>>;
+
+  template <class...>
+  friend class move_only_function;
 };
 
 #undef _LIBCPP_MOVE_ONLY_FUNCTION_CV

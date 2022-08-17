@@ -22,6 +22,7 @@ void test() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
+    LIBCPP_ASSERT(!f);
   }
   {
     decltype(&call_func) ptr     = nullptr;
@@ -29,24 +30,28 @@ void test() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(!f2);
+    LIBCPP_ASSERT(!f);
   }
   {
     std::move_only_function<T> f = TriviallyDestructible{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
+    LIBCPP_ASSERT(!f);
   }
   {
     std::move_only_function<T> f = TriviallyDestructibleTooLarge{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
+    LIBCPP_ASSERT(!f);
   }
   {
     std::move_only_function<T> f = NonTrivial{};
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
+    LIBCPP_ASSERT(!f);
   }
 }
 
@@ -61,6 +66,7 @@ void test_member_function_pointer() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(f2);
+    LIBCPP_ASSERT(!f);
   }
   {
     decltype(&S::func) ptr       = nullptr;
@@ -68,6 +74,7 @@ void test_member_function_pointer() {
     std::move_only_function<T> f2;
     f2 = std::move(f);
     assert(!f2);
+    LIBCPP_ASSERT(!f);
   }
 }
 
