@@ -461,7 +461,19 @@ private:
 
   void mangleExistingSubstitution(TemplateName name);
 
+  struct Namespaces {
+    const NamespaceDecl *NS;
+    std::string_view InnerNamespace{};
+  };
+
+  auto specializedClassInNamespace(
+      std::string_view Name, Namespaces NS,
+      std::initializer_list<
+          llvm::function_ref<bool(const TemplateArgument &)>>);
+  template <class... Args> auto anyBuiltin(Args... Builtins);
+
   bool mangleStandardSubstitution(const NamedDecl *ND);
+  bool mangleVersionedStandardSubstitution(const NamedDecl *ND);
 
   void addSubstitution(const NamedDecl *ND) {
     ND = cast<NamedDecl>(ND->getCanonicalDecl());
@@ -6319,6 +6331,212 @@ bool CXXNameMangler::isStdCharSpecialization(
   return true;
 }
 
+static bool isSpecialization(const ClassTemplateSpecializationDecl *SD,
+                             std::string_view Name,
+                             std::initializer_list<llvm::function_ref<bool(const TemplateArgument&)>> Args) {
+  if (!SD->getIdentifier()->isStr(Name))
+    return false;
+
+  if (SD->getSpecializedTemplate()->getOwningModuleForLinkage())
+    return false;
+
+  const auto& TemplateArgs = SD->getTemplateArgs();
+  if (TemplateArgs.size() != Args.size())
+    return false;
+
+  return llvm::all_of(llvm::zip(Args, TemplateArgs.asArray()), [](auto Arg) {
+    return std::get<0>(Arg)(std::get<1>(Arg));
+  });
+}
+
+auto CXXNameMangler::specializedClassInNamespace(
+    std::string_view Name, Namespaces NS,
+    std::initializer_list<llvm::function_ref<bool(const TemplateArgument &)>>
+        Args) {
+  return [=, this](const TemplateArgument &Type) -> bool {
+    const auto* RT = Type.getAsType()->getAs<RecordType>();
+    if (!RT)
+      return false;
+    const auto* SD = dyn_cast<ClassTemplateSpecializationDecl>(RT->getDecl());
+    if (!SD || !SD->getIdentifier()->isStr(Name))
+      return false;
+
+    const auto *DC = Context.getEffectiveDeclContext(SD);
+    if (!DC->isNamespace())
+      return false;
+    const auto *ND = cast<NamespaceDecl>(DC);
+    if (NS.InnerNamespace != "") {
+      if (ND->getIdentifier()->getName() != StringRef(NS.InnerNamespace))
+        return false;
+      if (!ND->getParent()->isNamespace())
+        return false;
+      ND = cast<NamespaceDecl>(ND->getParent());
+    }
+    if (ND->getOriginalNamespace() != NS.NS->getOriginalNamespace())
+      return false;
+    return isSpecialization(SD, Name, Args);
+  };
+}
+
+template <class... Args>
+auto CXXNameMangler::anyBuiltin(Args... Builtins) {
+  return [=](const TemplateArgument &TA) {
+    auto QT = TA.getAsType();
+    return (QT->isSpecificBuiltinType(Builtins) || ...);
+  };
+}
+
+static bool isVersionedStdNamespace(const DeclContext *DC) {
+  if (!DC->getEnclosingNamespaceContext()->isStdNamespace())
+    return false;
+  if (!DC->isNamespace())
+    return false;
+  auto Name = cast<NamespaceDecl>(DC)->getIdentifier()->getName();
+  if (!Name.starts_with("__"))
+    return false;
+  Name = Name.drop_front(2);
+  auto NoVersion = Name.drop_while([](char c) { return std::isdigit(c); });
+  if (NoVersion.size() == Name.size())
+    return false;
+  return NoVersion.size() == 1 && std::islower(NoVersion[0]);
+}
+
+bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
+  if (const NamespaceDecl *NS = dyn_cast<NamespaceDecl>(ND)) {
+    if (isVersionedStdNamespace(NS)) {
+      auto Name = NS->getName().drop_front(2);
+      Out << "S" << Name << "T";
+      return true;
+    }
+  }
+
+  if (!isVersionedStdNamespace(ND->getDeclContext()))
+    return false;
+
+  auto Version = cast<NamespaceDecl>(ND->getDeclContext())
+                     ->getIdentifier()
+                     ->getName()
+                     .drop_front(2);
+
+  if (const ClassTemplateDecl *TD = dyn_cast<ClassTemplateDecl>(ND)) {
+    const auto *EnclosingNamespace = Context.getEffectiveDeclContext(TD);
+    if (isVersionedStdNamespace(EnclosingNamespace)) {
+      if (TD->getOwningModuleForLinkage())
+        return false;
+
+      static std::pair<std::string_view, std::string_view> replacements[] {
+        {"allocator", "aL"},
+        {"atomic", "aT"},
+        {"expected", "eX"},
+        {"vector", "vE"},
+        {"copyable_function", "fC"},
+        {"function", "fF"},
+        {"move_only_function", "fM"},
+        {"function_ref", "fF"},
+        {"optional", "oP"},
+        {"shared_ptr", "sP"},
+        {"tuple", "tU"},
+        {"variant", "vA"},
+      };
+
+      for (auto [name, substitution] : replacements) {
+        if (TD->getIdentifier()->isStr(name)) {
+          Out << "S" << Version << substitution;
+          return true;
+        }
+      }
+    }
+  }
+
+  if (const ClassTemplateSpecializationDecl *SD =
+          dyn_cast<ClassTemplateSpecializationDecl>(ND)) {
+    const auto *EnclosingNamespace = SD->getEnclosingNamespaceContext();
+    if (isVersionedStdNamespace(EnclosingNamespace)) {
+      const auto *NS = cast<NamespaceDecl>(EnclosingNamespace);
+
+      { // char strings
+        auto Char = anyBuiltin(BuiltinType::Char_S, BuiltinType::Char_U);
+        auto CharTraitsChar =
+            specializedClassInNamespace("char_traits", {NS}, {Char});
+        auto AllocatorChar =
+            specializedClassInNamespace("allocator", {NS}, {Char});
+        auto PolymorphicAllocatorChar = specializedClassInNamespace(
+            "polymorphic_allocator", {NS, "pmr"}, {Char});
+
+        if (isSpecialization(SD, "basic_string",
+                            {Char, CharTraitsChar, AllocatorChar})) {
+          Out << "S" << Version << "S";
+          return true;
+        }
+        if (isSpecialization(SD, "basic_string",
+                            {Char, CharTraitsChar, PolymorphicAllocatorChar})) {
+          Out << "S" << Version << "sA";
+          return true;
+        }
+        if (isSpecialization(SD, "basic_string_view", {Char, CharTraitsChar})) {
+          Out << "S" << Version << "sB";
+          return true;
+        }
+        if (isSpecialization(SD, "basic_istream", {Char, CharTraitsChar})) {
+          Out << "S" << Version << "bI";
+          return true;
+        }
+        if (isSpecialization(SD, "basic_ostream", {Char, CharTraitsChar})) {
+          Out << "S" << Version << "bO";
+          return true;
+        }
+        if (isSpecialization(SD, "basic_iostream", {Char, CharTraitsChar})) {
+          Out << "S" << Version << "bS";
+          return true;
+        }
+      }
+
+      { // wchar strings
+        auto WChar = anyBuiltin(BuiltinType::WChar_S, BuiltinType::WChar_U);
+        auto CharTraitsWChar =
+            specializedClassInNamespace("char_traits", {NS}, {WChar});
+        auto AllocatorWChar =
+            specializedClassInNamespace("allocator", {NS}, {WChar});
+        auto PolymorphicAllocatorWChar = specializedClassInNamespace(
+            "polymorphic_allocator", {NS, "pmr"}, {WChar});
+
+        if (isSpecialization(SD, "basic_string",
+                            {WChar, CharTraitsWChar, AllocatorWChar})) {
+          Out << "S" << Version << "sC";
+          return true;
+        }
+        if (isSpecialization(
+                SD, "basic_string",
+                {WChar, CharTraitsWChar, PolymorphicAllocatorWChar})) {
+          Out << "S" << Version << "sD";
+          return true;
+        }
+        if (isSpecialization(SD, "basic_string_view", {WChar, CharTraitsWChar})) {
+          Out << "S" << Version << "sE";
+          return true;
+        }
+      }
+
+      { // complex
+        if (isSpecialization(SD, "complex", {anyBuiltin(BuiltinType::Float)})) {
+          Out << "S" << Version << "cF";
+          return true;
+        }
+        if (isSpecialization(SD, "complex", {anyBuiltin(BuiltinType::Double)})) {
+          Out << "S" << Version << "cD";
+          return true;
+        }
+        if (isSpecialization(SD, "complex", {anyBuiltin(BuiltinType::LongDouble)})) {
+          Out << "S" << Version << "cL";
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 bool CXXNameMangler::mangleStandardSubstitution(const NamedDecl *ND) {
   // <substitution> ::= St # ::std::
   if (const NamespaceDecl *NS = dyn_cast<NamespaceDecl>(ND)) {
@@ -6326,8 +6544,13 @@ bool CXXNameMangler::mangleStandardSubstitution(const NamedDecl *ND) {
       Out << "St";
       return true;
     }
+    if (isVersionedStdNamespace(NS))
+      return mangleVersionedStandardSubstitution(ND);
     return false;
   }
+
+  if (ND->isInStdNamespace())
+    return mangleVersionedStandardSubstitution(ND);
 
   if (const ClassTemplateDecl *TD = dyn_cast<ClassTemplateDecl>(ND)) {
     if (!isStdNamespace(Context.getEffectiveDeclContext(TD)))
@@ -6352,7 +6575,11 @@ bool CXXNameMangler::mangleStandardSubstitution(const NamedDecl *ND) {
 
   if (const ClassTemplateSpecializationDecl *SD =
         dyn_cast<ClassTemplateSpecializationDecl>(ND)) {
-    if (!isStdNamespace(Context.getEffectiveDeclContext(SD)))
+    const DeclContext *DC = Context.getEffectiveDeclContext(ND);
+    if (isVersionedStdNamespace(DC))
+      return mangleVersionedStandardSubstitution(ND);
+
+    if (!isStdNamespace(DC))
       return false;
 
     if (SD->getSpecializedTemplate()->getOwningModuleForLinkage())
