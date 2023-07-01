@@ -6500,16 +6500,19 @@ bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
   if (const ClassTemplateSpecializationDecl *SD =
           dyn_cast<ClassTemplateSpecializationDecl>(ND)) {
     const auto *EnclosingNamespace = SD->getEnclosingNamespaceContext();
-    if (isVersionedStdNamespace(EnclosingNamespace)) {
-      const auto *NS = cast<NamespaceDecl>(EnclosingNamespace);
+    if (!isVersionedStdNamespace(EnclosingNamespace))
+      return false;
 
-      auto MakeArgs = [](auto... Args) {
-        std::vector<std::function<bool(const TemplateArgument &)>> Vec;
-        Vec.reserve(sizeof...(Args));
-        (Vec.emplace_back(Args), ...);
-        return Vec;
-      };
+    const auto *NS = cast<NamespaceDecl>(EnclosingNamespace);
 
+    auto MakeArgs = [](auto... Args) {
+      std::vector<std::function<bool(const TemplateArgument &)>> Vec;
+      Vec.reserve(sizeof...(Args));
+      (Vec.emplace_back(Args), ...);
+      return Vec;
+    };
+
+    { // full specializations
       auto Char = anyBuiltin(BuiltinType::Char_S, BuiltinType::Char_U);
       auto CharTraitsChar =
           specializedClassInNamespace("char_traits", {NS}, MakeArgs(Char));
@@ -6556,6 +6559,32 @@ bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
           Out << "S" << Version << Substitution;
           return true;
         }
+      }
+    }
+
+    { // partial specializations
+      auto sameAs = [](QualType Type) {
+        return [=](const TemplateArgument &Arg) {
+          return Arg.getAsType() == Type;
+        };
+      };
+
+      if (SD->getIdentifier()->isStr("vector")) {
+        const auto& TemplateArgs = SD->getTemplateArgs();
+        if (TemplateArgs.size() != 2)
+          return false;
+        const auto& T = TemplateArgs[0];
+        const auto& Allocator = TemplateArgs[1];
+        const auto *AllocatorTS = dyn_cast<ClassTemplateSpecializationDecl>(
+            Allocator.getAsType()->getAs<RecordType>()->getDecl());
+        if (!AllocatorTS || AllocatorTS->getTemplateArgs().size() != 1)
+          return false;
+        if (!specializedClassInNamespace(
+                "allocator", {NS}, MakeArgs(sameAs(T.getAsType())))(Allocator))
+          return false;
+        Out << "S" << Version << "vC";
+        mangleTemplateArgs({}, std::array{T});
+        return true;
       }
     }
   }
