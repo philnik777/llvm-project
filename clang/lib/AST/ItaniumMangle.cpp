@@ -6410,7 +6410,7 @@ static std::pair<std::string_view, std::string_view> TemplateReplacements[]{
     {"basic_string", "bC"},
     {"basic_string_view", "bD"},
     {"char_traits", "cE"},
-    {"copyable_function", "fF"},
+    {"copyable_function", "fG"},
     {"default_delete", "dA"},
     {"deque", "dB"},
     {"expected", "eA"},
@@ -6420,15 +6420,15 @@ static std::pair<std::string_view, std::string_view> TemplateReplacements[]{
     {"flat_set", "fD"},
     {"forward_list", "fE"},
     {"function", "fF"},
-    {"function_ref", "fG"},
+    {"function_ref", "fH"},
     {"move_only_function", "mA"},
     {"optional", "oA"},
     {"polymorphic_allocator", "pA"},
     {"referenece_wrapper", "rA"},
     {"shared_ptr", "sA"},
     {"tuple", "tA"},
-    {"tuple_element", "tA"},
-    {"tuple_size", "tB"},
+    {"tuple_element", "tB"},
+    {"tuple_size", "tC"},
     {"unique_ptr", "uA"},
     {"unordered_map", "uB"},
     {"unordered_multimap", "uC"},
@@ -6540,12 +6540,12 @@ bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
               {"basic_string", {WChar, CharTraitsWChar, AllocatorWChar}, "sC"},
               {"basic_string",
                {Char, CharTraitsChar, PolymorphicAllocatorChar},
-               "sA"},
+               "sB"},
               {"basic_string",
                {WChar, CharTraitsWChar, PolymorphicAllocatorWChar},
                "sD"},
-              {"basic_string_view", {Char, CharTraitsChar}, "sB"},
-              {"basic_string_view", {WChar, CharTraitsWChar}, "sE"},
+              {"basic_string_view", {Char, CharTraitsChar}, "sE"},
+              {"basic_string_view", {WChar, CharTraitsWChar}, "sF"},
               {"basic_istream", {Char, CharTraitsChar}, "sI"},
               {"basic_ostream", {Char, CharTraitsChar}, "sO"},
               {"basic_iostream", {Char, CharTraitsChar}, "bS"},
@@ -6575,16 +6575,58 @@ bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
           return false;
         const auto& T = TemplateArgs[0];
         const auto& Allocator = TemplateArgs[1];
+
+        if (specializedClassInNamespace(
+                "allocator", {NS}, MakeArgs(sameAs(T.getAsType())))(Allocator)) {
+          Out << "NS" << Version << "vC";
+          mangleTemplateArgs({}, std::array{T});
+          Out << "E";
+          return true;
+        }
+
+        if (specializedClassInNamespace("polymorphic_allocator", {NS, "pmr"},
+                                        MakeArgs(sameAs(T.getAsType())))(
+                Allocator)) {
+          Out << "NS" << Version << "vD";
+          mangleTemplateArgs({}, std::array{T});
+          Out << "E";
+          return true;
+        }
+      }
+
+      if (SD->getIdentifier()->isStr("unordered_set")) {
+        const auto& TemplateArgs = SD->getTemplateArgs();
+        if (TemplateArgs.size() != 4)
+          return false;
+        const auto& T = TemplateArgs[0];
+        const auto& Hash = TemplateArgs[1];
+        const auto& Pred = TemplateArgs[2];
+        const auto& Allocator = TemplateArgs[3];
         const auto *AllocatorTS = dyn_cast<ClassTemplateSpecializationDecl>(
             Allocator.getAsType()->getAs<RecordType>()->getDecl());
         if (!AllocatorTS || AllocatorTS->getTemplateArgs().size() != 1)
           return false;
         if (!specializedClassInNamespace(
-                "allocator", {NS}, MakeArgs(sameAs(T.getAsType())))(Allocator))
+                "hash", {NS}, MakeArgs(sameAs(T.getAsType())))(Hash) ||
+            !specializedClassInNamespace("equal_to", {NS},
+                                         MakeArgs(sameAs(T.getAsType())))(Pred))
           return false;
-        Out << "S" << Version << "vC";
-        mangleTemplateArgs({}, std::array{T});
-        return true;
+        if (specializedClassInNamespace("allocator", {NS},
+                                        MakeArgs(sameAs(T.getAsType())))(
+                Allocator)) {
+          Out << "NS" << Version << "uF";
+          mangleTemplateArgs({}, std::array{T});
+          Out << "E";
+          return true;
+        }
+        if (specializedClassInNamespace("polymorphic_allocator", {NS, "pmr"},
+                                        MakeArgs(sameAs(T.getAsType())))(
+                Allocator)) {
+          Out << "NS" << Version << "uG";
+          mangleTemplateArgs({}, std::array{T});
+          Out << "E";
+          return true;
+        }
       }
     }
   }
