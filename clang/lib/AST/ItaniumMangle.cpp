@@ -6440,13 +6440,23 @@ static std::pair<std::string_view, std::string_view> TemplateReplacements[]{
 };
 
 bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
-  if (const NamespaceDecl *NS = dyn_cast<NamespaceDecl>(ND)) {
+  if (const auto* NS = dyn_cast<NamespaceDecl>(ND)) {
     if (isVersionedStdNamespace(NS)) {
       auto Name = NS->getName().drop_front(2);
       Out << "S" << Name << "T";
       return true;
     }
+  }
 
+  const auto* CMA = ND->getAttr<UseCompressionManglingAttr>();
+
+  if (!CMA)
+    return false;
+  auto UseMangling = [&](std::string_view Mangling) {
+    return llvm::is_contained(CMA->manglings(), Mangling);
+  };
+
+  if (const NamespaceDecl *NS = dyn_cast<NamespaceDecl>(ND)) {
     const auto *Parent = NS->getParent();
     if (!Parent->isNamespace())
       return false;
@@ -6454,21 +6464,29 @@ bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
     auto Name = cast<NamespaceDecl>(Parent)->getName().drop_front(2);
 
     if (NS->getName() == "chrono") {
+      if (!UseMangling("C"))
+        return false;
       Out << "S" << Name << "C";
       return true;
     }
 
     if (NS->getName() == "execution") {
+      if (!UseMangling("E"))
+        return false;
       Out << "S" << Name << "E";
       return true;
     }
 
     if (NS->getName() == "filesystem") {
+      if (!UseMangling("F"))
+        return false;
       Out << "S" << Name << "F";
       return true;
     }
 
     if (NS->getName() == "ranges") {
+      if (!UseMangling("R"))
+        return false;
       Out << "S" << Name << "R";
       return true;
     }
@@ -6489,7 +6507,7 @@ bool CXXNameMangler::mangleVersionedStandardSubstitution(const NamedDecl *ND) {
         return false;
 
       for (auto [Name, substitution] : TemplateReplacements) {
-        if (TD->getIdentifier()->isStr(Name)) {
+        if (TD->getIdentifier()->isStr(Name) && UseMangling(substitution)) {
           Out << "S" << Version << substitution;
           return true;
         }
