@@ -22,7 +22,7 @@ template <class _Tp>
 inline _LIBCPP_CONSTEXPR_SINCE_CXX17
 _LIBCPP_NO_CFI _LIBCPP_INLINE_VISIBILITY
 _Tp*
-addressof(_Tp& __x) _NOEXCEPT
+addressof(_Tp& __x) noexcept
 {
     return __builtin_addressof(__x);
 }
@@ -35,7 +35,7 @@ addressof(_Tp& __x) _NOEXCEPT
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 __strong _Tp*
-addressof(__strong _Tp& __x) _NOEXCEPT
+addressof(__strong _Tp& __x) noexcept
 {
   return &__x;
 }
@@ -44,16 +44,16 @@ addressof(__strong _Tp& __x) _NOEXCEPT
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 __weak _Tp*
-addressof(__weak _Tp& __x) _NOEXCEPT
+addressof(__weak _Tp& __x) noexcept
 {
   return &__x;
 }
-#endif
+#endif // _LIBCPP_HAS_OBJC_ARC_WEAK
 
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 __autoreleasing _Tp*
-addressof(__autoreleasing _Tp& __x) _NOEXCEPT
+addressof(__autoreleasing _Tp& __x) noexcept
 {
   return &__x;
 }
@@ -61,15 +61,13 @@ addressof(__autoreleasing _Tp& __x) _NOEXCEPT
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 __unsafe_unretained _Tp*
-addressof(__unsafe_unretained _Tp& __x) _NOEXCEPT
+addressof(__unsafe_unretained _Tp& __x) noexcept
 {
   return &__x;
 }
-#endif
+#endif // defined(_LIBCPP_HAS_OBJC_ARC) && !defined(_LIBCPP_PREDEFINED_OBJC_ARC_ADDRESSOF)
 
-#if !defined(_LIBCPP_CXX03_LANG)
 template <class _Tp> _Tp* addressof(const _Tp&&) noexcept = delete;
-#endif
 
 _LIBCPP_END_NAMESPACE_STD
 

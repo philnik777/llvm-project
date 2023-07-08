@@ -34,7 +34,7 @@ template <typename _Result, typename _Source, bool _IsSigned = is_signed<_Source
 
 template <typename _Result, typename _Source>
 struct __ct_abs<_Result, _Source, true> {
-    _LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+    constexpr _LIBCPP_INLINE_VISIBILITY
     _Result operator()(_Source __t) const noexcept
     {
         if (__t >= 0) return __t;
@@ -45,13 +45,13 @@ struct __ct_abs<_Result, _Source, true> {
 
 template <typename _Result, typename _Source>
 struct __ct_abs<_Result, _Source, false> {
-    _LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+    constexpr _LIBCPP_INLINE_VISIBILITY
     _Result operator()(_Source __t) const noexcept { return __t; }
 };
 
 
 template<class _Tp>
-_LIBCPP_CONSTEXPR _LIBCPP_HIDDEN
+constexpr _LIBCPP_HIDDEN
 _Tp __gcd(_Tp __m, _Tp __n)
 {
     static_assert((!is_signed<_Tp>::value), "");
@@ -59,7 +59,7 @@ _Tp __gcd(_Tp __m, _Tp __n)
 }
 
 template<class _Tp, class _Up>
-_LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+constexpr _LIBCPP_INLINE_VISIBILITY
 common_type_t<_Tp,_Up>
 gcd(_Tp __m, _Up __n)
 {
@@ -74,7 +74,7 @@ gcd(_Tp __m, _Up __n)
 }
 
 template<class _Tp, class _Up>
-_LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+constexpr _LIBCPP_INLINE_VISIBILITY
 common_type_t<_Tp,_Up>
 lcm(_Tp __m, _Up __n)
 {

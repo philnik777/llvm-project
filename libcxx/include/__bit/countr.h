@@ -23,14 +23,14 @@ _LIBCPP_PUSH_MACROS
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-int __libcpp_ctz(unsigned __x)           _NOEXCEPT { return __builtin_ctz(__x); }
+_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI constexpr
+int __libcpp_ctz(unsigned __x)           noexcept { return __builtin_ctz(__x); }
 
-_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-int __libcpp_ctz(unsigned long __x)      _NOEXCEPT { return __builtin_ctzl(__x); }
+_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI constexpr
+int __libcpp_ctz(unsigned long __x)      noexcept { return __builtin_ctzl(__x); }
 
-_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-int __libcpp_ctz(unsigned long long __x) _NOEXCEPT { return __builtin_ctzll(__x); }
+_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI constexpr
+int __libcpp_ctz(unsigned long long __x) noexcept { return __builtin_ctzll(__x); }
 
 #if _LIBCPP_STD_VER >= 20
 

@@ -32,8 +32,6 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <bool ..._Preds>
 struct __all_dummy;
 
@@ -119,7 +117,6 @@ struct _LIBCPP_EXPORTED_FROM_ABI __check_tuple_constructor_fail {
     template <class ...>
     static _LIBCPP_HIDE_FROM_ABI constexpr bool __enable_assign() { return false; }
 };
-#endif // !defined(_LIBCPP_CXX03_LANG)
 
 #if _LIBCPP_STD_VER >= 17
 

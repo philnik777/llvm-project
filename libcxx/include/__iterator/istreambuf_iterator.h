@@ -66,16 +66,16 @@ private:
         return __sbuf_ == nullptr;
     }
 public:
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR istreambuf_iterator() _NOEXCEPT : __sbuf_(nullptr) {}
+    _LIBCPP_INLINE_VISIBILITY constexpr istreambuf_iterator() noexcept : __sbuf_(nullptr) {}
 #if _LIBCPP_STD_VER >= 20
     _LIBCPP_INLINE_VISIBILITY constexpr istreambuf_iterator(default_sentinel_t) noexcept
         : istreambuf_iterator() {}
 #endif // _LIBCPP_STD_VER >= 20
-    _LIBCPP_INLINE_VISIBILITY istreambuf_iterator(istream_type& __s) _NOEXCEPT
+    _LIBCPP_INLINE_VISIBILITY istreambuf_iterator(istream_type& __s) noexcept
         : __sbuf_(__s.rdbuf()) {}
-    _LIBCPP_INLINE_VISIBILITY istreambuf_iterator(streambuf_type* __s) _NOEXCEPT
+    _LIBCPP_INLINE_VISIBILITY istreambuf_iterator(streambuf_type* __s) noexcept
         : __sbuf_(__s) {}
-    _LIBCPP_INLINE_VISIBILITY istreambuf_iterator(const __proxy& __p) _NOEXCEPT
+    _LIBCPP_INLINE_VISIBILITY istreambuf_iterator(const __proxy& __p) noexcept
         : __sbuf_(__p.__sbuf_) {}
 
     _LIBCPP_INLINE_VISIBILITY char_type  operator*() const

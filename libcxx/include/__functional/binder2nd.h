@@ -22,7 +22,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 #if _LIBCPP_STD_VER <= 14 || defined(_LIBCPP_ENABLE_CXX17_REMOVED_BINDERS)
 
 template <class __Operation>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 binder2nd
+class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED binder2nd
     : public __unary_function<typename __Operation::first_argument_type, typename __Operation::result_type>
 {
 protected:
@@ -41,7 +41,7 @@ public:
 };
 
 template <class __Operation, class _Tp>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCPP_DEPRECATED inline _LIBCPP_INLINE_VISIBILITY
 binder2nd<__Operation>
 bind2nd(const __Operation& __op, const _Tp& __x)
     {return binder2nd<__Operation>(__op, __x);}

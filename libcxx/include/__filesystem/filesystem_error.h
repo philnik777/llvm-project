@@ -26,8 +26,6 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 class _LIBCPP_AVAILABILITY_FILESYSTEM_LIBRARY _LIBCPP_EXPORTED_FROM_ABI filesystem_error : public system_error {
@@ -72,20 +70,18 @@ private:
 
 #  ifndef _LIBCPP_HAS_NO_EXCEPTIONS
 template <class... _Args>
-_LIBCPP_NORETURN inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_AVAILABILITY_FILESYSTEM_LIBRARY void
+[[noreturn]] inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_AVAILABILITY_FILESYSTEM_LIBRARY void
 __throw_filesystem_error(_Args&&... __args) {
   throw filesystem_error(_VSTD::forward<_Args>(__args)...);
 }
 #  else
 template <class... _Args>
-_LIBCPP_NORETURN inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_AVAILABILITY_FILESYSTEM_LIBRARY void
+[[noreturn]] inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_AVAILABILITY_FILESYSTEM_LIBRARY void
 __throw_filesystem_error(_Args&&...) {
   _LIBCPP_VERBOSE_ABORT("filesystem_error was thrown in -fno-exceptions mode");
 }
 #  endif
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___FILESYSTEM_FILESYSTEM_ERROR_H

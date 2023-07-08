@@ -18,12 +18,10 @@
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 struct __nat {
-#ifndef _LIBCPP_CXX03_LANG
   __nat()                        = delete;
   __nat(const __nat&)            = delete;
   __nat& operator=(const __nat&) = delete;
   ~__nat()                       = delete;
-#endif
 };
 
 _LIBCPP_END_NAMESPACE_STD

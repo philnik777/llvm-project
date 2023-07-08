@@ -24,8 +24,6 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#if !defined(_LIBCPP_CXX03_LANG)
-
 template <bool, class _Tp>
 struct __libcpp_is_nothrow_destructible;
 
@@ -48,21 +46,6 @@ struct _LIBCPP_TEMPLATE_VIS is_nothrow_destructible<_Tp&> : public true_type {};
 
 template <class _Tp>
 struct _LIBCPP_TEMPLATE_VIS is_nothrow_destructible<_Tp&&> : public true_type {};
-
-#else
-
-template <class _Tp>
-struct __libcpp_nothrow_destructor : public integral_constant<bool, is_scalar<_Tp>::value || is_reference<_Tp>::value> {
-};
-
-template <class _Tp>
-struct _LIBCPP_TEMPLATE_VIS is_nothrow_destructible : public __libcpp_nothrow_destructor<__remove_all_extents_t<_Tp> > {
-};
-
-template <class _Tp>
-struct _LIBCPP_TEMPLATE_VIS is_nothrow_destructible<_Tp[]> : public false_type {};
-
-#endif
 
 #if _LIBCPP_STD_VER >= 17
 template <class _Tp>

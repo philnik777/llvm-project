@@ -42,8 +42,6 @@ minmax(_LIBCPP_LIFETIMEBOUND const _Tp& __a, _LIBCPP_LIFETIMEBOUND const _Tp& __
     return std::minmax(__a, __b, __less<>());
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
 pair<_Tp, _Tp> minmax(initializer_list<_Tp> __t, _Compare __comp) {
@@ -61,8 +59,6 @@ minmax(initializer_list<_Tp> __t)
 {
     return std::minmax(__t, __less<>());
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_STD
 

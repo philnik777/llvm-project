@@ -141,16 +141,12 @@ private:
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-class _LIBCPP_DEPRECATED _LIBCPP_EXPORTED_FROM_ABI strstreambuf
+class [[__deprecated__]] _LIBCPP_EXPORTED_FROM_ABI strstreambuf
     : public streambuf
 {
 public:
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI strstreambuf() : strstreambuf(0) {}
     explicit strstreambuf(streamsize __alsize);
-#else
-    explicit strstreambuf(streamsize __alsize = 0);
-#endif
     strstreambuf(void* (*__palloc)(size_t), void (*__pfree)(void*));
     strstreambuf(char* __gnext, streamsize __n, char* __pbeg = nullptr);
     strstreambuf(const char* __gnext, streamsize __n);
@@ -160,12 +156,10 @@ public:
     strstreambuf(unsigned char* __gnext, streamsize __n, unsigned char* __pbeg = nullptr);
     strstreambuf(const unsigned char* __gnext, streamsize __n);
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     strstreambuf(strstreambuf&& __rhs);
     _LIBCPP_INLINE_VISIBILITY
     strstreambuf& operator=(strstreambuf&& __rhs);
-#endif // _LIBCPP_CXX03_LANG
 
     ~strstreambuf() override;
 
@@ -200,8 +194,6 @@ private:
     void __init(char* __gnext, streamsize __n, char* __pbeg);
 };
 
-#ifndef _LIBCPP_CXX03_LANG
-
 inline _LIBCPP_INLINE_VISIBILITY
 strstreambuf::strstreambuf(strstreambuf&& __rhs)
     : streambuf(__rhs),
@@ -235,9 +227,7 @@ strstreambuf::operator=(strstreambuf&& __rhs)
     return *this;
 }
 
-#endif // _LIBCPP_CXX03_LANG
-
-class _LIBCPP_DEPRECATED _LIBCPP_EXPORTED_FROM_ABI istrstream
+class [[__deprecated__]] _LIBCPP_EXPORTED_FROM_ABI istrstream
     : public istream
 {
 public:
@@ -254,7 +244,6 @@ public:
     istrstream(char* __s, streamsize __n)
         : istream(&__sb_), __sb_(__s, __n) {}
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     istrstream(istrstream&& __rhs)  // extension
         : istream(_VSTD::move(static_cast<istream&>(__rhs))),
@@ -270,7 +259,6 @@ public:
         istream::operator=(_VSTD::move(__rhs));
         return *this;
     }
-#endif // _LIBCPP_CXX03_LANG
 
     ~istrstream() override;
 
@@ -290,7 +278,7 @@ private:
     strstreambuf __sb_;
 };
 
-class _LIBCPP_DEPRECATED _LIBCPP_EXPORTED_FROM_ABI ostrstream
+class [[__deprecated__]] _LIBCPP_EXPORTED_FROM_ABI ostrstream
     : public ostream
 {
 public:
@@ -303,7 +291,6 @@ public:
           __sb_(__s, __n, __s + (__mode & ios::app ? _VSTD::strlen(__s) : 0))
         {}
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     ostrstream(ostrstream&& __rhs)  // extension
         : ostream(_VSTD::move(static_cast<ostream&>(__rhs))),
@@ -319,7 +306,6 @@ public:
         ostream::operator=(_VSTD::move(__rhs));
         return *this;
     }
-#endif // _LIBCPP_CXX03_LANG
 
     ~ostrstream() override;
 
@@ -343,7 +329,7 @@ private:
     strstreambuf __sb_; // exposition only
 };
 
-class _LIBCPP_DEPRECATED _LIBCPP_EXPORTED_FROM_ABI strstream
+class [[__deprecated__]] _LIBCPP_EXPORTED_FROM_ABI strstream
     : public iostream
 {
 public:
@@ -363,7 +349,6 @@ public:
           __sb_(__s, __n, __s + (__mode & ios::app ? _VSTD::strlen(__s) : 0))
         {}
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     strstream(strstream&& __rhs)  // extension
         : iostream(_VSTD::move(static_cast<iostream&>(__rhs))),
@@ -379,7 +364,6 @@ public:
         iostream::operator=(_VSTD::move(__rhs));
         return *this;
     }
-#endif // _LIBCPP_CXX03_LANG
 
     ~strstream() override;
 

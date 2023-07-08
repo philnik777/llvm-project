@@ -23,7 +23,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 // Perform division by two quickly for positive integers (llvm.org/PR39129)
 
 template <typename _Integral>
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     is_integral<_Integral>::value,
@@ -35,7 +35,7 @@ __half_positive(_Integral __value)
 }
 
 template <typename _Tp>
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     !is_integral<_Tp>::value,

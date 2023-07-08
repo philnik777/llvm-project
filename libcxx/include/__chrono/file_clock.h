@@ -21,11 +21,9 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 struct _FilesystemClock;
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-#endif // !_LIBCPP_CXX03_LANG
 
 #if _LIBCPP_STD_VER >= 20
 
@@ -46,7 +44,6 @@ _LIBCPP_END_NAMESPACE_STD
 
 #endif // _LIBCPP_STD_VER >= 20
 
-#ifndef _LIBCPP_CXX03_LANG
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 struct _FilesystemClock {
 #if !defined(_LIBCPP_HAS_NO_INT128)
@@ -80,6 +77,5 @@ struct _FilesystemClock {
 #endif // _LIBCPP_STD_VER >= 20
 };
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-#endif // !_LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___CHRONO_FILE_CLOCK_H

@@ -49,8 +49,6 @@ namespace pmr {
 
 _LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
 
 template <class _CharT, class _Traits = char_traits<_CharT>>
@@ -65,8 +63,6 @@ _LIBCPP_DEPCREATED_MEMORY_RESOURCE("wstring") typedef basic_string<wchar_t> wstr
 #endif
 
 _LIBCPP_SUPPRESS_DEPRECATED_POP
-
-#endif // _LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_LFTS_PMR
 

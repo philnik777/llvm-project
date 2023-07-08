@@ -21,34 +21,34 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 int __convert_to_integral(int __val) { return __val; }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 unsigned __convert_to_integral(unsigned __val) { return __val; }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 long __convert_to_integral(long __val) { return __val; }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 unsigned long __convert_to_integral(unsigned long __val) { return __val; }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 long long __convert_to_integral(long long __val) { return __val; }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 unsigned long long __convert_to_integral(unsigned long long __val) {return __val; }
 
 template<typename _Fp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if<is_floating_point<_Fp>::value, long long>::type
  __convert_to_integral(_Fp __val) { return __val; }
 
 #ifndef _LIBCPP_HAS_NO_INT128
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 __int128_t __convert_to_integral(__int128_t __val) { return __val; }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 __uint128_t __convert_to_integral(__uint128_t __val) { return __val; }
 #endif
 
@@ -63,7 +63,7 @@ template <class _Tp>
 struct __sfinae_underlying_type<_Tp, false> {};
 
 template <class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename __sfinae_underlying_type<_Tp>::__promoted_type
 __convert_to_integral(_Tp __val) { return __val; }
 

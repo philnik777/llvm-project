@@ -17,8 +17,6 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 // On Windows, these permission bits map to one single readonly flag per
@@ -85,7 +83,5 @@ _LIBCPP_INLINE_VISIBILITY
 inline perms& operator^=(perms& __lhs, perms __rhs) { return __lhs = __lhs ^ __rhs; }
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___FILESYSTEM_PERMS_H

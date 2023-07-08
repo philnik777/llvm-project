@@ -24,9 +24,9 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 template <typename _Alloc>
 _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 void __swap_allocator(_Alloc& __a1, _Alloc& __a2, true_type)
 #if _LIBCPP_STD_VER >= 14
-    _NOEXCEPT
+    noexcept
 #else
-    _NOEXCEPT_(__is_nothrow_swappable<_Alloc>::value)
+    noexcept(__is_nothrow_swappable<_Alloc>::value)
 #endif
 {
   using _VSTD::swap;
@@ -35,14 +35,14 @@ _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 void __swap_allocator(_Alloc
 
 template <typename _Alloc>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 void
-__swap_allocator(_Alloc&, _Alloc&, false_type) _NOEXCEPT {}
+__swap_allocator(_Alloc&, _Alloc&, false_type) noexcept {}
 
 template <typename _Alloc>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 void __swap_allocator(_Alloc& __a1, _Alloc& __a2)
 #if _LIBCPP_STD_VER >= 14
-    _NOEXCEPT
+    noexcept
 #else
-    _NOEXCEPT_(__is_nothrow_swappable<_Alloc>::value)
+    noexcept(__is_nothrow_swappable<_Alloc>::value)
 #endif
 {
   _VSTD::__swap_allocator(

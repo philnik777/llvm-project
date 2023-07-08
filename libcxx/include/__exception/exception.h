@@ -41,20 +41,20 @@ struct __std_exception_data {
 
 class exception { // base of all library exceptions
 public:
-  exception() _NOEXCEPT : __data_() {}
+  exception() noexcept : __data_() {}
 
-  explicit exception(char const* __message) _NOEXCEPT : __data_() {
+  explicit exception(char const* __message) noexcept : __data_() {
     __data_._What   = __message;
     __data_._DoFree = true;
   }
 
-  exception(exception const&) _NOEXCEPT {}
+  exception(exception const&) noexcept {}
 
-  exception& operator=(exception const&) _NOEXCEPT { return *this; }
+  exception& operator=(exception const&) noexcept { return *this; }
 
-  virtual ~exception() _NOEXCEPT {}
+  virtual ~exception() noexcept {}
 
-  virtual char const* what() const _NOEXCEPT { return __data_._What ? __data_._What : "Unknown exception"; }
+  virtual char const* what() const noexcept { return __data_._What ? __data_._What : "Unknown exception"; }
 
 private:
   __std_exception_data __data_;
@@ -62,7 +62,7 @@ private:
 
 class bad_exception : public exception {
 public:
-  bad_exception() _NOEXCEPT : exception("bad exception") {}
+  bad_exception() noexcept : exception("bad exception") {}
 };
 
 #else  // !defined(_LIBCPP_ABI_VCRUNTIME)
@@ -71,18 +71,18 @@ public:
 
 class _LIBCPP_EXPORTED_FROM_ABI exception {
 public:
-  _LIBCPP_HIDE_FROM_ABI exception() _NOEXCEPT {}
-  _LIBCPP_HIDE_FROM_ABI exception(const exception&) _NOEXCEPT = default;
+  _LIBCPP_HIDE_FROM_ABI exception() noexcept {}
+  _LIBCPP_HIDE_FROM_ABI exception(const exception&) noexcept = default;
 
-  virtual ~exception() _NOEXCEPT;
-  virtual const char* what() const _NOEXCEPT;
+  virtual ~exception() noexcept;
+  virtual const char* what() const noexcept;
 };
 
 class _LIBCPP_EXPORTED_FROM_ABI bad_exception : public exception {
 public:
-  _LIBCPP_HIDE_FROM_ABI bad_exception() _NOEXCEPT {}
-  ~bad_exception() _NOEXCEPT override;
-  const char* what() const _NOEXCEPT override;
+  _LIBCPP_HIDE_FROM_ABI bad_exception() noexcept {}
+  ~bad_exception() noexcept override;
+  const char* what() const noexcept override;
 };
 #endif // !_LIBCPP_ABI_VCRUNTIME
 

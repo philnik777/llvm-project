@@ -725,9 +725,9 @@ void __introsort(_RandomAccessIterator __first,
   typedef typename iterator_traits<_RandomAccessIterator>::difference_type difference_type;
   using _Comp_ref = __comp_ref_type<_Compare>;
   // Upper bound for using insertion sort for sorting.
-  _LIBCPP_CONSTEXPR difference_type __limit = 24;
+  constexpr difference_type __limit = 24;
   // Lower bound for using Tuckey's ninther technique for median computation.
-  _LIBCPP_CONSTEXPR difference_type __ninther_threshold = 128;
+  constexpr difference_type __ninther_threshold = 128;
   while (true) {
     difference_type __len = __last - __first;
     switch (__len) {

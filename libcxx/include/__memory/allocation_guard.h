@@ -54,21 +54,21 @@ struct __allocation_guard {
     { }
 
     _LIBCPP_HIDE_FROM_ABI
-    ~__allocation_guard() _NOEXCEPT {
+    ~__allocation_guard() noexcept {
         if (__ptr_ != nullptr) {
             allocator_traits<_Alloc>::deallocate(__alloc_, __ptr_, __n_);
         }
     }
 
     _LIBCPP_HIDE_FROM_ABI
-    _Pointer __release_ptr() _NOEXCEPT { // not called __release() because it's a keyword in objective-c++
+    _Pointer __release_ptr() noexcept { // not called __release() because it's a keyword in objective-c++
         _Pointer __tmp = __ptr_;
         __ptr_ = nullptr;
         return __tmp;
     }
 
     _LIBCPP_HIDE_FROM_ABI
-    _Pointer __get() const _NOEXCEPT {
+    _Pointer __get() const noexcept {
         return __ptr_;
     }
 

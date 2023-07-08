@@ -24,73 +24,65 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <size_t _Ip, class ..._Tp>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 typename tuple_element<_Ip, tuple<_Tp...> >::type&
-get(tuple<_Tp...>&) _NOEXCEPT;
+get(tuple<_Tp...>&) noexcept;
 
 template <size_t _Ip, class ..._Tp>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 const typename tuple_element<_Ip, tuple<_Tp...> >::type&
-get(const tuple<_Tp...>&) _NOEXCEPT;
+get(const tuple<_Tp...>&) noexcept;
 
 template <size_t _Ip, class ..._Tp>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 typename tuple_element<_Ip, tuple<_Tp...> >::type&&
-get(tuple<_Tp...>&&) _NOEXCEPT;
+get(tuple<_Tp...>&&) noexcept;
 
 template <size_t _Ip, class ..._Tp>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 const typename tuple_element<_Ip, tuple<_Tp...> >::type&&
-get(const tuple<_Tp...>&&) _NOEXCEPT;
-
-#endif //_LIBCPP_CXX03_LANG
+get(const tuple<_Tp...>&&) noexcept;
 
 template <size_t _Ip, class _T1, class _T2>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 typename tuple_element<_Ip, pair<_T1, _T2> >::type&
-get(pair<_T1, _T2>&) _NOEXCEPT;
+get(pair<_T1, _T2>&) noexcept;
 
 template <size_t _Ip, class _T1, class _T2>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 const typename tuple_element<_Ip, pair<_T1, _T2> >::type&
-get(const pair<_T1, _T2>&) _NOEXCEPT;
+get(const pair<_T1, _T2>&) noexcept;
 
-#ifndef _LIBCPP_CXX03_LANG
 template <size_t _Ip, class _T1, class _T2>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 typename tuple_element<_Ip, pair<_T1, _T2> >::type&&
-get(pair<_T1, _T2>&&) _NOEXCEPT;
+get(pair<_T1, _T2>&&) noexcept;
 
 template <size_t _Ip, class _T1, class _T2>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 const typename tuple_element<_Ip, pair<_T1, _T2> >::type&&
-get(const pair<_T1, _T2>&&) _NOEXCEPT;
-#endif
+get(const pair<_T1, _T2>&&) noexcept;
 
 template <size_t _Ip, class _Tp, size_t _Size>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 _Tp&
-get(array<_Tp, _Size>&) _NOEXCEPT;
+get(array<_Tp, _Size>&) noexcept;
 
 template <size_t _Ip, class _Tp, size_t _Size>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 const _Tp&
-get(const array<_Tp, _Size>&) _NOEXCEPT;
+get(const array<_Tp, _Size>&) noexcept;
 
-#ifndef _LIBCPP_CXX03_LANG
 template <size_t _Ip, class _Tp, size_t _Size>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 _Tp&&
-get(array<_Tp, _Size>&&) _NOEXCEPT;
+get(array<_Tp, _Size>&&) noexcept;
 
 template <size_t _Ip, class _Tp, size_t _Size>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
 const _Tp&&
-get(const array<_Tp, _Size>&&) _NOEXCEPT;
-#endif
+get(const array<_Tp, _Size>&&) noexcept;
 
 #if _LIBCPP_STD_VER >= 20
 

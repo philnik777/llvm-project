@@ -106,10 +106,10 @@ protected:
                  intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
     result do_unshift(state_type& __st,
                       extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-    int do_encoding() const _NOEXCEPT override;
-    bool do_always_noconv() const _NOEXCEPT override;
+    int do_encoding() const noexcept override;
+    bool do_always_noconv() const noexcept override;
     int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-    int do_max_length() const _NOEXCEPT override;
+    int do_max_length() const noexcept override;
 };
 #endif // _LIBCPP_HAS_NO_WIDE_CHARACTERS
 
@@ -141,10 +141,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
@@ -175,10 +175,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
@@ -231,11 +231,11 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end,
                           size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 template <>
@@ -267,10 +267,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 #endif // _LIBCPP_HAS_NO_WIDE_CHARACTERS
 
@@ -302,10 +302,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
@@ -336,10 +336,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
@@ -370,10 +370,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
@@ -404,10 +404,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
@@ -460,10 +460,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 #endif // _LIBCPP_HAS_NO_WIDE_CHARACTERS
 
@@ -495,10 +495,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
@@ -529,10 +529,10 @@ protected:
                   intern_type* __to, intern_type* __to_end, intern_type*& __to_nxt) const override;
      result do_unshift(state_type& __st,
                        extern_type* __to, extern_type* __to_end, extern_type*& __to_nxt) const override;
-     int do_encoding() const _NOEXCEPT override;
-     bool do_always_noconv() const _NOEXCEPT override;
+     int do_encoding() const noexcept override;
+     bool do_always_noconv() const noexcept override;
      int do_length(state_type&, const extern_type* __frm, const extern_type* __end, size_t __mx) const override;
-     int do_max_length() const _NOEXCEPT override;
+     int do_max_length() const noexcept override;
 };
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH

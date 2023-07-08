@@ -17,8 +17,6 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 // On Windows, the library never identifies files as block, character, fifo
@@ -37,7 +35,5 @@ enum class _LIBCPP_ENUM_VIS file_type : signed char {
 };
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___FILESYSTEM_FILE_TYPE_H
