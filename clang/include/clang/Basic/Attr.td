@@ -1794,6 +1794,14 @@ def NoUniqueAddress : InheritableAttr, TargetSpecificAttr<TargetItaniumCXXABI> {
   let SimpleHandler = 1;
 }
 
+def UseCompressionMangling : InheritableAttr, TargetSpecificAttr<TargetItaniumCXXABI> {
+  let Spellings = [CXX11<"itanium", "use_compression_mangling">];
+  let Args = [VariadicStringArgument<"Manglings">];
+  let Subjects = SubjectList<[CXXRecord], ErrorDiag>;
+  let Documentation = [UseCompressionManglingDocs];
+  let SimpleHandler = 1;
+}
+
 def ReturnsTwice : InheritableAttr {
   let Spellings = [GCC<"returns_twice">];
   let Subjects = SubjectList<[Function]>;
@@ -4198,4 +4206,3 @@ def AvailableOnlyInDefaultEvalMethod : InheritableAttr {
   let Subjects = SubjectList<[TypedefName], ErrorDiag>;
   let Documentation = [Undocumented];
 }
-

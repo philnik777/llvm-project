@@ -5223,6 +5223,33 @@ declarations with `preferred_name`. This is intended to be fixed in the future.
   }];
 }
 
+def UseCompressionManglingDocs : Documentation {
+  let Category = DocCatDecl;
+  let Content = [{
+The ``itanium::use_compression_mangling`` attribute is used to enable compression
+mangling for certain types. If the compression mangling is not known or does not
+belong to the type that is annotated and the annotation is inside a versioned
+``namespace std``, an error is produced. Otherwise a warning is produced. This
+is to avoid silently ignoring the attribute and causing an ABI break later. For
+example
+.. code-block:: c++
+namespace std::inline __2c {
+  template <class>
+  class [[itanium::use_compression_mangling("aA")]] allocator { /*...*/ };
+
+  template <class, size_t>
+  class array { /*...*/ };
+}
+
+// This function is mangled as _Z5func1NS2cT5arrayIiLm1EEE despite there being a
+// compressed mangling scheme present
+void func1(std::array<int, 1>) {}
+
+// This function is mangled as _Z5func2NS2caAIiEE
+void func2(std::allocator<int>) {}
+  }];
+}
+
 def PreserveMostDocs : Documentation {
   let Category = DocCatCallingConvs;
   let Content = [{

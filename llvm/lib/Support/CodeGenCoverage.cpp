@@ -20,7 +20,7 @@
 #include "llvm/Support/ToolOutputFile.h"
 
 using namespace llvm;
-
+#pragma clang diagnostic ignored "-Wglobal-constructors"
 static sys::SmartMutex<true> OutputMutex;
 
 CodeGenCoverage::CodeGenCoverage() = default;
