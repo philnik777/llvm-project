@@ -556,35 +556,6 @@
 #    define _LIBCPP_NO_CFI
 #  endif
 
-#  ifndef _LIBCPP_CXX03_LANG
-
-#    define _LIBCPP_ALIGNOF(_Tp) alignof(_Tp)
-#    define _ALIGNAS_TYPE(x) alignas(x)
-#    define _ALIGNAS(x) alignas(x)
-#    define _LIBCPP_NORETURN [[noreturn]]
-#    define _NOEXCEPT noexcept
-#    define _NOEXCEPT_(x) noexcept(x)
-#    define _LIBCPP_CONSTEXPR constexpr
-
-#  else
-
-#    define _LIBCPP_ALIGNOF(_Tp) _Alignof(_Tp)
-#    define _ALIGNAS_TYPE(x) __attribute__((__aligned__(_LIBCPP_ALIGNOF(x))))
-#    define _ALIGNAS(x) __attribute__((__aligned__(x)))
-#    define _LIBCPP_NORETURN __attribute__((__noreturn__))
-#    define _LIBCPP_HAS_NO_NOEXCEPT
-#    define nullptr __nullptr
-#    define _NOEXCEPT throw()
-#    define _NOEXCEPT_(x)
-#    define static_assert(...) _Static_assert(__VA_ARGS__)
-#    define decltype(...) __decltype(__VA_ARGS__)
-#    define _LIBCPP_CONSTEXPR
-
-typedef __char16_t char16_t;
-typedef __char32_t char32_t;
-
-#  endif
-
 #  if !defined(__cpp_exceptions) || __cpp_exceptions < 199711L
 #    define _LIBCPP_HAS_NO_EXCEPTIONS
 #  endif
@@ -838,24 +809,6 @@ _LIBCPP_BEGIN_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
 #  else
 #    define _LIBCPP_USING_IF_EXISTS
 #  endif
-
-#  ifdef _LIBCPP_CXX03_LANG
-#    define _LIBCPP_DECLARE_STRONG_ENUM(x)                                                                             \
-      struct _LIBCPP_EXPORTED_FROM_ABI x {                                                                             \
-        enum __lx
-// clang-format off
-#    define _LIBCPP_DECLARE_STRONG_ENUM_EPILOG(x)                                                                      \
-      __lx __v_;                                                                                                       \
-      _LIBCPP_INLINE_VISIBILITY x(__lx __v) : __v_(__v) {}                                                             \
-      _LIBCPP_INLINE_VISIBILITY explicit x(int __v) : __v_(static_cast<__lx>(__v)) {}                                  \
-      _LIBCPP_INLINE_VISIBILITY operator int() const { return __v_; }                                                  \
-      };
-// clang-format on
-
-#  else // _LIBCPP_CXX03_LANG
-#    define _LIBCPP_DECLARE_STRONG_ENUM(x) enum class _LIBCPP_ENUM_VIS x
-#    define _LIBCPP_DECLARE_STRONG_ENUM_EPILOG(x)
-#  endif // _LIBCPP_CXX03_LANG
 
 #  if defined(__APPLE__) || defined(__FreeBSD__) || defined(_LIBCPP_MSVCRT_LIKE) || defined(__NetBSD__)
 #    define _LIBCPP_LOCALE__L_EXTENSIONS 1

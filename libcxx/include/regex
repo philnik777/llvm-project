@@ -859,7 +859,7 @@ enum syntax_option_type
     multiline  = 1 << 10
 };
 
-_LIBCPP_HIDE_FROM_ABI inline _LIBCPP_CONSTEXPR
+_LIBCPP_HIDE_FROM_ABI inline constexpr
 syntax_option_type __get_grammar(syntax_option_type __g)
 {
 #ifdef _LIBCPP_ABI_REGEX_CONSTANTS_NONZERO
@@ -870,7 +870,7 @@ syntax_option_type __get_grammar(syntax_option_type __g)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator~(syntax_option_type __x)
 {
@@ -878,7 +878,7 @@ operator~(syntax_option_type __x)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator&(syntax_option_type __x, syntax_option_type __y)
 {
@@ -886,7 +886,7 @@ operator&(syntax_option_type __x, syntax_option_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator|(syntax_option_type __x, syntax_option_type __y)
 {
@@ -894,7 +894,7 @@ operator|(syntax_option_type __x, syntax_option_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator^(syntax_option_type __x, syntax_option_type __y)
 {
@@ -947,7 +947,7 @@ enum match_flag_type
 };
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator~(match_flag_type __x)
 {
@@ -955,7 +955,7 @@ operator~(match_flag_type __x)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator&(match_flag_type __x, match_flag_type __y)
 {
@@ -963,7 +963,7 @@ operator&(match_flag_type __x, match_flag_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator|(match_flag_type __x, match_flag_type __y)
 {
@@ -971,7 +971,7 @@ operator|(match_flag_type __x, match_flag_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator^(match_flag_type __x, match_flag_type __y)
 {
@@ -1031,14 +1031,14 @@ class _LIBCPP_EXPORTED_FROM_ABI regex_error
     regex_constants::error_type __code_;
 public:
     explicit regex_error(regex_constants::error_type __ecode);
-    _LIBCPP_HIDE_FROM_ABI regex_error(const regex_error&) _NOEXCEPT = default;
-    ~regex_error() _NOEXCEPT override;
+    _LIBCPP_HIDE_FROM_ABI regex_error(const regex_error&) noexcept = default;
+    ~regex_error() noexcept override;
     _LIBCPP_INLINE_VISIBILITY
     regex_constants::error_type code() const {return __code_;}
 };
 
 template <regex_constants::error_type _Ev>
-_LIBCPP_NORETURN inline _LIBCPP_INLINE_VISIBILITY
+[[noreturn]] inline _LIBCPP_INLINE_VISIBILITY
 void __throw_regex_error()
 {
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS
@@ -2086,7 +2086,7 @@ __word_boundary<_CharT, _Traits>::__exec(__state& __s) const
 // __l_anchor
 
 template <class _CharT>
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool __is_eol(_CharT __c)
 {
     return __c == '\r' || __c == '\n';
@@ -2761,7 +2761,7 @@ public:
         {return *this = __that;}
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
-    basic_regex& assign(basic_regex&& __that) _NOEXCEPT
+    basic_regex& assign(basic_regex&& __that) noexcept
         {return *this = _VSTD::move(__that);}
 #endif
     _LIBCPP_INLINE_VISIBILITY
@@ -5016,7 +5016,7 @@ public:
     bool matched;
 
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR sub_match() : matched() {}
+    constexpr sub_match() : matched() {}
 
     _LIBCPP_INLINE_VISIBILITY
     difference_type length() const
@@ -5041,7 +5041,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI
     void swap(sub_match& __s)
 #ifndef _LIBCPP_CXX03_LANG
-    _NOEXCEPT(__is_nothrow_swappable<_BidirectionalIterator>::value)
+    noexcept(__is_nothrow_swappable<_BidirectionalIterator>::value)
 #endif // _LIBCPP_CXX03_LANG
     {
         this->pair<_BidirectionalIterator, _BidirectionalIterator>::swap(__s);
@@ -5524,11 +5524,11 @@ public:
 
     // size:
     _LIBCPP_INLINE_VISIBILITY
-    size_type size() const _NOEXCEPT {return __matches_.size();}
+    size_type size() const noexcept {return __matches_.size();}
     _LIBCPP_INLINE_VISIBILITY
-    size_type max_size() const _NOEXCEPT {return __matches_.max_size();}
+    size_type max_size() const noexcept {return __matches_.max_size();}
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
-    bool empty() const _NOEXCEPT {return size() == 0;}
+    bool empty() const noexcept {return size() == 0;}
 
     // element access:
     _LIBCPP_INLINE_VISIBILITY

@@ -46,8 +46,8 @@ public:
     return __oldstate >> 32;
   }
 
-  static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR result_type min() { return _Min; }
-  static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR result_type max() { return _Max; }
+  static _LIBCPP_HIDE_FROM_ABI constexpr result_type min() { return _Min; }
+  static _LIBCPP_HIDE_FROM_ABI constexpr result_type max() { return _Max; }
 
 private:
   uint_fast64_t __state_;
@@ -84,8 +84,8 @@ public:
 
     result_type operator()();
 
-    static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR result_type min() {return _Min;}
-    static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR result_type max() {return _Max;}
+    static _LIBCPP_HIDE_FROM_ABI constexpr result_type min() {return _Min;}
+    static _LIBCPP_HIDE_FROM_ABI constexpr result_type max() {return _Max;}
 
     friend _LIBCPP_EXPORTED_FROM_ABI __rs_default __rs_get();
 };

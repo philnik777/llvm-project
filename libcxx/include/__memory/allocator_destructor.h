@@ -30,10 +30,10 @@ private:
     size_type __s_;
 public:
     _LIBCPP_INLINE_VISIBILITY __allocator_destructor(_Alloc& __a, size_type __s)
-             _NOEXCEPT
+             noexcept
         : __alloc_(__a), __s_(__s) {}
     _LIBCPP_INLINE_VISIBILITY
-    void operator()(pointer __p) _NOEXCEPT
+    void operator()(pointer __p) noexcept
         {__alloc_traits::deallocate(__alloc_, __p, __s_);}
 };
 

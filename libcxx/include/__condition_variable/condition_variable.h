@@ -35,14 +35,13 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 #ifndef _LIBCPP_HAS_NO_THREADS
 
 // enum class cv_status
-_LIBCPP_DECLARE_STRONG_ENUM(cv_status){no_timeout, timeout};
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(cv_status)
+enum class cv_status {no_timeout, timeout};
 
 class _LIBCPP_EXPORTED_FROM_ABI condition_variable {
   __libcpp_condvar_t __cv_ = _LIBCPP_CONDVAR_INITIALIZER;
 
 public:
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR condition_variable() _NOEXCEPT = default;
+  _LIBCPP_HIDE_FROM_ABI constexpr condition_variable() noexcept = default;
 
 #  ifdef _LIBCPP_HAS_TRIVIAL_CONDVAR_DESTRUCTION
   ~condition_variable() = default;
@@ -53,10 +52,10 @@ public:
   condition_variable(const condition_variable&)            = delete;
   condition_variable& operator=(const condition_variable&) = delete;
 
-  void notify_one() _NOEXCEPT;
-  void notify_all() _NOEXCEPT;
+  void notify_one() noexcept;
+  void notify_all() noexcept;
 
-  void wait(unique_lock<mutex>& __lk) _NOEXCEPT;
+  void wait(unique_lock<mutex>& __lk) noexcept;
   template <class _Predicate>
   _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS void wait(unique_lock<mutex>& __lk, _Predicate __pred);
 
@@ -81,14 +80,14 @@ public:
 
 private:
   void
-  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<chrono::system_clock, chrono::nanoseconds>) _NOEXCEPT;
+  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<chrono::system_clock, chrono::nanoseconds>) noexcept;
 #  if defined(_LIBCPP_HAS_COND_CLOCKWAIT)
   _LIBCPP_HIDE_FROM_ABI void
-  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<chrono::steady_clock, chrono::nanoseconds>) _NOEXCEPT;
+  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<chrono::steady_clock, chrono::nanoseconds>) noexcept;
 #  endif
   template <class _Clock>
   _LIBCPP_HIDE_FROM_ABI void
-  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<_Clock, chrono::nanoseconds>) _NOEXCEPT;
+  __do_timed_wait(unique_lock<mutex>& __lk, chrono::time_point<_Clock, chrono::nanoseconds>) noexcept;
 };
 #endif // !_LIBCPP_HAS_NO_THREADS
 
@@ -208,7 +207,7 @@ condition_variable::wait_for(unique_lock<mutex>& __lk, const chrono::duration<_R
 
 #  if defined(_LIBCPP_HAS_COND_CLOCKWAIT)
 inline void condition_variable::__do_timed_wait(
-    unique_lock<mutex>& __lk, chrono::time_point<chrono::steady_clock, chrono::nanoseconds> __tp) _NOEXCEPT {
+    unique_lock<mutex>& __lk, chrono::time_point<chrono::steady_clock, chrono::nanoseconds> __tp) noexcept {
   using namespace chrono;
   if (!__lk.owns_lock())
     __throw_system_error(EPERM, "condition_variable::timed wait: mutex not locked");
@@ -232,7 +231,7 @@ inline void condition_variable::__do_timed_wait(
 
 template <class _Clock>
 inline void condition_variable::__do_timed_wait(unique_lock<mutex>& __lk,
-                                                chrono::time_point<_Clock, chrono::nanoseconds> __tp) _NOEXCEPT {
+                                                chrono::time_point<_Clock, chrono::nanoseconds> __tp) noexcept {
   wait_for(__lk, __tp - _Clock::now());
 }
 

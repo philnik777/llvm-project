@@ -28,10 +28,10 @@ struct __builtin_new_allocator {
   struct __builtin_new_deleter {
     typedef void* pointer_type;
 
-    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR explicit __builtin_new_deleter(size_t __size, size_t __align)
+    _LIBCPP_HIDE_FROM_ABI constexpr explicit __builtin_new_deleter(size_t __size, size_t __align)
         : __size_(__size), __align_(__align) {}
 
-    _LIBCPP_HIDE_FROM_ABI void operator()(void* __p) const _NOEXCEPT {
+    _LIBCPP_HIDE_FROM_ABI void operator()(void* __p) const noexcept {
         _VSTD::__libcpp_deallocate(__p, __size_, __align_);
     }
 
@@ -48,20 +48,20 @@ struct __builtin_new_allocator {
   }
 
   _LIBCPP_HIDE_FROM_ABI static void __deallocate_bytes(void* __p, size_t __s,
-                                 size_t __align) _NOEXCEPT {
+                                 size_t __align) noexcept {
       _VSTD::__libcpp_deallocate(__p, __s, __align);
   }
 
   template <class _Tp>
   _LIBCPP_NODEBUG _LIBCPP_ALWAYS_INLINE
   _LIBCPP_HIDE_FROM_ABI static __holder_t __allocate_type(size_t __n) {
-      return __allocate_bytes(__n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp));
+      return __allocate_bytes(__n * sizeof(_Tp), alignof(_Tp));
   }
 
   template <class _Tp>
   _LIBCPP_NODEBUG _LIBCPP_ALWAYS_INLINE
-  _LIBCPP_HIDE_FROM_ABI static void __deallocate_type(void* __p, size_t __n) _NOEXCEPT {
-      __deallocate_bytes(__p, __n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp));
+  _LIBCPP_HIDE_FROM_ABI static void __deallocate_type(void* __p, size_t __n) noexcept {
+      __deallocate_bytes(__p, __n * sizeof(_Tp), alignof(_Tp));
   }
 };
 

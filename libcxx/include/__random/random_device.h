@@ -48,13 +48,13 @@ public:
     typedef unsigned result_type;
 
     // generator characteristics
-    static _LIBCPP_CONSTEXPR const result_type _Min = 0;
-    static _LIBCPP_CONSTEXPR const result_type _Max = 0xFFFFFFFFu;
+    static constexpr const result_type _Min = 0;
+    static constexpr const result_type _Max = 0xFFFFFFFFu;
 
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min;}
+    static constexpr result_type min() { return _Min;}
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max;}
+    static constexpr result_type max() { return _Max;}
 
     // constructors
 #ifndef _LIBCPP_CXX03_LANG
@@ -69,7 +69,7 @@ public:
     result_type operator()();
 
     // property functions
-    double entropy() const _NOEXCEPT;
+    double entropy() const noexcept;
 
     random_device(const random_device&) = delete;
     void operator=(const random_device&) = delete;

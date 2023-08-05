@@ -69,8 +69,8 @@ public:
 
     // special values
 
-    _LIBCPP_INLINE_VISIBILITY static _LIBCPP_CONSTEXPR time_point min() _NOEXCEPT {return time_point(duration::min());}
-    _LIBCPP_INLINE_VISIBILITY static _LIBCPP_CONSTEXPR time_point max() _NOEXCEPT {return time_point(duration::max());}
+    _LIBCPP_INLINE_VISIBILITY static constexpr time_point min() noexcept {return time_point(duration::min());}
+    _LIBCPP_INLINE_VISIBILITY static constexpr time_point max() noexcept {return time_point(duration::max());}
 };
 
 } // namespace chrono
@@ -94,7 +94,7 @@ time_point_cast(const time_point<_Clock, _Duration>& __t)
 
 #if _LIBCPP_STD_VER >= 17
 template <class _ToDuration, class _Clock, class _Duration>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     __is_duration<_ToDuration>::value,
@@ -106,7 +106,7 @@ floor(const time_point<_Clock, _Duration>& __t)
 }
 
 template <class _ToDuration, class _Clock, class _Duration>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     __is_duration<_ToDuration>::value,
@@ -118,7 +118,7 @@ ceil(const time_point<_Clock, _Duration>& __t)
 }
 
 template <class _ToDuration, class _Clock, class _Duration>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     __is_duration<_ToDuration>::value,
@@ -130,7 +130,7 @@ round(const time_point<_Clock, _Duration>& __t)
 }
 
 template <class _Rep, class _Period>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     numeric_limits<_Rep>::is_signed,

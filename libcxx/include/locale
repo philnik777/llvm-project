@@ -1484,7 +1484,7 @@ num_put<_CharT, _OutputIterator>::__do_put_integral(iter_type __s, ios_base& __i
     // Worst case is octal, with showbase enabled. Note that octal is always
     // printed as an unsigned value.
     using _Unsigned = typename make_unsigned<_Integral>::type;
-    _LIBCPP_CONSTEXPR const unsigned __nbuf
+    constexpr const unsigned __nbuf
         = (numeric_limits<_Unsigned>::digits / 3)        // 1 char per 3 bits
         + ((numeric_limits<_Unsigned>::digits % 3) != 0) // round up
         + 2; // base prefix + terminating null character
@@ -3657,7 +3657,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI byte_string to_bytes(const _Elem* __first, const _Elem* __last);
 
     _LIBCPP_INLINE_VISIBILITY
-    size_t converted() const _NOEXCEPT {return __cvtcount_;}
+    size_t converted() const noexcept {return __cvtcount_;}
     _LIBCPP_INLINE_VISIBILITY
     state_type state() const {return __cvtstate_;}
 };

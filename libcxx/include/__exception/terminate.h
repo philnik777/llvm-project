@@ -16,7 +16,7 @@
 #endif
 
 namespace std { // purposefully not using versioning namespace
-_LIBCPP_NORETURN _LIBCPP_EXPORTED_FROM_ABI void terminate() _NOEXCEPT;
+[[noreturn]] _LIBCPP_EXPORTED_FROM_ABI void terminate() noexcept;
 } // namespace std
 
 #endif // _LIBCPP___EXCEPTION_TERMINATE_H

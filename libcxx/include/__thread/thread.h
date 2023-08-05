@@ -125,7 +125,7 @@ struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>
     : public __unary_function<__thread_id, size_t>
 {
     _LIBCPP_INLINE_VISIBILITY
-    size_t operator()(__thread_id __v) const _NOEXCEPT
+    size_t operator()(__thread_id __v) const noexcept
     {
         return hash<__libcpp_thread_id>()(__v.__id_);
     }
@@ -169,7 +169,7 @@ public:
     typedef __libcpp_thread_t native_handle_type;
 
     _LIBCPP_INLINE_VISIBILITY
-    thread() _NOEXCEPT : __t_(_LIBCPP_NULL_THREAD) {}
+    thread() noexcept : __t_(_LIBCPP_NULL_THREAD) {}
 #ifndef _LIBCPP_CXX03_LANG
     template <class _Fp, class ..._Args,
               class = __enable_if_t<!is_same<__remove_cvref_t<_Fp>, thread>::value> >
@@ -183,12 +183,12 @@ public:
     ~thread();
 
     _LIBCPP_INLINE_VISIBILITY
-    thread(thread&& __t) _NOEXCEPT : __t_(__t.__t_) {
+    thread(thread&& __t) noexcept : __t_(__t.__t_) {
         __t.__t_ = _LIBCPP_NULL_THREAD;
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    thread& operator=(thread&& __t) _NOEXCEPT {
+    thread& operator=(thread&& __t) noexcept {
         if (!__libcpp_thread_isnull(&__t_))
             terminate();
         __t_ = __t.__t_;
@@ -197,18 +197,18 @@ public:
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    void swap(thread& __t) _NOEXCEPT {_VSTD::swap(__t_, __t.__t_);}
+    void swap(thread& __t) noexcept {_VSTD::swap(__t_, __t.__t_);}
 
     _LIBCPP_INLINE_VISIBILITY
-    bool joinable() const _NOEXCEPT {return !__libcpp_thread_isnull(&__t_);}
+    bool joinable() const noexcept {return !__libcpp_thread_isnull(&__t_);}
     void join();
     void detach();
     _LIBCPP_INLINE_VISIBILITY
-    id get_id() const _NOEXCEPT {return __libcpp_thread_get_id(&__t_);}
+    id get_id() const noexcept {return __libcpp_thread_get_id(&__t_);}
     _LIBCPP_INLINE_VISIBILITY
-    native_handle_type native_handle() _NOEXCEPT {return __t_;}
+    native_handle_type native_handle() noexcept {return __t_;}
 
-    static unsigned hardware_concurrency() _NOEXCEPT;
+    static unsigned hardware_concurrency() noexcept;
 };
 
 #ifndef _LIBCPP_CXX03_LANG
@@ -290,7 +290,7 @@ thread::thread(_Fp __f)
 #endif // _LIBCPP_CXX03_LANG
 
 inline _LIBCPP_INLINE_VISIBILITY
-void swap(thread& __x, thread& __y) _NOEXCEPT {__x.swap(__y);}
+void swap(thread& __x, thread& __y) noexcept {__x.swap(__y);}
 
 _LIBCPP_END_NAMESPACE_STD
 

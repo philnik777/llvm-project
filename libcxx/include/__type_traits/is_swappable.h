@@ -45,12 +45,12 @@ using __swap_result_t = void;
 
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20 __swap_result_t<_Tp> swap(_Tp& __x, _Tp& __y)
-    _NOEXCEPT_(is_nothrow_move_constructible<_Tp>::value&& is_nothrow_move_assignable<_Tp>::value);
+    noexcept(is_nothrow_move_constructible<_Tp>::value&& is_nothrow_move_assignable<_Tp>::value);
 
 template <class _Tp, size_t _Np>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
     typename enable_if<__is_swappable<_Tp>::value>::type swap(_Tp (&__a)[_Np], _Tp (&__b)[_Np])
-        _NOEXCEPT_(__is_nothrow_swappable<_Tp>::value);
+        noexcept(__is_nothrow_swappable<_Tp>::value);
 
 namespace __detail {
 // ALL generic swap overloads MUST already have a declaration available at this point.
@@ -75,12 +75,8 @@ struct __swappable_with<_Tp, _Up, false> : false_type {};
 template <class _Tp, class _Up = _Tp, bool _Swappable = __swappable_with<_Tp, _Up>::value>
 struct __nothrow_swappable_with {
   static const bool value =
-#ifndef _LIBCPP_HAS_NO_NOEXCEPT
       noexcept(swap(std::declval<_Tp>(), std::declval<_Up>()))&& noexcept(
           swap(std::declval<_Up>(), std::declval<_Tp>()));
-#else
-      false;
-#endif
 };
 
 template <class _Tp, class _Up>

@@ -55,12 +55,12 @@ private:
     static const _Working_result_type _Rp = _Engine::_Max - _Engine::_Min
                                           + _Working_result_type(1);
 #else
-    static _LIBCPP_CONSTEXPR const _Working_result_type _Rp = _Engine::max() - _Engine::min()
+    static constexpr const _Working_result_type _Rp = _Engine::max() - _Engine::min()
                                                       + _Working_result_type(1);
 #endif
-    static _LIBCPP_CONSTEXPR const size_t __m = __log2<_Working_result_type, _Rp>::value;
-    static _LIBCPP_CONSTEXPR const size_t _WDt = numeric_limits<_Working_result_type>::digits;
-    static _LIBCPP_CONSTEXPR const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
+    static constexpr const size_t __m = __log2<_Working_result_type, _Rp>::value;
+    static constexpr const size_t _WDt = numeric_limits<_Working_result_type>::digits;
+    static constexpr const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
 
 public:
     // constructors and seeding functions

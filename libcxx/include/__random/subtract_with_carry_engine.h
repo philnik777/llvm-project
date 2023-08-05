@@ -68,26 +68,26 @@ private:
     result_type  __c_;
     size_t      __i_;
 
-    static _LIBCPP_CONSTEXPR const result_type _Dt = numeric_limits<result_type>::digits;
+    static constexpr const result_type _Dt = numeric_limits<result_type>::digits;
     static_assert(  0 <  __w, "subtract_with_carry_engine invalid parameters");
     static_assert(__w <= _Dt, "subtract_with_carry_engine invalid parameters");
     static_assert(  0 <  __s, "subtract_with_carry_engine invalid parameters");
     static_assert(__s <  __r, "subtract_with_carry_engine invalid parameters");
 public:
-    static _LIBCPP_CONSTEXPR const result_type _Min = 0;
-    static _LIBCPP_CONSTEXPR const result_type _Max = __w == _Dt ? result_type(~0) :
+    static constexpr const result_type _Min = 0;
+    static constexpr const result_type _Max = __w == _Dt ? result_type(~0) :
                                                       (result_type(1) << __w) - result_type(1);
     static_assert(_Min < _Max, "subtract_with_carry_engine invalid parameters");
 
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const size_t word_size = __w;
-    static _LIBCPP_CONSTEXPR const size_t short_lag = __s;
-    static _LIBCPP_CONSTEXPR const size_t long_lag = __r;
+    static constexpr const size_t word_size = __w;
+    static constexpr const size_t short_lag = __s;
+    static constexpr const size_t long_lag = __r;
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min; }
+    static constexpr result_type min() { return _Min; }
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max; }
-    static _LIBCPP_CONSTEXPR const result_type default_seed = 19780503u;
+    static constexpr result_type max() { return _Max; }
+    static constexpr const result_type default_seed = 19780503u;
 
     // constructors and seeding functions
 #ifndef _LIBCPP_CXX03_LANG
@@ -163,16 +163,16 @@ private:
 };
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::word_size;
+    constexpr const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::word_size;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::short_lag;
+    constexpr const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::short_lag;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::long_lag;
+    constexpr const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::long_lag;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const typename subtract_with_carry_engine<_UIntType, __w, __s, __r>::result_type
+    constexpr const typename subtract_with_carry_engine<_UIntType, __w, __s, __r>::result_type
     subtract_with_carry_engine<_UIntType, __w, __s, __r>::default_seed;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>

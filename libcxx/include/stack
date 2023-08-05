@@ -169,7 +169,7 @@ protected:
 public:
     _LIBCPP_INLINE_VISIBILITY
     stack()
-        _NOEXCEPT_(is_nothrow_default_constructible<container_type>::value)
+        noexcept(is_nothrow_default_constructible<container_type>::value)
         : c() {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -182,12 +182,12 @@ public:
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     stack(stack&& __q)
-        _NOEXCEPT_(is_nothrow_move_constructible<container_type>::value)
+        noexcept(is_nothrow_move_constructible<container_type>::value)
         : c(_VSTD::move(__q.c)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     stack& operator=(stack&& __q)
-        _NOEXCEPT_(is_nothrow_move_assignable<container_type>::value)
+        noexcept(is_nothrow_move_assignable<container_type>::value)
         {c = _VSTD::move(__q.c); return *this;}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -296,7 +296,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(stack& __s)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value)
+        noexcept(__is_nothrow_swappable<container_type>::value)
     {
         using _VSTD::swap;
         swap(c, __s.c);
@@ -418,7 +418,7 @@ template <class _Tp, class _Container>
 inline _LIBCPP_INLINE_VISIBILITY
 __enable_if_t<__is_swappable<_Container>::value, void>
 swap(stack<_Tp, _Container>& __x, stack<_Tp, _Container>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }

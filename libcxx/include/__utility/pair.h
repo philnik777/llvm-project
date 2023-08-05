@@ -63,10 +63,10 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class, class>
 struct __non_trivially_copyable_base {
-  _LIBCPP_CONSTEXPR _LIBCPP_HIDE_FROM_ABI
-  __non_trivially_copyable_base() _NOEXCEPT {}
+  constexpr _LIBCPP_HIDE_FROM_ABI
+  __non_trivially_copyable_base() noexcept {}
   _LIBCPP_CONSTEXPR_SINCE_CXX14 _LIBCPP_HIDE_FROM_ABI
-  __non_trivially_copyable_base(__non_trivially_copyable_base const&) _NOEXCEPT {}
+  __non_trivially_copyable_base(__non_trivially_copyable_base const&) noexcept {}
 };
 
 #if _LIBCPP_STD_VER >= 23
@@ -168,16 +168,16 @@ struct _LIBCPP_TEMPLATE_VIS pair
     template<bool _Dummy = true, typename enable_if<
             _CheckArgsDep<_Dummy>::__enable_explicit_default()
     >::type* = nullptr>
-    explicit _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-    pair() _NOEXCEPT_(is_nothrow_default_constructible<first_type>::value &&
+    explicit _LIBCPP_HIDE_FROM_ABI constexpr
+    pair() noexcept(is_nothrow_default_constructible<first_type>::value &&
                       is_nothrow_default_constructible<second_type>::value)
         : first(), second() {}
 
     template<bool _Dummy = true, typename enable_if<
             _CheckArgsDep<_Dummy>::__enable_implicit_default()
     >::type* = nullptr>
-    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-    pair() _NOEXCEPT_(is_nothrow_default_constructible<first_type>::value &&
+    _LIBCPP_HIDE_FROM_ABI constexpr
+    pair() noexcept(is_nothrow_default_constructible<first_type>::value &&
                       is_nothrow_default_constructible<second_type>::value)
         : first(), second() {}
 
@@ -186,7 +186,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >::type* = nullptr>
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     explicit pair(_T1 const& __t1, _T2 const& __t2)
-        _NOEXCEPT_(is_nothrow_copy_constructible<first_type>::value &&
+        noexcept(is_nothrow_copy_constructible<first_type>::value &&
                    is_nothrow_copy_constructible<second_type>::value)
         : first(__t1), second(__t2) {}
 
@@ -195,7 +195,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >::type* = nullptr>
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     pair(_T1 const& __t1, _T2 const& __t2)
-        _NOEXCEPT_(is_nothrow_copy_constructible<first_type>::value &&
+        noexcept(is_nothrow_copy_constructible<first_type>::value &&
                    is_nothrow_copy_constructible<second_type>::value)
         : first(__t1), second(__t2) {}
 
@@ -209,7 +209,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     explicit pair(_U1&& __u1, _U2&& __u2)
-        _NOEXCEPT_((is_nothrow_constructible<first_type, _U1>::value &&
+        noexcept((is_nothrow_constructible<first_type, _U1>::value &&
                     is_nothrow_constructible<second_type, _U2>::value))
         : first(std::forward<_U1>(__u1)), second(std::forward<_U2>(__u2)) {}
 
@@ -223,7 +223,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     pair(_U1&& __u1, _U2&& __u2)
-        _NOEXCEPT_((is_nothrow_constructible<first_type, _U1>::value &&
+        noexcept((is_nothrow_constructible<first_type, _U1>::value &&
                     is_nothrow_constructible<second_type, _U2>::value))
         : first(std::forward<_U1>(__u1)), second(std::forward<_U2>(__u2)) {}
 
@@ -243,7 +243,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >::type* = nullptr>
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     explicit pair(pair<_U1, _U2> const& __p)
-        _NOEXCEPT_((is_nothrow_constructible<first_type, _U1 const&>::value &&
+        noexcept((is_nothrow_constructible<first_type, _U1 const&>::value &&
                     is_nothrow_constructible<second_type, _U2 const&>::value))
         : first(__p.first), second(__p.second) {}
 
@@ -252,7 +252,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >::type* = nullptr>
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     pair(pair<_U1, _U2> const& __p)
-        _NOEXCEPT_((is_nothrow_constructible<first_type, _U1 const&>::value &&
+        noexcept((is_nothrow_constructible<first_type, _U1 const&>::value &&
                     is_nothrow_constructible<second_type, _U2 const&>::value))
         : first(__p.first), second(__p.second) {}
 
@@ -261,7 +261,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >::type* = nullptr>
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     explicit pair(pair<_U1, _U2>&&__p)
-        _NOEXCEPT_((is_nothrow_constructible<first_type, _U1&&>::value &&
+        noexcept((is_nothrow_constructible<first_type, _U1&&>::value &&
                     is_nothrow_constructible<second_type, _U2&&>::value))
         : first(std::forward<_U1>(__p.first)), second(std::forward<_U2>(__p.second)) {}
 
@@ -270,7 +270,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >::type* = nullptr>
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     pair(pair<_U1, _U2>&& __p)
-        _NOEXCEPT_((is_nothrow_constructible<first_type, _U1&&>::value &&
+        noexcept((is_nothrow_constructible<first_type, _U1&&>::value &&
                     is_nothrow_constructible<second_type, _U2&&>::value))
         : first(std::forward<_U1>(__p.first)), second(std::forward<_U2>(__p.second)) {}
 
@@ -309,7 +309,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     pair(piecewise_construct_t __pc,
          tuple<_Args1...> __first_args, tuple<_Args2...> __second_args)
-        _NOEXCEPT_((is_nothrow_constructible<first_type, _Args1...>::value &&
+        noexcept((is_nothrow_constructible<first_type, _Args1...>::value &&
                     is_nothrow_constructible<second_type, _Args2...>::value))
         : pair(__pc, __first_args, __second_args,
                 typename __make_tuple_indices<sizeof...(_Args1)>::type(),
@@ -320,7 +320,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
                         is_copy_assignable<first_type>::value &&
                         is_copy_assignable<second_type>::value,
                     pair, __nat> const& __p)
-        _NOEXCEPT_(is_nothrow_copy_assignable<first_type>::value &&
+        noexcept(is_nothrow_copy_assignable<first_type>::value &&
                    is_nothrow_copy_assignable<second_type>::value)
     {
         first = __p.first;
@@ -333,7 +333,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
                         is_move_assignable<first_type>::value &&
                         is_move_assignable<second_type>::value,
                     pair, __nat>&& __p)
-        _NOEXCEPT_(is_nothrow_move_assignable<first_type>::value &&
+        noexcept(is_nothrow_move_assignable<first_type>::value &&
                    is_nothrow_move_assignable<second_type>::value)
     {
         first = std::forward<first_type>(__p.first);
@@ -568,7 +568,7 @@ struct _LIBCPP_TEMPLATE_VIS pair
 
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     void
-    swap(pair& __p) _NOEXCEPT_(__is_nothrow_swappable<first_type>::value &&
+    swap(pair& __p) noexcept(__is_nothrow_swappable<first_type>::value &&
                                __is_nothrow_swappable<second_type>::value)
     {
         using std::swap;
@@ -697,7 +697,7 @@ typename enable_if
     void
 >::type
 swap(pair<_T1, _T2>& __x, pair<_T1, _T2>& __y)
-                     _NOEXCEPT_((__is_nothrow_swappable<_T1>::value &&
+                     noexcept((__is_nothrow_swappable<_T1>::value &&
                                  __is_nothrow_swappable<_T2>::value))
 {
     __x.swap(__y);
@@ -755,25 +755,25 @@ struct __get_pair<0>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     _T1&
-    get(pair<_T1, _T2>& __p) _NOEXCEPT {return __p.first;}
+    get(pair<_T1, _T2>& __p) noexcept {return __p.first;}
 
     template <class _T1, class _T2>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     const _T1&
-    get(const pair<_T1, _T2>& __p) _NOEXCEPT {return __p.first;}
+    get(const pair<_T1, _T2>& __p) noexcept {return __p.first;}
 
     template <class _T1, class _T2>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     _T1&&
-    get(pair<_T1, _T2>&& __p) _NOEXCEPT {return std::forward<_T1>(__p.first);}
+    get(pair<_T1, _T2>&& __p) noexcept {return std::forward<_T1>(__p.first);}
 
     template <class _T1, class _T2>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     const _T1&&
-    get(const pair<_T1, _T2>&& __p) _NOEXCEPT {return std::forward<const _T1>(__p.first);}
+    get(const pair<_T1, _T2>&& __p) noexcept {return std::forward<const _T1>(__p.first);}
 };
 
 template <>
@@ -783,31 +783,31 @@ struct __get_pair<1>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     _T2&
-    get(pair<_T1, _T2>& __p) _NOEXCEPT {return __p.second;}
+    get(pair<_T1, _T2>& __p) noexcept {return __p.second;}
 
     template <class _T1, class _T2>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     const _T2&
-    get(const pair<_T1, _T2>& __p) _NOEXCEPT {return __p.second;}
+    get(const pair<_T1, _T2>& __p) noexcept {return __p.second;}
 
     template <class _T1, class _T2>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     _T2&&
-    get(pair<_T1, _T2>&& __p) _NOEXCEPT {return std::forward<_T2>(__p.second);}
+    get(pair<_T1, _T2>&& __p) noexcept {return std::forward<_T2>(__p.second);}
 
     template <class _T1, class _T2>
     static
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
     const _T2&&
-    get(const pair<_T1, _T2>&& __p) _NOEXCEPT {return std::forward<const _T2>(__p.second);}
+    get(const pair<_T1, _T2>&& __p) noexcept {return std::forward<const _T2>(__p.second);}
 };
 
 template <size_t _Ip, class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
 typename tuple_element<_Ip, pair<_T1, _T2> >::type&
-get(pair<_T1, _T2>& __p) _NOEXCEPT
+get(pair<_T1, _T2>& __p) noexcept
 {
     return __get_pair<_Ip>::get(__p);
 }
@@ -815,7 +815,7 @@ get(pair<_T1, _T2>& __p) _NOEXCEPT
 template <size_t _Ip, class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
 const typename tuple_element<_Ip, pair<_T1, _T2> >::type&
-get(const pair<_T1, _T2>& __p) _NOEXCEPT
+get(const pair<_T1, _T2>& __p) noexcept
 {
     return __get_pair<_Ip>::get(__p);
 }
@@ -823,7 +823,7 @@ get(const pair<_T1, _T2>& __p) _NOEXCEPT
 template <size_t _Ip, class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
 typename tuple_element<_Ip, pair<_T1, _T2> >::type&&
-get(pair<_T1, _T2>&& __p) _NOEXCEPT
+get(pair<_T1, _T2>&& __p) noexcept
 {
     return __get_pair<_Ip>::get(std::move(__p));
 }
@@ -831,7 +831,7 @@ get(pair<_T1, _T2>&& __p) _NOEXCEPT
 template <size_t _Ip, class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
 const typename tuple_element<_Ip, pair<_T1, _T2> >::type&&
-get(const pair<_T1, _T2>&& __p) _NOEXCEPT
+get(const pair<_T1, _T2>&& __p) noexcept
 {
     return __get_pair<_Ip>::get(std::move(__p));
 }
@@ -839,56 +839,56 @@ get(const pair<_T1, _T2>&& __p) _NOEXCEPT
 #if _LIBCPP_STD_VER >= 14
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 & get(pair<_T1, _T2>& __p) _NOEXCEPT
+constexpr _T1 & get(pair<_T1, _T2>& __p) noexcept
 {
     return __get_pair<0>::get(__p);
 }
 
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 const & get(pair<_T1, _T2> const& __p) _NOEXCEPT
+constexpr _T1 const & get(pair<_T1, _T2> const& __p) noexcept
 {
     return __get_pair<0>::get(__p);
 }
 
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 && get(pair<_T1, _T2>&& __p) _NOEXCEPT
+constexpr _T1 && get(pair<_T1, _T2>&& __p) noexcept
 {
     return __get_pair<0>::get(std::move(__p));
 }
 
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 const && get(pair<_T1, _T2> const&& __p) _NOEXCEPT
+constexpr _T1 const && get(pair<_T1, _T2> const&& __p) noexcept
 {
     return __get_pair<0>::get(std::move(__p));
 }
 
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 & get(pair<_T2, _T1>& __p) _NOEXCEPT
+constexpr _T1 & get(pair<_T2, _T1>& __p) noexcept
 {
     return __get_pair<1>::get(__p);
 }
 
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 const & get(pair<_T2, _T1> const& __p) _NOEXCEPT
+constexpr _T1 const & get(pair<_T2, _T1> const& __p) noexcept
 {
     return __get_pair<1>::get(__p);
 }
 
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 && get(pair<_T2, _T1>&& __p) _NOEXCEPT
+constexpr _T1 && get(pair<_T2, _T1>&& __p) noexcept
 {
     return __get_pair<1>::get(std::move(__p));
 }
 
 template <class _T1, class _T2>
 inline _LIBCPP_HIDE_FROM_ABI
-constexpr _T1 const && get(pair<_T2, _T1> const&& __p) _NOEXCEPT
+constexpr _T1 const && get(pair<_T2, _T1> const&& __p) noexcept
 {
     return __get_pair<1>::get(std::move(__p));
 }

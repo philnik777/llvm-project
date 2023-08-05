@@ -26,7 +26,7 @@ struct __temp_value {
     typedef allocator_traits<_Alloc> _Traits;
 
 #ifdef _LIBCPP_CXX03_LANG
-    typename aligned_storage<sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp)>::type __v;
+    typename aligned_storage<sizeof(_Tp), alignof(_Tp)>::type __v;
 #else
     union { _Tp __v; };
 #endif

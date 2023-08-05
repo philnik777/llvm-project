@@ -284,7 +284,7 @@ struct _LIBCPP_TEMPLATE_VIS allocator_traits
     }
 
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    static void deallocate(allocator_type& __a, pointer __p, size_type __n) _NOEXCEPT {
+    static void deallocate(allocator_type& __a, pointer __p, size_type __n) noexcept {
         __a.deallocate(__p, __n);
     }
 
@@ -329,7 +329,7 @@ struct _LIBCPP_TEMPLATE_VIS allocator_traits
     template <class _Ap = _Alloc, class =
         __enable_if_t<__has_max_size<const _Ap>::value> >
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    static size_type max_size(const allocator_type& __a) _NOEXCEPT {
+    static size_type max_size(const allocator_type& __a) noexcept {
         _LIBCPP_SUPPRESS_DEPRECATED_PUSH
         return __a.max_size();
         _LIBCPP_SUPPRESS_DEPRECATED_POP
@@ -337,7 +337,7 @@ struct _LIBCPP_TEMPLATE_VIS allocator_traits
     template <class _Ap = _Alloc, class = void, class =
         __enable_if_t<!__has_max_size<const _Ap>::value> >
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    static size_type max_size(const allocator_type&) _NOEXCEPT {
+    static size_type max_size(const allocator_type&) noexcept {
         return numeric_limits<size_type>::max() / sizeof(value_type);
     }
 

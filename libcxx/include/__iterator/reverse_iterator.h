@@ -487,13 +487,13 @@ struct __unwrap_reverse_iter_impl {
   using _UnwrappedIter = decltype(__unwrap_iter_impl<_Iter>::__unwrap(std::declval<_Iter>()));
   using _ReverseWrapper = _RevIter1<_RevIter2<_Iter> >;
 
-  static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _ReverseWrapper
+  static _LIBCPP_HIDE_FROM_ABI constexpr _ReverseWrapper
   __rewrap(_ReverseWrapper __orig_iter, _UnwrappedIter __unwrapped_iter) {
     return _ReverseWrapper(
         _RevIter2<_Iter>(__unwrap_iter_impl<_Iter>::__rewrap(__orig_iter.base().base(), __unwrapped_iter)));
   }
 
-  static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _UnwrappedIter __unwrap(_ReverseWrapper __i) _NOEXCEPT {
+  static _LIBCPP_HIDE_FROM_ABI constexpr _UnwrappedIter __unwrap(_ReverseWrapper __i) noexcept {
     return __unwrap_iter_impl<_Iter>::__unwrap(__i.base().base());
   }
 };

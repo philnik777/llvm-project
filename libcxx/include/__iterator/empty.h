@@ -25,7 +25,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 template <class _Cont>
 _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
 constexpr auto empty(const _Cont& __c)
-_NOEXCEPT_(noexcept(__c.empty()))
+noexcept(noexcept(__c.empty()))
 -> decltype        (__c.empty())
 { return            __c.empty(); }
 

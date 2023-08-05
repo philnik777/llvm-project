@@ -43,21 +43,21 @@ public:
     typedef typename _Engine::result_type result_type;
 
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const size_t block_size = __p;
-    static _LIBCPP_CONSTEXPR const size_t used_block = __r;
+    static constexpr const size_t block_size = __p;
+    static constexpr const size_t used_block = __r;
 
 #ifdef _LIBCPP_CXX03_LANG
     static const result_type _Min = _Engine::_Min;
     static const result_type _Max = _Engine::_Max;
 #else
-    static _LIBCPP_CONSTEXPR const result_type _Min = _Engine::min();
-    static _LIBCPP_CONSTEXPR const result_type _Max = _Engine::max();
+    static constexpr const result_type _Min = _Engine::min();
+    static constexpr const result_type _Max = _Engine::max();
 #endif
 
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Engine::min(); }
+    static constexpr result_type min() { return _Engine::min(); }
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Engine::max(); }
+    static constexpr result_type max() { return _Engine::max(); }
 
     // constructors and seeding functions
     _LIBCPP_INLINE_VISIBILITY
@@ -98,7 +98,7 @@ public:
 
     // property functions
     _LIBCPP_INLINE_VISIBILITY
-    const _Engine& base() const _NOEXCEPT {return __e_;}
+    const _Engine& base() const noexcept {return __e_;}
 
     template<class _Eng, size_t _Pp, size_t _Rp>
     friend
@@ -130,10 +130,10 @@ public:
 };
 
 template<class _Engine, size_t __p, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t discard_block_engine<_Engine, __p, __r>::block_size;
+    constexpr const size_t discard_block_engine<_Engine, __p, __r>::block_size;
 
 template<class _Engine, size_t __p, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t discard_block_engine<_Engine, __p, __r>::used_block;
+    constexpr const size_t discard_block_engine<_Engine, __p, __r>::used_block;
 
 template<class _Engine, size_t __p, size_t __r>
 typename discard_block_engine<_Engine, __p, __r>::result_type

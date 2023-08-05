@@ -230,8 +230,8 @@ public:
     recursive_mutex& operator=(const recursive_mutex&) = delete;
 
     void lock();
-    bool try_lock() _NOEXCEPT;
-    void unlock()  _NOEXCEPT;
+    bool try_lock() noexcept;
+    void unlock()  noexcept;
 
     typedef __libcpp_recursive_mutex_t* native_handle_type;
 
@@ -253,7 +253,7 @@ public:
 
 public:
     void lock();
-    bool try_lock() _NOEXCEPT;
+    bool try_lock() noexcept;
     template <class _Rep, class _Period>
         _LIBCPP_INLINE_VISIBILITY
         bool try_lock_for(const chrono::duration<_Rep, _Period>& __d)
@@ -261,7 +261,7 @@ public:
     template <class _Clock, class _Duration>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         bool try_lock_until(const chrono::time_point<_Clock, _Duration>& __t);
-    void unlock() _NOEXCEPT;
+    void unlock() noexcept;
 };
 
 template <class _Clock, class _Duration>
@@ -295,7 +295,7 @@ public:
     recursive_timed_mutex& operator=(const recursive_timed_mutex&) = delete;
 
     void lock();
-    bool try_lock() _NOEXCEPT;
+    bool try_lock() noexcept;
     template <class _Rep, class _Period>
         _LIBCPP_INLINE_VISIBILITY
         bool try_lock_for(const chrono::duration<_Rep, _Period>& __d)
@@ -303,7 +303,7 @@ public:
     template <class _Clock, class _Duration>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         bool try_lock_until(const chrono::time_point<_Clock, _Duration>& __t);
-    void unlock() _NOEXCEPT;
+    void unlock() noexcept;
 };
 
 template <class _Clock, class _Duration>
@@ -578,8 +578,8 @@ void call_once(once_flag&, const _Callable&);
 struct _LIBCPP_TEMPLATE_VIS once_flag
 {
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR
-        once_flag() _NOEXCEPT : __state_(0) {}
+    constexpr
+        once_flag() noexcept : __state_(0) {}
     once_flag(const once_flag&) = delete;
     once_flag& operator=(const once_flag&) = delete;
 

@@ -27,23 +27,23 @@ class _LIBCPP_HIDDEN __do_message;
 
 class _LIBCPP_EXPORTED_FROM_ABI error_category {
 public:
-  virtual ~error_category() _NOEXCEPT;
+  virtual ~error_category() noexcept;
 
 #if defined(_LIBCPP_ERROR_CATEGORY_DEFINE_LEGACY_INLINE_FUNCTIONS)
   error_category() noexcept;
 #else
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 error_category() _NOEXCEPT = default;
+  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 error_category() noexcept = default;
 #endif
   error_category(const error_category&)            = delete;
   error_category& operator=(const error_category&) = delete;
 
-  virtual const char* name() const _NOEXCEPT = 0;
-  virtual error_condition default_error_condition(int __ev) const _NOEXCEPT;
-  virtual bool equivalent(int __code, const error_condition& __condition) const _NOEXCEPT;
-  virtual bool equivalent(const error_code& __code, int __condition) const _NOEXCEPT;
+  virtual const char* name() const noexcept = 0;
+  virtual error_condition default_error_condition(int __ev) const noexcept;
+  virtual bool equivalent(int __code, const error_condition& __condition) const noexcept;
+  virtual bool equivalent(const error_code& __code, int __condition) const noexcept;
   virtual string message(int __ev) const = 0;
 
-  _LIBCPP_HIDE_FROM_ABI bool operator==(const error_category& __rhs) const _NOEXCEPT { return this == &__rhs; }
+  _LIBCPP_HIDE_FROM_ABI bool operator==(const error_category& __rhs) const noexcept { return this == &__rhs; }
 
 #if _LIBCPP_STD_VER >= 20
 
@@ -53,9 +53,9 @@ public:
 
 #else // _LIBCPP_STD_VER >= 20
 
-  _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_category& __rhs) const _NOEXCEPT { return !(*this == __rhs); }
+  _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_category& __rhs) const noexcept { return !(*this == __rhs); }
 
-  _LIBCPP_HIDE_FROM_ABI bool operator<(const error_category& __rhs) const _NOEXCEPT { return this < &__rhs; }
+  _LIBCPP_HIDE_FROM_ABI bool operator<(const error_category& __rhs) const noexcept { return this < &__rhs; }
 
 #endif // _LIBCPP_STD_VER >= 20
 
@@ -67,8 +67,8 @@ public:
   string message(int __ev) const override;
 };
 
-_LIBCPP_EXPORTED_FROM_ABI const error_category& generic_category() _NOEXCEPT;
-_LIBCPP_EXPORTED_FROM_ABI const error_category& system_category() _NOEXCEPT;
+_LIBCPP_EXPORTED_FROM_ABI const error_category& generic_category() noexcept;
+_LIBCPP_EXPORTED_FROM_ABI const error_category& system_category() noexcept;
 
 _LIBCPP_END_NAMESPACE_STD
 

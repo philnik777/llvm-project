@@ -21,14 +21,14 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 inline _LIBCPP_HIDE_FROM_ABI
 void
-atomic_thread_fence(memory_order __m) _NOEXCEPT
+atomic_thread_fence(memory_order __m) noexcept
 {
     __cxx_atomic_thread_fence(__m);
 }
 
 inline _LIBCPP_HIDE_FROM_ABI
 void
-atomic_signal_fence(memory_order __m) _NOEXCEPT
+atomic_signal_fence(memory_order __m) noexcept
 {
     __cxx_atomic_signal_fence(__m);
 }

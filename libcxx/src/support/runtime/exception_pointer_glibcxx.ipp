@@ -32,7 +32,7 @@ struct exception_ptr
 
 }
 
-_LIBCPP_NORETURN void rethrow_exception(__exception_ptr::exception_ptr);
+[[noreturn]] void rethrow_exception(__exception_ptr::exception_ptr);
 
 exception_ptr::~exception_ptr() noexcept
 {
@@ -59,7 +59,7 @@ nested_exception::nested_exception() noexcept
 }
 
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void
 nested_exception::rethrow_nested() const
 {
@@ -68,7 +68,7 @@ nested_exception::rethrow_nested() const
     rethrow_exception(__ptr_);
 }
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void rethrow_exception(exception_ptr p)
 {
     rethrow_exception(reinterpret_cast<__exception_ptr::exception_ptr&>(p));

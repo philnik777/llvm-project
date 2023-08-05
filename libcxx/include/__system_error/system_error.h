@@ -32,13 +32,13 @@ public:
   system_error(int __ev, const error_category& __ecat, const string& __what_arg);
   system_error(int __ev, const error_category& __ecat, const char* __what_arg);
   system_error(int __ev, const error_category& __ecat);
-  _LIBCPP_HIDE_FROM_ABI system_error(const system_error&) _NOEXCEPT = default;
-  ~system_error() _NOEXCEPT override;
+  _LIBCPP_HIDE_FROM_ABI system_error(const system_error&) noexcept = default;
+  ~system_error() noexcept override;
 
-  _LIBCPP_HIDE_FROM_ABI const error_code& code() const _NOEXCEPT { return __ec_; }
+  _LIBCPP_HIDE_FROM_ABI const error_code& code() const noexcept { return __ec_; }
 };
 
-_LIBCPP_NORETURN _LIBCPP_EXPORTED_FROM_ABI void __throw_system_error(int __ev, const char* __what_arg);
+[[noreturn]] _LIBCPP_EXPORTED_FROM_ABI void __throw_system_error(int __ev, const char* __what_arg);
 
 _LIBCPP_END_NAMESPACE_STD
 

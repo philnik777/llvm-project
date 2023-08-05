@@ -314,7 +314,7 @@ protected:
 public:
     _LIBCPP_INLINE_VISIBILITY
     queue()
-        _NOEXCEPT_(is_nothrow_default_constructible<container_type>::value)
+        noexcept(is_nothrow_default_constructible<container_type>::value)
         : c() {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -352,12 +352,12 @@ public:
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     queue(queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_constructible<container_type>::value)
+        noexcept(is_nothrow_move_constructible<container_type>::value)
         : c(_VSTD::move(__q.c)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     queue& operator=(queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_assignable<container_type>::value)
+        noexcept(is_nothrow_move_assignable<container_type>::value)
         {c = _VSTD::move(__q.c); return *this;}
 #endif // _LIBCPP_CXX03_LANG
 
@@ -445,7 +445,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(queue& __q)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value)
+        noexcept(__is_nothrow_swappable<container_type>::value)
     {
         using _VSTD::swap;
         swap(c, __q.c);
@@ -569,7 +569,7 @@ template <class _Tp, class _Container>
 inline _LIBCPP_INLINE_VISIBILITY
 __enable_if_t<__is_swappable<_Container>::value, void>
 swap(queue<_Tp, _Container>& __x, queue<_Tp, _Container>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }
@@ -600,7 +600,7 @@ protected:
 public:
     _LIBCPP_INLINE_VISIBILITY
     priority_queue()
-        _NOEXCEPT_(is_nothrow_default_constructible<container_type>::value &&
+        noexcept(is_nothrow_default_constructible<container_type>::value &&
                    is_nothrow_default_constructible<value_compare>::value)
         : c(), comp() {}
 
@@ -614,13 +614,13 @@ public:
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     priority_queue(priority_queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_constructible<container_type>::value &&
+        noexcept(is_nothrow_move_constructible<container_type>::value &&
                    is_nothrow_move_constructible<value_compare>::value)
         : c(_VSTD::move(__q.c)), comp(_VSTD::move(__q.comp)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     priority_queue& operator=(priority_queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_assignable<container_type>::value &&
+        noexcept(is_nothrow_move_assignable<container_type>::value &&
                    is_nothrow_move_assignable<value_compare>::value)
         {c = _VSTD::move(__q.c); comp = _VSTD::move(__q.comp); return *this;}
 #endif // _LIBCPP_CXX03_LANG
@@ -775,7 +775,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(priority_queue& __q)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value &&
+        noexcept(__is_nothrow_swappable<container_type>::value &&
                    __is_nothrow_swappable<value_compare>::value);
 
     _LIBCPP_NODISCARD _LIBCPP_HIDE_FROM_ABI const _Container& __get_container() const { return c; }
@@ -1100,7 +1100,7 @@ template <class _Tp, class _Container, class _Compare>
 inline
 void
 priority_queue<_Tp, _Container, _Compare>::swap(priority_queue& __q)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value &&
+        noexcept(__is_nothrow_swappable<container_type>::value &&
                    __is_nothrow_swappable<value_compare>::value)
 {
     using _VSTD::swap;
@@ -1116,7 +1116,7 @@ __enable_if_t<
 >
 swap(priority_queue<_Tp, _Container, _Compare>& __x,
      priority_queue<_Tp, _Container, _Compare>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }

@@ -626,14 +626,14 @@ class __map_value_compare
 public:
     _LIBCPP_INLINE_VISIBILITY
     __map_value_compare()
-        _NOEXCEPT_(is_nothrow_default_constructible<_Compare>::value)
+        noexcept(is_nothrow_default_constructible<_Compare>::value)
         : _Compare() {}
     _LIBCPP_INLINE_VISIBILITY
     __map_value_compare(_Compare __c)
-        _NOEXCEPT_(is_nothrow_copy_constructible<_Compare>::value)
+        noexcept(is_nothrow_copy_constructible<_Compare>::value)
         : _Compare(__c) {}
     _LIBCPP_INLINE_VISIBILITY
-    const _Compare& key_comp() const _NOEXCEPT {return *this;}
+    const _Compare& key_comp() const noexcept {return *this;}
     _LIBCPP_INLINE_VISIBILITY
     bool operator()(const _CP& __x, const _CP& __y) const
         {return static_cast<const _Compare&>(*this)(__x.__get_value().first, __y.__get_value().first);}
@@ -644,7 +644,7 @@ public:
     bool operator()(const _Key& __x, const _CP& __y) const
         {return static_cast<const _Compare&>(*this)(__x, __y.__get_value().first);}
     _LIBCPP_HIDE_FROM_ABI void swap(__map_value_compare& __y)
-        _NOEXCEPT_(__is_nothrow_swappable<_Compare>::value)
+        noexcept(__is_nothrow_swappable<_Compare>::value)
     {
       using _VSTD::swap;
       swap(static_cast<_Compare&>(*this), static_cast<_Compare&>(__y));
@@ -671,14 +671,14 @@ class __map_value_compare<_Key, _CP, _Compare, false>
 public:
     _LIBCPP_INLINE_VISIBILITY
     __map_value_compare()
-        _NOEXCEPT_(is_nothrow_default_constructible<_Compare>::value)
+        noexcept(is_nothrow_default_constructible<_Compare>::value)
         : __comp_() {}
     _LIBCPP_INLINE_VISIBILITY
     __map_value_compare(_Compare __c)
-        _NOEXCEPT_(is_nothrow_copy_constructible<_Compare>::value)
+        noexcept(is_nothrow_copy_constructible<_Compare>::value)
         : __comp_(__c) {}
     _LIBCPP_INLINE_VISIBILITY
-    const _Compare& key_comp() const _NOEXCEPT {return __comp_;}
+    const _Compare& key_comp() const noexcept {return __comp_;}
 
     _LIBCPP_INLINE_VISIBILITY
     bool operator()(const _CP& __x, const _CP& __y) const
@@ -690,7 +690,7 @@ public:
     bool operator()(const _Key& __x, const _CP& __y) const
         {return __comp_(__x, __y.__get_value().first);}
     void swap(__map_value_compare& __y)
-        _NOEXCEPT_(__is_nothrow_swappable<_Compare>::value)
+        noexcept(__is_nothrow_swappable<_Compare>::value)
     {
         using _VSTD::swap;
         swap(__comp_, __y.__comp_);
@@ -714,7 +714,7 @@ inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(__map_value_compare<_Key, _CP, _Compare, __b>& __x,
      __map_value_compare<_Key, _CP, _Compare, __b>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }
@@ -738,7 +738,7 @@ public:
     bool __second_constructed;
 
     _LIBCPP_INLINE_VISIBILITY
-    explicit __map_node_destructor(allocator_type& __na) _NOEXCEPT
+    explicit __map_node_destructor(allocator_type& __na) noexcept
         : __na_(__na),
           __first_constructed(false),
           __second_constructed(false)
@@ -746,7 +746,7 @@ public:
 
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
-    __map_node_destructor(__tree_node_destructor<allocator_type>&& __x) _NOEXCEPT
+    __map_node_destructor(__tree_node_destructor<allocator_type>&& __x) noexcept
         : __na_(__x.__na_),
           __first_constructed(__x.__value_constructed),
           __second_constructed(__x.__value_constructed)
@@ -756,7 +756,7 @@ public:
 #endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
-    void operator()(pointer __p) _NOEXCEPT
+    void operator()(pointer __p) noexcept
     {
         if (__second_constructed)
             __alloc_traits::destroy(__na_, _VSTD::addressof(__p->__value_.__get_value().second));
@@ -908,10 +908,10 @@ public:
     typedef typename _NodeTypes::__map_value_type_pointer        pointer;
 
     _LIBCPP_INLINE_VISIBILITY
-    __map_iterator() _NOEXCEPT {}
+    __map_iterator() noexcept {}
 
     _LIBCPP_INLINE_VISIBILITY
-    __map_iterator(_TreeIterator __i) _NOEXCEPT : __i_(__i) {}
+    __map_iterator(_TreeIterator __i) noexcept : __i_(__i) {}
 
     _LIBCPP_INLINE_VISIBILITY
     reference operator*() const {return __i_->__get_value();}
@@ -967,13 +967,13 @@ public:
     typedef typename _NodeTypes::__const_map_value_type_pointer  pointer;
 
     _LIBCPP_INLINE_VISIBILITY
-    __map_const_iterator() _NOEXCEPT {}
+    __map_const_iterator() noexcept {}
 
     _LIBCPP_INLINE_VISIBILITY
-    __map_const_iterator(_TreeIterator __i) _NOEXCEPT : __i_(__i) {}
+    __map_const_iterator(_TreeIterator __i) noexcept : __i_(__i) {}
     _LIBCPP_INLINE_VISIBILITY
     __map_const_iterator(__map_iterator<
-        typename _TreeIterator::__non_const_iterator> __i) _NOEXCEPT
+        typename _TreeIterator::__non_const_iterator> __i) noexcept
         : __i_(__i.__i_) {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -1081,7 +1081,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     map()
-        _NOEXCEPT_(
+        noexcept(
             is_nothrow_default_constructible<allocator_type>::value &&
             is_nothrow_default_constructible<key_compare>::value &&
             is_nothrow_copy_constructible<key_compare>::value)
@@ -1089,7 +1089,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     explicit map(const key_compare& __comp)
-        _NOEXCEPT_(
+        noexcept(
             is_nothrow_default_constructible<allocator_type>::value &&
             is_nothrow_copy_constructible<key_compare>::value)
         : __tree_(__vc(__comp)) {}
@@ -1167,7 +1167,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     map(map&& __m)
-        _NOEXCEPT_(is_nothrow_move_constructible<__base>::value)
+        noexcept(is_nothrow_move_constructible<__base>::value)
         : __tree_(_VSTD::move(__m.__tree_))
         {
         }
@@ -1176,7 +1176,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     map& operator=(map&& __m)
-        _NOEXCEPT_(is_nothrow_move_assignable<__base>::value)
+        noexcept(is_nothrow_move_assignable<__base>::value)
         {
             __tree_ = _VSTD::move(__m.__tree_);
             return *this;
@@ -1230,41 +1230,41 @@ public:
     }
 
     _LIBCPP_INLINE_VISIBILITY
-          iterator begin() _NOEXCEPT {return __tree_.begin();}
+          iterator begin() noexcept {return __tree_.begin();}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator begin() const _NOEXCEPT {return __tree_.begin();}
+    const_iterator begin() const noexcept {return __tree_.begin();}
     _LIBCPP_INLINE_VISIBILITY
-          iterator end() _NOEXCEPT {return __tree_.end();}
+          iterator end() noexcept {return __tree_.end();}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator end() const _NOEXCEPT {return __tree_.end();}
+    const_iterator end() const noexcept {return __tree_.end();}
 
     _LIBCPP_INLINE_VISIBILITY
-          reverse_iterator rbegin() _NOEXCEPT {return reverse_iterator(end());}
+          reverse_iterator rbegin() noexcept {return reverse_iterator(end());}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator rbegin() const _NOEXCEPT
+    const_reverse_iterator rbegin() const noexcept
         {return const_reverse_iterator(end());}
     _LIBCPP_INLINE_VISIBILITY
-          reverse_iterator rend() _NOEXCEPT
+          reverse_iterator rend() noexcept
             {return       reverse_iterator(begin());}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator rend() const _NOEXCEPT
+    const_reverse_iterator rend() const noexcept
         {return const_reverse_iterator(begin());}
 
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator cbegin() const _NOEXCEPT {return begin();}
+    const_iterator cbegin() const noexcept {return begin();}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator cend() const _NOEXCEPT {return end();}
+    const_iterator cend() const noexcept {return end();}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator crbegin() const _NOEXCEPT {return rbegin();}
+    const_reverse_iterator crbegin() const noexcept {return rbegin();}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator crend() const _NOEXCEPT {return rend();}
+    const_reverse_iterator crend() const noexcept {return rend();}
 
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
-    bool      empty() const _NOEXCEPT {return __tree_.size() == 0;}
+    bool      empty() const noexcept {return __tree_.size() == 0;}
     _LIBCPP_INLINE_VISIBILITY
-    size_type size() const _NOEXCEPT {return __tree_.size();}
+    size_type size() const noexcept {return __tree_.size();}
     _LIBCPP_INLINE_VISIBILITY
-    size_type max_size() const _NOEXCEPT {return __tree_.max_size();}
+    size_type max_size() const noexcept {return __tree_.max_size();}
 
     _LIBCPP_HIDE_FROM_ABI mapped_type& operator[](const key_type& __k);
 #ifndef _LIBCPP_CXX03_LANG
@@ -1275,7 +1275,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI const mapped_type& at(const key_type& __k) const;
 
     _LIBCPP_INLINE_VISIBILITY
-    allocator_type get_allocator() const _NOEXCEPT {return allocator_type(__tree_.__alloc());}
+    allocator_type get_allocator() const noexcept {return allocator_type(__tree_.__alloc());}
     _LIBCPP_INLINE_VISIBILITY
     key_compare    key_comp()      const {return __tree_.value_comp().key_comp();}
     _LIBCPP_INLINE_VISIBILITY
@@ -1457,7 +1457,7 @@ public:
     iterator  erase(const_iterator __f, const_iterator __l)
         {return __tree_.erase(__f.__i_, __l.__i_);}
     _LIBCPP_INLINE_VISIBILITY
-    void clear() _NOEXCEPT {__tree_.clear();}
+    void clear() noexcept {__tree_.clear();}
 
 #if _LIBCPP_STD_VER >= 17
     _LIBCPP_INLINE_VISIBILITY
@@ -1522,7 +1522,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(map& __m)
-        _NOEXCEPT_(__is_nothrow_swappable<__base>::value)
+        noexcept(__is_nothrow_swappable<__base>::value)
         {__tree_.swap(__m.__tree_);}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -1837,7 +1837,7 @@ inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(map<_Key, _Tp, _Compare, _Allocator>& __x,
      map<_Key, _Tp, _Compare, _Allocator>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }
@@ -1921,7 +1921,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     multimap()
-        _NOEXCEPT_(
+        noexcept(
             is_nothrow_default_constructible<allocator_type>::value &&
             is_nothrow_default_constructible<key_compare>::value &&
             is_nothrow_copy_constructible<key_compare>::value)
@@ -1929,7 +1929,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     explicit multimap(const key_compare& __comp)
-        _NOEXCEPT_(
+        noexcept(
             is_nothrow_default_constructible<allocator_type>::value &&
             is_nothrow_copy_constructible<key_compare>::value)
         : __tree_(__vc(__comp)) {}
@@ -2008,7 +2008,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     multimap(multimap&& __m)
-        _NOEXCEPT_(is_nothrow_move_constructible<__base>::value)
+        noexcept(is_nothrow_move_constructible<__base>::value)
         : __tree_(_VSTD::move(__m.__tree_))
         {
         }
@@ -2017,7 +2017,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     multimap& operator=(multimap&& __m)
-        _NOEXCEPT_(is_nothrow_move_assignable<__base>::value)
+        noexcept(is_nothrow_move_assignable<__base>::value)
         {
             __tree_ = _VSTD::move(__m.__tree_);
             return *this;
@@ -2071,43 +2071,43 @@ public:
     }
 
     _LIBCPP_INLINE_VISIBILITY
-          iterator begin() _NOEXCEPT {return __tree_.begin();}
+          iterator begin() noexcept {return __tree_.begin();}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator begin() const _NOEXCEPT {return __tree_.begin();}
+    const_iterator begin() const noexcept {return __tree_.begin();}
     _LIBCPP_INLINE_VISIBILITY
-          iterator end() _NOEXCEPT {return __tree_.end();}
+          iterator end() noexcept {return __tree_.end();}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator end() const _NOEXCEPT {return __tree_.end();}
+    const_iterator end() const noexcept {return __tree_.end();}
 
     _LIBCPP_INLINE_VISIBILITY
-          reverse_iterator rbegin() _NOEXCEPT {return reverse_iterator(end());}
+          reverse_iterator rbegin() noexcept {return reverse_iterator(end());}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator rbegin() const _NOEXCEPT
+    const_reverse_iterator rbegin() const noexcept
         {return const_reverse_iterator(end());}
     _LIBCPP_INLINE_VISIBILITY
-          reverse_iterator rend() _NOEXCEPT {return reverse_iterator(begin());}
+          reverse_iterator rend() noexcept {return reverse_iterator(begin());}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator rend() const _NOEXCEPT
+    const_reverse_iterator rend() const noexcept
         {return const_reverse_iterator(begin());}
 
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator cbegin()  const _NOEXCEPT {return begin();}
+    const_iterator cbegin()  const noexcept {return begin();}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator cend() const _NOEXCEPT {return end();}
+    const_iterator cend() const noexcept {return end();}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator crbegin() const _NOEXCEPT {return rbegin();}
+    const_reverse_iterator crbegin() const noexcept {return rbegin();}
     _LIBCPP_INLINE_VISIBILITY
-    const_reverse_iterator crend() const _NOEXCEPT {return rend();}
+    const_reverse_iterator crend() const noexcept {return rend();}
 
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
-    bool empty() const _NOEXCEPT {return __tree_.size() == 0;}
+    bool empty() const noexcept {return __tree_.size() == 0;}
     _LIBCPP_INLINE_VISIBILITY
-    size_type size() const _NOEXCEPT {return __tree_.size();}
+    size_type size() const noexcept {return __tree_.size();}
     _LIBCPP_INLINE_VISIBILITY
-    size_type max_size() const _NOEXCEPT {return __tree_.max_size();}
+    size_type max_size() const noexcept {return __tree_.max_size();}
 
     _LIBCPP_INLINE_VISIBILITY
-    allocator_type get_allocator() const _NOEXCEPT {return allocator_type(__tree_.__alloc());}
+    allocator_type get_allocator() const noexcept {return allocator_type(__tree_.__alloc());}
     _LIBCPP_INLINE_VISIBILITY
     key_compare    key_comp() const {return __tree_.value_comp().key_comp();}
     _LIBCPP_INLINE_VISIBILITY
@@ -2254,11 +2254,11 @@ public:
 #endif
 
     _LIBCPP_INLINE_VISIBILITY
-    void clear() _NOEXCEPT {__tree_.clear();}
+    void clear() noexcept {__tree_.clear();}
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(multimap& __m)
-        _NOEXCEPT_(__is_nothrow_swappable<__base>::value)
+        noexcept(__is_nothrow_swappable<__base>::value)
         {__tree_.swap(__m.__tree_);}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -2493,7 +2493,7 @@ inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(multimap<_Key, _Tp, _Compare, _Allocator>& __x,
      multimap<_Key, _Tp, _Compare, _Allocator>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }

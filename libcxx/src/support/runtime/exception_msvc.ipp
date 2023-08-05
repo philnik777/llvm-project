@@ -39,7 +39,7 @@ unexpected_handler get_unexpected() noexcept {
   return ::_get_unexpected();
 }
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void unexpected() {
     (*get_unexpected())();
     // unexpected handler should not return
@@ -54,7 +54,7 @@ terminate_handler get_terminate() noexcept {
   return ::_get_terminate();
 }
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void terminate() noexcept
 {
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS

@@ -37,7 +37,7 @@ struct __lce_alg_picker
                   "The current values of a, c, and m cannot generate a number "
                   "within bounds of linear_congruential_engine.");
 
-    static _LIBCPP_CONSTEXPR const bool __use_schrage = _MightOverflow &&
+    static constexpr const bool __use_schrage = _MightOverflow &&
                                                         !_OverflowOK &&
                                                         _SchrageOK;
 };
@@ -214,25 +214,25 @@ public:
 private:
     result_type __x_;
 
-    static _LIBCPP_CONSTEXPR const result_type _Mp = result_type(~0);
+    static constexpr const result_type _Mp = result_type(~0);
 
     static_assert(__m == 0 || __a < __m, "linear_congruential_engine invalid parameters");
     static_assert(__m == 0 || __c < __m, "linear_congruential_engine invalid parameters");
     static_assert(is_unsigned<_UIntType>::value, "_UIntType must be unsigned type");
 public:
-    static _LIBCPP_CONSTEXPR const result_type _Min = __c == 0u ? 1u : 0u;
-    static _LIBCPP_CONSTEXPR const result_type _Max = __m - _UIntType(1u);
+    static constexpr const result_type _Min = __c == 0u ? 1u : 0u;
+    static constexpr const result_type _Max = __m - _UIntType(1u);
     static_assert(_Min < _Max,           "linear_congruential_engine invalid parameters");
 
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const result_type multiplier = __a;
-    static _LIBCPP_CONSTEXPR const result_type increment = __c;
-    static _LIBCPP_CONSTEXPR const result_type modulus = __m;
+    static constexpr const result_type multiplier = __a;
+    static constexpr const result_type increment = __c;
+    static constexpr const result_type modulus = __m;
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() {return _Min;}
+    static constexpr result_type min() {return _Min;}
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() {return _Max;}
-    static _LIBCPP_CONSTEXPR const result_type default_seed = 1u;
+    static constexpr result_type max() {return _Max;}
+    static constexpr const result_type default_seed = 1u;
 
     // constructors and seeding functions
 #ifndef _LIBCPP_CXX03_LANG
@@ -316,19 +316,19 @@ private:
 };
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    constexpr const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::multiplier;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    constexpr const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::increment;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    constexpr const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::modulus;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    constexpr const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::default_seed;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>

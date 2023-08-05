@@ -52,7 +52,7 @@ struct _LIBCPP_TEMPLATE_VIS hash<monostate> {
   using argument_type = monostate;
   using result_type = size_t;
 
-  inline _LIBCPP_HIDE_FROM_ABI result_type operator()(const argument_type&) const _NOEXCEPT {
+  inline _LIBCPP_HIDE_FROM_ABI result_type operator()(const argument_type&) const noexcept {
     return 66740831; // return a fundamentally attractive random value.
   }
 };

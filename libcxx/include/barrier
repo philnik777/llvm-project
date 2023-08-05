@@ -245,7 +245,7 @@ class __barrier_base<__empty_completion> {
     __atomic_base<uint64_t>   __phase_arrived_expected;
 
     static _LIBCPP_INLINE_VISIBILITY
-    constexpr uint64_t __init(ptrdiff_t __count) _NOEXCEPT
+    constexpr uint64_t __init(ptrdiff_t __count) noexcept
     {
         return ((uint64_t(1u << 31) - __count) << 32)
               | (uint64_t(1u << 31) - __count);

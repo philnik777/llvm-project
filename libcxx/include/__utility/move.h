@@ -26,8 +26,8 @@ _LIBCPP_PUSH_MACROS
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _Tp>
-_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR __libcpp_remove_reference_t<_Tp>&&
-move(_LIBCPP_LIFETIMEBOUND _Tp&& __t) _NOEXCEPT {
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI constexpr __libcpp_remove_reference_t<_Tp>&&
+move(_LIBCPP_LIFETIMEBOUND _Tp&& __t) noexcept {
   typedef _LIBCPP_NODEBUG __libcpp_remove_reference_t<_Tp> _Up;
   return static_cast<_Up&&>(__t);
 }
@@ -38,7 +38,7 @@ using __move_if_noexcept_result_t =
 
 template <class _Tp>
 _LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 __move_if_noexcept_result_t<_Tp>
-move_if_noexcept(_LIBCPP_LIFETIMEBOUND _Tp& __x) _NOEXCEPT {
+move_if_noexcept(_LIBCPP_LIFETIMEBOUND _Tp& __x) noexcept {
   return std::move(__x);
 }
 

@@ -63,7 +63,7 @@ template <class _Tp,
           class _Up,
           class _Proj,
           __enable_if_t<__is_identity<_Proj>::value && __libcpp_is_trivially_equality_comparable<_Tp, _Up>::value &&
-                            sizeof(_Tp) == sizeof(wchar_t) && _LIBCPP_ALIGNOF(_Tp) >= _LIBCPP_ALIGNOF(wchar_t),
+                            sizeof(_Tp) == sizeof(wchar_t) && alignof(_Tp) >= alignof(wchar_t),
                         int> = 0>
 _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 _Tp*
 __find_impl(_Tp* __first, _Tp* __last, const _Up& __value, _Proj&) {
