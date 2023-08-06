@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // Make sure we can use `std::unreachable()`. We can't actually execute it cause that would be
 // UB, but we can make sure that it doesn't cause a linker error or something like that.

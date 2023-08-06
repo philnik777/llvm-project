@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: !stdlib=libc++ && (c++03 || c++11 || c++14)
+// UNSUPPORTED: !stdlib=libc++ && (c++11 || c++14)
 
 // During the review D130295 it was noticed libc++'s implementation uses
 // std::common_type. When users specialize this template for their own types the

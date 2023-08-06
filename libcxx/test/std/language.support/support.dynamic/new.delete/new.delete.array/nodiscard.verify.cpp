@@ -11,9 +11,6 @@
 // [[nodiscard]] void* operator new[](std::size_t, std::align_val_t);
 // [[nodiscard]] void* operator new[](std::size_t, std::align_val_t, std::nothrow_t const&);
 
-// [[nodiscard]] is not supported at all in c++03
-// UNSUPPORTED: c++03
-
 // [[nodiscard]] enabled before C++20 in libc++ as an extension
 // UNSUPPORTED: (c++11 || c++14 || c++17) && !stdlib=libc++
 

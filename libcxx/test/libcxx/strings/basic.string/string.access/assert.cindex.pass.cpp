@@ -11,7 +11,6 @@
 // Index const string out of bounds.
 
 // REQUIRES: has-unix-headers
-// UNSUPPORTED: c++03
 // UNSUPPORTED: libcpp-hardening-mode=unchecked
 // XFAIL: availability-verbose_abort-missing
 

@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // This test makes sure that the control block implementation used for non-array
 // types in std::make_shared and std::allocate_shared is ABI compatible with the

@@ -10,7 +10,6 @@
 
 // ~list() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <list>
 #include <cassert>

@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 //   template<class R, class Pred>
 //     drop_while_view(R&&, Pred) -> drop_while_view<views::all_t<R>, Pred>;

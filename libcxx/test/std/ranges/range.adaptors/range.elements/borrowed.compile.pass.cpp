@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 //
 // template<class T, size_t N>
 //   inline constexpr bool enable_borrowed_range<elements_view<T, N>> =

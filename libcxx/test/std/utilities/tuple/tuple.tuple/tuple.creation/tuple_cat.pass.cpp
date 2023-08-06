@@ -12,7 +12,6 @@
 
 // template <class... Tuples> tuple<CTypes...> tuple_cat(Tuples&&... tpls);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <utility>

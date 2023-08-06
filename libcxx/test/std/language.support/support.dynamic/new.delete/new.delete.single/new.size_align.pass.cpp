@@ -8,7 +8,7 @@
 
 // void* operator new(std::size_t, std::align_val_t);
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // We get availability markup errors when aligned allocation is missing
 // XFAIL: availability-aligned_allocation-missing

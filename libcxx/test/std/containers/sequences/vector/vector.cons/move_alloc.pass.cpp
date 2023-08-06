@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03 && !stdlib=libc++
-
 // <vector>
 
 // vector(vector&& c, const allocator_type& a);

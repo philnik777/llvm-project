@@ -22,7 +22,7 @@
 //   typename Fn::result_type operator()(typename Fn::first_argument_type& x) const;
 // };
 
-// REQUIRES: c++03 || c++11 || c++14
+// REQUIRES: c++11 || c++14
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>

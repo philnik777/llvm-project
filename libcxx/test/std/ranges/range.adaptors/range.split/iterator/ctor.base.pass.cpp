@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // constexpr iterator(split_view& parent, iterator_t<V> current, subrange<iterator_t<V>> next);
 

@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // Apple platforms don't provide <uchar.h> yet, so these tests fail.
 // XFAIL: target={{.+}}-apple-{{.+}}

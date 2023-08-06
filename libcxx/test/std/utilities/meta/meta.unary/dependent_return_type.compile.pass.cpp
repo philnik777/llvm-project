@@ -8,7 +8,7 @@
 
 // Check that all the type_trait aliases can be mangled
 
-// UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: c++11
 
 // ignore deprecated volatile return types
 // ADDITIONAL_COMPILE_FLAGS: -Wno-deprecated-volatile

@@ -11,7 +11,6 @@
 // ~list()
 
 // no emplace_back in C++03
-// UNSUPPORTED: c++03
 
 #include <list>
 #include <cassert>

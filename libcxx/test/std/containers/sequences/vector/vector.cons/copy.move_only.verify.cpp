@@ -8,8 +8,6 @@
 
 // Make sure that a std::vector containing move-only types can't be copied.
 
-// UNSUPPORTED: c++03 && !stdlib=libc++
-
 #include <vector>
 
 #include "MoveOnly.h"

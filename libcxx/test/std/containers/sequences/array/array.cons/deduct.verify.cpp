@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // <array>
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // template <class T, class... U>
 //   array(T, U...) -> array<T, 1 + sizeof...(U)>;

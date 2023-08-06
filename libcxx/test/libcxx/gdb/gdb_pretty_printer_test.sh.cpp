@@ -9,7 +9,6 @@
 // REQUIRES: host-has-gdb-with-python
 // REQUIRES: locale.en_US.UTF-8
 // UNSUPPORTED: no-localization
-// UNSUPPORTED: c++03
 
 // TODO: Investigate these failures which break the CI.
 // UNSUPPORTED: clang-15, clang-16, clang-17, clang-18

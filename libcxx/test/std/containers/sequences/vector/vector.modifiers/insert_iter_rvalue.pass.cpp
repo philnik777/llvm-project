@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03 && !stdlib=libc++
-
 // <vector>
 
 // iterator insert(const_iterator position, value_type&& x);

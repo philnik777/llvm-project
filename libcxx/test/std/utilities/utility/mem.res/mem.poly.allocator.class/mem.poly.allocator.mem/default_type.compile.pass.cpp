@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 // UNSUPPORTED: availability-pmr-missing
 
 // test_memory_resource requires RTTI for dynamic_cast

@@ -11,7 +11,7 @@
 // Hardened mode would additionally trigger the error that hardened and debug modes are mutually exclusive.
 // UNSUPPORTED: libcpp-hardening-mode=hardened
 // `check_assertion.h` is only available starting from C++11 and requires Unix headers.
-// UNSUPPORTED: c++03, !has-unix-headers
+// UNSUPPORTED: !has-unix-headers
 // The ability to set a custom abort message is required to compare the assertion message.
 // XFAIL: availability-verbose_abort-missing
 // ADDITIONAL_COMPILE_FLAGS: -Wno-macro-redefined -D_LIBCPP_ENABLE_DEBUG_MODE=1

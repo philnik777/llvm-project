@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: c++11
 // REQUIRES: availability-synchronization_library-missing
 
 // Test the availability markup on std::latch.

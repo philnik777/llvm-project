@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // friend constexpr void iter_swap(iterator const& x, iterator const& y)
 //  noexcept(noexcept(ranges::iter_swap(x.current_, y.current_)))

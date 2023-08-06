@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // <regex>
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // template<class ForwardIterator>
 // basic_regex(ForwardIterator, ForwardIterator,

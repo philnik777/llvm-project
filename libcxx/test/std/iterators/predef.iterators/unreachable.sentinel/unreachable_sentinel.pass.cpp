@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // struct unreachable_sentinel_t;
 // inline constexpr unreachable_sentinel_t unreachable_sentinel;

@@ -376,12 +376,12 @@ class TestFeature(SetupConfigs):
         self.assertRaises(ValueError, lambda: feature.pretty(self.config))
 
     def test_adding_action(self):
-        feature = dsl.Feature(name="name", actions=[dsl.AddCompileFlag("-std=c++03")])
+        feature = dsl.Feature(name="name", actions=[dsl.AddCompileFlag("-std=c++11")])
         origLinkFlags = copy.deepcopy(self.getSubstitution("%{link_flags}"))
         for a in feature.getActions(self.config):
             a.applyTo(self.config)
         self.assertIn("name", self.config.available_features)
-        self.assertIn("-std=c++03", self.getSubstitution("%{compile_flags}"))
+        self.assertIn("-std=c++11", self.getSubstitution("%{compile_flags}"))
         self.assertEqual(origLinkFlags, self.getSubstitution("%{link_flags}"))
 
     def test_actions_can_be_a_callable(self):
@@ -389,12 +389,12 @@ class TestFeature(SetupConfigs):
             name="name",
             actions=lambda cfg: (
                 self.assertIs(self.config, cfg),
-                [dsl.AddCompileFlag("-std=c++03")],
+                [dsl.AddCompileFlag("-std=c++11")],
             )[1],
         )
         for a in feature.getActions(self.config):
             a.applyTo(self.config)
-        self.assertIn("-std=c++03", self.getSubstitution("%{compile_flags}"))
+        self.assertIn("-std=c++11", self.getSubstitution("%{compile_flags}"))
 
     def test_unsupported_feature(self):
         feature = dsl.Feature(name="name", when=lambda _: False)
@@ -420,7 +420,7 @@ class TestParameter(SetupConfigs):
         self.assertRaises(
             ValueError,
             lambda: dsl.Parameter(
-                name="", choices=["c++03"], type=str, help="", actions=lambda _: []
+                name="", choices=["c++11"], type=str, help="", actions=lambda _: []
             ),
         )
 
@@ -438,13 +438,13 @@ class TestParameter(SetupConfigs):
 
     def test_name_is_set_correctly(self):
         param = dsl.Parameter(
-            name="std", choices=["c++03"], type=str, help="", actions=lambda _: []
+            name="std", choices=["c++11"], type=str, help="", actions=lambda _: []
         )
         self.assertEqual(param.name, "std")
 
     def test_no_value_provided_and_no_default_value(self):
         param = dsl.Parameter(
-            name="std", choices=["c++03"], type=str, help="", actions=lambda _: []
+            name="std", choices=["c++11"], type=str, help="", actions=lambda _: []
         )
         self.assertRaises(
             ValueError, lambda: param.getActions(self.config, self.litConfig.params)
@@ -453,81 +453,81 @@ class TestParameter(SetupConfigs):
     def test_no_value_provided_and_default_value(self):
         param = dsl.Parameter(
             name="std",
-            choices=["c++03"],
+            choices=["c++11"],
             type=str,
             help="",
-            default="c++03",
+            default="c++11",
             actions=lambda std: [dsl.AddFeature(std)],
         )
         for a in param.getActions(self.config, self.litConfig.params):
             a.applyTo(self.config)
-        self.assertIn("c++03", self.config.available_features)
+        self.assertIn("c++11", self.config.available_features)
 
     def test_value_provided_on_command_line_and_no_default_value(self):
-        self.litConfig.params["std"] = "c++03"
-        param = dsl.Parameter(
-            name="std",
-            choices=["c++03"],
-            type=str,
-            help="",
-            actions=lambda std: [dsl.AddFeature(std)],
-        )
-        for a in param.getActions(self.config, self.litConfig.params):
-            a.applyTo(self.config)
-        self.assertIn("c++03", self.config.available_features)
-
-    def test_value_provided_on_command_line_and_default_value(self):
-        """The value provided on the command line should override the default value"""
         self.litConfig.params["std"] = "c++11"
         param = dsl.Parameter(
             name="std",
-            choices=["c++03", "c++11"],
+            choices=["c++11"],
             type=str,
-            default="c++03",
             help="",
             actions=lambda std: [dsl.AddFeature(std)],
         )
         for a in param.getActions(self.config, self.litConfig.params):
             a.applyTo(self.config)
         self.assertIn("c++11", self.config.available_features)
-        self.assertNotIn("c++03", self.config.available_features)
+
+    def test_value_provided_on_command_line_and_default_value(self):
+        """The value provided on the command line should override the default value"""
+        self.litConfig.params["std"] = "c++14"
+        param = dsl.Parameter(
+            name="std",
+            choices=["c++11", "c++14"],
+            type=str,
+            default="c++11",
+            help="",
+            actions=lambda std: [dsl.AddFeature(std)],
+        )
+        for a in param.getActions(self.config, self.litConfig.params):
+            a.applyTo(self.config)
+        self.assertIn("c++14", self.config.available_features)
+        self.assertNotIn("c++11", self.config.available_features)
 
     def test_value_provided_in_config_and_default_value(self):
         """The value provided in the config should override the default value"""
         self.config.std = "c++11"
         param = dsl.Parameter(
             name="std",
-            choices=["c++03", "c++11"],
+            choices=["c++11", "c++14"],
             type=str,
-            default="c++03",
+            default="c++11",
+            help="",
+            actions=lambda std: [dsl.AddFeature(std)],
+        )
+        for a in param.getActions(self.config, self.litConfig.params):
+            a.applyTo(self.config)
+        self.assertIn("c++14", self.config.available_features)
+        self.assertNotIn("c++11", self.config.available_features)
+
+    def test_value_provided_in_config_and_on_command_line(self):
+        """The value on the command line should override the one in the config"""
+        self.config.std = "c++11"
+        self.litConfig.params["std"] = "c++11"
+        param = dsl.Parameter(
+            name="std",
+            choices=["c++11", "c++14"],
+            type=str,
             help="",
             actions=lambda std: [dsl.AddFeature(std)],
         )
         for a in param.getActions(self.config, self.litConfig.params):
             a.applyTo(self.config)
         self.assertIn("c++11", self.config.available_features)
-        self.assertNotIn("c++03", self.config.available_features)
-
-    def test_value_provided_in_config_and_on_command_line(self):
-        """The value on the command line should override the one in the config"""
-        self.config.std = "c++11"
-        self.litConfig.params["std"] = "c++03"
-        param = dsl.Parameter(
-            name="std",
-            choices=["c++03", "c++11"],
-            type=str,
-            help="",
-            actions=lambda std: [dsl.AddFeature(std)],
-        )
-        for a in param.getActions(self.config, self.litConfig.params):
-            a.applyTo(self.config)
-        self.assertIn("c++03", self.config.available_features)
-        self.assertNotIn("c++11", self.config.available_features)
+        self.assertNotIn("c++14", self.config.available_features)
 
     def test_no_actions(self):
-        self.litConfig.params["std"] = "c++03"
+        self.litConfig.params["std"] = "c++11"
         param = dsl.Parameter(
-            name="std", choices=["c++03"], type=str, help="", actions=lambda _: []
+            name="std", choices=["c++11"], type=str, help="", actions=lambda _: []
         )
         actions = param.getActions(self.config, self.litConfig.params)
         self.assertEqual(actions, [])

@@ -71,7 +71,7 @@ that. However, you can manually specify the option like so if you want:
 .. code-block:: bash
 
   $ libcxx/utils/libcxx-lit <build> -sv libcxx/test/std/containers # Run the tests with the newest -std
-  $ libcxx/utils/libcxx-lit <build> -sv libcxx/test/std/containers --param std=c++03 # Run the tests in C++03
+  $ libcxx/utils/libcxx-lit <build> -sv libcxx/test/std/containers --param std=c++11 # Run the tests in C++11
 
 Other parameters are supported by the test suite. Those are defined in ``libcxx/utils/libcxx/test/params.py``.
 If you want to customize how to run the libc++ test suite beyond what is available

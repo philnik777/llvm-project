@@ -10,7 +10,6 @@
 // allocations.
 // XFAIL: target=x86_64-pc-windows-msvc && stdlib=libc++ && libcpp-abi-version=1
 
-// UNSUPPORTED: c++03
 
 // <functional>
 

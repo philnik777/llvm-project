@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // We don't control the implementation of the math.h functions on windows
 // UNSUPPORTED: windows

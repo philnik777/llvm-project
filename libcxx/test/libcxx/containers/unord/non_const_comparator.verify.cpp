@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // REQUIRES: diagnose-if-support
 
 // Test that libc++ generates a warning diagnostic when the container is

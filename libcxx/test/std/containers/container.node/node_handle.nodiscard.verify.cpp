@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // UNSUPPORTED: (c++11 || c++14 || c++17) && !stdlib=libc++
 
 // Make sure the various node handles mark their .empty() method with

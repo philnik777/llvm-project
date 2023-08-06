@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // to_chars requires functions in the dylib that have not been introduced in older
 // versions of the dylib on macOS.

@@ -9,7 +9,6 @@
 // Test that _LIBCPP_NODISCARD_AFTER_CXX17 works
 // #define _LIBCPP_NODISCARD_AFTER_CXX17 [[nodiscard]]
 
-// UNSUPPORTED: c++03
 // UNSUPPORTED: (c++11 || c++14 || c++17) && !stdlib=libc++
 
 #include <__config>

@@ -17,7 +17,7 @@
 // https://github.com/google/sanitizers/issues/619
 // https://github.com/google/sanitizers/issues/398
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68016
-// UNSUPPORTED: c++03, asan
+// UNSUPPORTED: asan
 
 // <functional>
 

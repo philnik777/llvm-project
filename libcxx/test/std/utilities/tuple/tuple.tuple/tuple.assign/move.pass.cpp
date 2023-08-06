@@ -12,7 +12,6 @@
 
 // tuple& operator=(tuple&& u);
 
-// UNSUPPORTED: c++03
 
 #include <memory>
 #include <tuple>

@@ -9,7 +9,7 @@
 // This test breaks when enabling LSV.
 // UNSUPPORTED: modules-build
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // Make sure that <ctime> can be included even when _XOPEN_SOURCE is defined.
 // This used to trigger some bug in Apple SDKs, since timespec_get was not

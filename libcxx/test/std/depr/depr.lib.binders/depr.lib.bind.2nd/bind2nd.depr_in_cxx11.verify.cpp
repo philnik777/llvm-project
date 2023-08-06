@@ -10,7 +10,6 @@
 //
 // bind2nd
 
-// UNSUPPORTED: c++03
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_ENABLE_CXX17_REMOVED_BINDERS
 
 #include <functional>

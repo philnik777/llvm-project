@@ -10,7 +10,6 @@
 
 // ~forward_list() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <forward_list>
 #include <cassert>

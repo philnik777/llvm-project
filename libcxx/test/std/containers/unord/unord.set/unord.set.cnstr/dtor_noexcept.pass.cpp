@@ -10,7 +10,6 @@
 
 // ~unordered_set() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <unordered_set>
 #include <cassert>

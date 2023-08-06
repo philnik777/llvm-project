@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // constexpr unreachable_sentinel_t end() const noexcept;
 // constexpr iterator end() const requires (!same_as<Bound, unreachable_sentinel_t>);

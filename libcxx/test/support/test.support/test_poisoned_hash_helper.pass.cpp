@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // Test that the header `poisoned_hash_helper.h` doesn't include any
 // headers that provide hash<T> specializations. This is required so that the

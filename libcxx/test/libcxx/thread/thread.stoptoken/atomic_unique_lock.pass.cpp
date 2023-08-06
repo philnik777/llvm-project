@@ -10,7 +10,7 @@
 
 // XFAIL: availability-synchronization_library-missing
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <__stop_token/atomic_unique_lock.h>
 #include <atomic>

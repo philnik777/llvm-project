@@ -17,7 +17,6 @@
 // atomic_compare_exchange_strong(shared_ptr<T>* p, shared_ptr<T>* v,
 //                                shared_ptr<T> w);
 
-// UNSUPPORTED: c++03
 
 #include <memory>
 

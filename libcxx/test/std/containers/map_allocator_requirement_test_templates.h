@@ -19,7 +19,6 @@
 // emplace(...);
 // emplace_hint(...);
 
-// UNSUPPORTED: c++03
 
 #include <cassert>
 #include <iterator>

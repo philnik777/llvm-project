@@ -10,7 +10,6 @@
 
 // ~unordered_multimap() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <unordered_map>
 #include <cassert>

@@ -8,7 +8,7 @@
 
 // void* operator new[](std::size_t, std::align_val_t, std::nothrow_t const&);
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // asan and msan will not call the new handler.
 // UNSUPPORTED: sanitizer-new-delete

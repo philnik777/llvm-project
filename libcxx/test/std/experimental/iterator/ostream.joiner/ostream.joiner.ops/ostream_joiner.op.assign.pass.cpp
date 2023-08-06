@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: c++11
 // UNSUPPORTED: no-localization
 
 // <experimental/iterator>

@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // <unordered_map>
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // template<class InputIterator,
 //          class Hash = hash<iter-key-type<InputIterator>>,

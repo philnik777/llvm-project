@@ -8,7 +8,6 @@
 
 // Regression test for https://llvm.org/PR27375
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 

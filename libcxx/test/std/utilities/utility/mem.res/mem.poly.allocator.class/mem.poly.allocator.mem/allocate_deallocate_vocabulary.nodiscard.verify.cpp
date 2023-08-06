@@ -8,7 +8,7 @@
 
 // check that functions are marked [[nodiscard]]
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // test_memory_resource requires RTTI for dynamic_cast
 // UNSUPPORTED: no-rtti

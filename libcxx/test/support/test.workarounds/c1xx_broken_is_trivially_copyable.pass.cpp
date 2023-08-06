@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // Verify TEST_WORKAROUND_MSVC_BROKEN_IS_TRIVIALLY_COPYABLE.
 

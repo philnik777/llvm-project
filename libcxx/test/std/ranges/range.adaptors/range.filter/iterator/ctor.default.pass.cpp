@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // std::ranges::filter_view<V>::<iterator>() requires default_initializable<iterator_t<V>> = default;
 

@@ -12,7 +12,6 @@
 
 // insert(...)
 
-// UNSUPPORTED: c++03
 
 #include <set>
 

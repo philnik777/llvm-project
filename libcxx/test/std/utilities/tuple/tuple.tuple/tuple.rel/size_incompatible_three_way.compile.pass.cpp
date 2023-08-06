@@ -14,7 +14,7 @@
 //   auto
 //   operator<=>(const tuple<TTypes...>& t, const tuple<UTypes...>& u);
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <tuple>
 

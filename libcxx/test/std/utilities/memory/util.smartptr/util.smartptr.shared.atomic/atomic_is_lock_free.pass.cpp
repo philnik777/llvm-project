@@ -16,7 +16,6 @@
 // bool
 // atomic_is_lock_free(const shared_ptr<T>* p);
 
-// UNSUPPORTED: c++03
 
 #include <memory>
 #include <cassert>

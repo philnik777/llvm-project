@@ -10,7 +10,6 @@
 
 // iterator insert (const_iterator p, value_type&& v);
 
-// UNSUPPORTED: c++03
 
 #include "asan_testing.h"
 #include <deque>

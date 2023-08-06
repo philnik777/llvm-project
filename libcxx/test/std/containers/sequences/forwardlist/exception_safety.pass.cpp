@@ -8,7 +8,7 @@
 
 // <forward_list>
 
-// UNSUPPORTED: c++03, no-exceptions
+// UNSUPPORTED: no-exceptions
 
 // TODO:
 // - throwing upon moving;

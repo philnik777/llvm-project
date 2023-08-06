@@ -12,7 +12,6 @@
 
 // tuple(tuple&& u);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <utility>

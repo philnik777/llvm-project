@@ -13,7 +13,6 @@
 // template<class... Types>
 //   tuple<Types&...> tie(Types&... t);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <string>

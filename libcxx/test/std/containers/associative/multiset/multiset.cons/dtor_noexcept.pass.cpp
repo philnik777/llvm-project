@@ -10,7 +10,6 @@
 
 // ~multiset() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <set>
 #include <cassert>

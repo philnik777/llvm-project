@@ -11,7 +11,6 @@
 // Debug mode would additionally trigger the error that hardened and debug modes are mutually exclusive.
 // UNSUPPORTED: libcpp-hardening-mode=debug
 // `check_assertion.h` is only available starting from C++11.
-// UNSUPPORTED: c++03
 // `check_assertion.h` requires Unix headers.
 // REQUIRES: has-unix-headers
 // The ability to set a custom abort message is required to compare the assertion message.

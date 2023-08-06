@@ -15,7 +15,7 @@
 // void swap(unordered_set& x, unordered_set& y);
 
 // REQUIRES: has-unix-headers
-// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode
 
 #include <unordered_set>
 

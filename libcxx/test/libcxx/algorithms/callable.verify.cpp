@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
-
 // <algorithm>
 
 // check that the classical algorithms with non-callable comparators fail

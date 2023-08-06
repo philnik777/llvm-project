@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // The string reported on errors changed, which makes those tests fail when run
 // against already-released libc++'s.

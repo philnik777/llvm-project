@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 // Some fields in the test case variables are deliberately not explicitly initialized, this silences a warning on GCC.
 // ADDITIONAL_COMPILE_FLAGS: -Wno-missing-field-initializers
 
@@ -38,4 +38,3 @@ int main(int, char**) {
 
   return 0;
 }
-

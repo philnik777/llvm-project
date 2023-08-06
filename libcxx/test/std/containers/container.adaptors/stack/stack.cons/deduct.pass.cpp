@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // <stack>
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // template<class Container>
 //   stack(Container) -> stack<typename Container::value_type, Container>;

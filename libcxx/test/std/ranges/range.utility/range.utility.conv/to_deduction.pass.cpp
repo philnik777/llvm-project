@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 // There is a bug in older versions of Clang that causes trouble with constraints in classes like
 // `ContainerWithDirectCtr`.
 // XFAIL: clang-16, apple-clang-15

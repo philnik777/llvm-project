@@ -12,7 +12,7 @@
 
 // auto_ptr& operator=(auto_ptr& a) throw();
 
-// REQUIRES: c++03 || c++11 || c++14
+// REQUIRES: c++11 || c++14
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <memory>

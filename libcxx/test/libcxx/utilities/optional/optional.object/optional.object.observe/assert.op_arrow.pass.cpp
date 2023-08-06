@@ -12,7 +12,7 @@
 // constexpr const T* optional<T>::operator->() const;
 
 // REQUIRES: has-unix-headers
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 // UNSUPPORTED: libcpp-hardening-mode=unchecked
 // XFAIL: availability-verbose_abort-missing
 

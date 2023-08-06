@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03 && !stdlib=libc++
-
 // <vector>
 
 // Test that vector produces a decent diagnostic for user types that explicitly

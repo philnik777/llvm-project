@@ -8,7 +8,7 @@
 
 // <algorithm>
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 // UNSUPPORTED: GCC-ALWAYS_INLINE-FIXME
 
 // template<input_iterator I, sentinel_for<I> S, weakly_incrementable O>

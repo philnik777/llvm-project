@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 //
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <__stop_token/intrusive_shared_ptr.h>
 #include <atomic>

@@ -18,7 +18,6 @@
 //                                       shared_ptr<T> w, memory_order success,
 //                                       memory_order failure);
 
-// UNSUPPORTED: c++03
 
 #include <memory>
 

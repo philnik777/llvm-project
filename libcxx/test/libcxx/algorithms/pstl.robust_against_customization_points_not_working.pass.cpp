@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 // UNSUPPORTED: libcpp-has-no-incomplete-pstl
 
 // Having a customization point outside the module doesn't work, so this test is inherintly module-hostile.

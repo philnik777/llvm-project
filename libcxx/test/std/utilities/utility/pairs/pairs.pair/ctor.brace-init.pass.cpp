@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // TODO: Revisit this test once we have more information
 //       with https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102247

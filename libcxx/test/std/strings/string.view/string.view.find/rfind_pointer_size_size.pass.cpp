@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: !stdlib=libc++ && (c++03 || c++11 || c++14)
+// UNSUPPORTED: !stdlib=libc++ && (c++11 || c++14)
 
 // <string_view>
 // constexpr size_type rfind(const charT* s, size_type pos, size_type n) const;

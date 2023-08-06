@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // libc++ supports basic_format_string in C++20 as an extension
 // UNSUPPORTED: !stdlib=libc++ && c++20

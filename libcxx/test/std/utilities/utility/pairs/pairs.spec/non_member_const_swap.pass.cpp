@@ -11,7 +11,7 @@
 // template <class T1, class T2>
 // void swap(const pair<T1, T2>& x, const pair<T1, T2>& y) const noexcept(noexcept(x.swap(y)));;
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 #include <cassert>
 #include <type_traits>

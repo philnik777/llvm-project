@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // test_memory_resource requires RTTI for dynamic_cast
 // UNSUPPORTED: no-rtti

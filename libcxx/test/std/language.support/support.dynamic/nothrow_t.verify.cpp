@@ -7,7 +7,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // struct nothrow_t {
 //   explicit nothrow_t() = default;

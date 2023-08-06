@@ -8,7 +8,7 @@
 //
 // <type_traits>
 //
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 //
 // __is_always_bitcastable<_From, _To>
 

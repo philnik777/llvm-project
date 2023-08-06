@@ -16,7 +16,6 @@
 //     typedef Ti type;
 // };
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 

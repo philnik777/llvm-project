@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // ADDITIONAL_COMPILE_FLAGS: -D _LIBCPP_USE_IS_CONVERTIBLE_FALLBACK
 

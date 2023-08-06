@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 //  Because we don't have a functioning decltype in C++03
 
 // UNSUPPORTED: no-localization

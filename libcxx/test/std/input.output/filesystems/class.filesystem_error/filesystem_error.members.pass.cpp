@@ -7,7 +7,6 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: availability-filesystem-missing
-// UNSUPPORTED: c++03
 
 // <filesystem>
 

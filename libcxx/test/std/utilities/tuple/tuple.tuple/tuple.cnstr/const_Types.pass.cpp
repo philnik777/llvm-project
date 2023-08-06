@@ -12,7 +12,6 @@
 
 // explicit tuple(const T&...);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <string>

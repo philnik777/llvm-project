@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // REQUIRES: has-fobjc-arc
 // ADDITIONAL_COMPILE_FLAGS: -fobjc-arc
 

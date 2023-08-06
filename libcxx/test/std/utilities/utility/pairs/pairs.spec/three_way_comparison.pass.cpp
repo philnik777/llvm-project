@@ -14,7 +14,7 @@
 //   constexpr common_comparison_category_t<synth-three-way-result<T1, U1>,synth-three-way-result<T2, U2>>
 //     operator<=>(const pair<T1,T2>&, const pair<U1,U2>&);
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <cassert>
 #include <compare>

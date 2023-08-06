@@ -12,7 +12,7 @@
 //   const_mem_fun1_t<S,T,A>
 //   mem_fun(S (T::*f)(A) const);
 
-// REQUIRES: c++03 || c++11 || c++14
+// REQUIRES: c++11 || c++14
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>

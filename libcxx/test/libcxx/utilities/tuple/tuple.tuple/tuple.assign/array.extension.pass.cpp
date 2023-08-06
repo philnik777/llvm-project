@@ -17,7 +17,6 @@
 // template <class U, size_t N>
 //   tuple& operator=(array<U, N>&& u);
 
-// UNSUPPORTED: c++03
 
 #include <array>
 #include <cassert>

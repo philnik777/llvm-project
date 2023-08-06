@@ -11,7 +11,6 @@
 
 // notify_all_at_thread_exit(...) requires move semantics to transfer the
 // unique_lock.
-// UNSUPPORTED: c++03
 
 // PR30202 was fixed starting in macosx10.13.
 // UNSUPPORTED: stdlib=apple-libc++ && target={{.+}}-apple-macosx10.{{9|10|11|12}}

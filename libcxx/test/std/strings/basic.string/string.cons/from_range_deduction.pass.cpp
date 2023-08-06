@@ -8,7 +8,7 @@
 
 // <string>
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 // To silence a GCC warning-turned-error re. `BadAlloc::value_type`.
 // ADDITIONAL_COMPILE_FLAGS: -Wno-unused-local-typedefs
 

@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // template <class _Tp, template <class...> class _Template>
 // inline constexpr bool __is_specialization_v = true if and only if _Tp is a specialization of _Template

@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // constexpr reverse_iterator<iterator_t<V>> begin();
 // constexpr reverse_iterator<iterator_t<V>> begin() requires common_range<V>;

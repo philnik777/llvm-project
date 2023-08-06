@@ -13,7 +13,7 @@
 // template <class... Types>
 //   void swap(const tuple<Types...>& x, const tuple<Types...>& y);
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 #include <tuple>
 #include <cassert>

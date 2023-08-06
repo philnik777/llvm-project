@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // constexpr iota_view(iterator first, see below last); // explicit since C++23
 
@@ -91,4 +91,3 @@ int main(int, char**) {
 
   return 0;
 }
-

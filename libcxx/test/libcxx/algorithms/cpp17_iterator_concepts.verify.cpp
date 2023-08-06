@@ -8,7 +8,7 @@
 
 // Check that __cpp17_*_iterator catch bad iterators
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <__iterator/cpp17_iterator_concepts.h>
 #include <__iterator/iterator_traits.h>

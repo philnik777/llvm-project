@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: no-localization
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // clang-cl and cl currently don't support [[no_unique_address]]
 // XFAIL: msvc
@@ -23,4 +23,3 @@ struct Empty {
 };
 
 static_assert(sizeof(std::ranges::istream_view<Empty>) == sizeof(void*));
-

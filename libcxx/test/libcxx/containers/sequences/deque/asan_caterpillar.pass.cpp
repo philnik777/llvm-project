@@ -12,7 +12,6 @@
 // with origin in deque::__add_back_capacity.
 
 // REQUIRES: has-unix-headers
-// UNSUPPORTED: c++03
 
 #include <deque>
 #include <cstdio>

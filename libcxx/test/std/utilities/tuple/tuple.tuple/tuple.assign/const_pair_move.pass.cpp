@@ -15,7 +15,7 @@
 // - is_assignable_v<const T1&, U1> is true, and
 // - is_assignable_v<const T2&, U2> is true
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 #include <cassert>
 #include <tuple>

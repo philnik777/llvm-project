@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // constexpr outer-iterator(outer-iterator<!Const> i)
 //   requires Const && convertible_to<iterator_t<View>, iterator_t<Base>>

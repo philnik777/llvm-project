@@ -10,7 +10,6 @@
 
 // ~deque() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <deque>
 #include <cassert>

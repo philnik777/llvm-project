@@ -9,7 +9,7 @@
 // Make sure std::array is an aggregate type.
 // We can only check this in C++17 and above, because we don't have the
 // trait before that.
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 #include <array>
 #include <type_traits>

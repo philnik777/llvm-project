@@ -14,7 +14,6 @@
 
 // UNSUPPORTED: apple-clang-14
 
-// UNSUPPORTED: c++03
 
 #include <atomic>
 

@@ -12,7 +12,6 @@
 
 // template <class... UTypes> tuple(tuple<UTypes...>&& u);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <string>
