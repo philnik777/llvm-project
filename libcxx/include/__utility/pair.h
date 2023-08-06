@@ -92,38 +92,6 @@ struct _LIBCPP_TEMPLATE_VIS pair
     _LIBCPP_HIDE_FROM_ABI pair(pair const&) = default;
     _LIBCPP_HIDE_FROM_ABI pair(pair&&) = default;
 
-#ifdef _LIBCPP_CXX03_LANG
-    _LIBCPP_HIDE_FROM_ABI
-    pair() : first(), second() {}
-
-    _LIBCPP_HIDE_FROM_ABI
-    pair(_T1 const& __t1, _T2 const& __t2) : first(__t1), second(__t2) {}
-
-    template <class _U1, class _U2>
-    _LIBCPP_HIDE_FROM_ABI
-    pair(const pair<_U1, _U2>& __p) : first(__p.first), second(__p.second) {}
-
-    _LIBCPP_HIDE_FROM_ABI
-    pair& operator=(pair const& __p) {
-        first = __p.first;
-        second = __p.second;
-        return *this;
-    }
-
-    // Extension: This is provided in C++03 because it allows properly handling the
-    //            assignment to a pair containing references, which would be a hard
-    //            error otherwise.
-    template <class _U1, class _U2, class = __enable_if_t<
-        is_assignable<first_type&, _U1 const&>::value &&
-        is_assignable<second_type&, _U2 const&>::value
-    > >
-    _LIBCPP_HIDE_FROM_ABI
-    pair& operator=(pair<_U1, _U2> const& __p) {
-        first = __p.first;
-        second = __p.second;
-        return *this;
-    }
-#else
     struct _CheckArgs {
       template <int&...>
       static _LIBCPP_HIDE_FROM_ABI constexpr bool __enable_explicit_default() {
@@ -564,7 +532,6 @@ struct _LIBCPP_TEMPLATE_VIS pair
         return *this;
     }
 #endif // _LIBCPP_STD_VER < 23
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     void
@@ -588,14 +555,11 @@ struct _LIBCPP_TEMPLATE_VIS pair
     }
 #endif
 private:
-
-#ifndef _LIBCPP_CXX03_LANG
     template <class... _Args1, class... _Args2, size_t... _I1, size_t... _I2>
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     pair(piecewise_construct_t,
          tuple<_Args1...>& __first_args, tuple<_Args2...>& __second_args,
          __tuple_indices<_I1...>, __tuple_indices<_I2...>);
-#endif
 };
 
 #if _LIBCPP_STD_VER >= 17

@@ -56,13 +56,8 @@ private:
     typedef typename _Engine::result_type _Engine_result_type;
     typedef __conditional_t<sizeof(_Engine_result_type) <= sizeof(result_type), result_type, _Engine_result_type>
         _Working_result_type;
-#ifdef _LIBCPP_CXX03_LANG
-    static const _Working_result_type _Rp = _Engine::_Max - _Engine::_Min
-                                          + _Working_result_type(1);
-#else
     static constexpr const _Working_result_type _Rp = _Engine::max() - _Engine::min()
                                                             + _Working_result_type(1);
-#endif
     static constexpr const size_t __m = __log2<_Working_result_type, _Rp>::value;
     static constexpr const size_t __n = __get_n<_Working_result_type, _Rp, __w, __m>::value;
     static constexpr const size_t __w0 = __w / __n;
@@ -97,11 +92,11 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     explicit independent_bits_engine(const _Engine& __e)
         : __e_(__e) {}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit independent_bits_engine(_Engine&& __e)
         : __e_(_VSTD::move(__e)) {}
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit independent_bits_engine(result_type __sd) : __e_(__sd) {}
     template<class _Sseq>

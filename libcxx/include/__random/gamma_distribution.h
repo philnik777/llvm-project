@@ -62,18 +62,12 @@ private:
 
 public:
     // constructors and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     gamma_distribution() : gamma_distribution(1) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit gamma_distribution(result_type __alpha, result_type __beta = 1)
         : __p_(param_type(__alpha, __beta)) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit gamma_distribution(result_type __alpha = 1,
-                                result_type __beta = 1)
-        : __p_(param_type(__alpha, __beta)) {}
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     explicit gamma_distribution(const param_type& __p)
         : __p_(__p) {}

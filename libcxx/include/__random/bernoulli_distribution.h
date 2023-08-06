@@ -54,15 +54,10 @@ private:
 
 public:
     // constructors and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     bernoulli_distribution() : bernoulli_distribution(0.5) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit bernoulli_distribution(double __p) : __p_(param_type(__p)) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit bernoulli_distribution(double __p = 0.5) : __p_(param_type(__p)) {}
-#endif
     _LIBCPP_INLINE_VISIBILITY
     explicit bernoulli_distribution(const param_type& __p) : __p_(__p) {}
     _LIBCPP_INLINE_VISIBILITY

@@ -60,18 +60,12 @@ private:
 
 public:
     // constructor and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     lognormal_distribution() : lognormal_distribution(0) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit lognormal_distribution(result_type __m, result_type __s = 1)
         : __nd_(__m, __s) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit lognormal_distribution(result_type __m = 0,
-                                    result_type __s = 1)
-        : __nd_(__m, __s) {}
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     explicit lognormal_distribution(const param_type& __p)
         : __nd_(__p.m(), __p.s()) {}

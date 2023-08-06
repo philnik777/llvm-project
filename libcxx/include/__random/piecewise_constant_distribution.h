@@ -45,10 +45,10 @@ public:
         template<class _InputIteratorB, class _InputIteratorW>
         _LIBCPP_HIDE_FROM_ABI param_type(_InputIteratorB __f_b, _InputIteratorB __l_b,
                        _InputIteratorW __f_w);
-#ifndef _LIBCPP_CXX03_LANG
+
         template<class _UnaryOperation>
         _LIBCPP_HIDE_FROM_ABI param_type(initializer_list<result_type> __bl, _UnaryOperation __fw);
-#endif // _LIBCPP_CXX03_LANG
+
         template<class _UnaryOperation>
         _LIBCPP_HIDE_FROM_ABI param_type(size_t __nw, result_type __xmin, result_type __xmax,
                        _UnaryOperation __fw);
@@ -99,13 +99,11 @@ public:
                                         _InputIteratorW __f_w)
         : __p_(__f_b, __l_b, __f_w) {}
 
-#ifndef _LIBCPP_CXX03_LANG
     template<class _UnaryOperation>
         _LIBCPP_INLINE_VISIBILITY
         piecewise_constant_distribution(initializer_list<result_type> __bl,
                                         _UnaryOperation __fw)
         : __p_(__bl, __fw) {}
-#endif // _LIBCPP_CXX03_LANG
 
     template<class _UnaryOperation>
         _LIBCPP_INLINE_VISIBILITY
@@ -236,8 +234,6 @@ piecewise_constant_distribution<_RealType>::param_type::param_type(
     }
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template<class _RealType>
 template<class _UnaryOperation>
 piecewise_constant_distribution<_RealType>::param_type::param_type(
@@ -260,8 +256,6 @@ piecewise_constant_distribution<_RealType>::param_type::param_type(
         __init();
     }
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template<class _RealType>
 template<class _UnaryOperation>

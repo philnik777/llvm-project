@@ -653,7 +653,6 @@ struct _LIBCPP_TEMPLATE_VIS hash<nullptr_t>
 };
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Key, class _Hash>
 using __check_hash_requirements _LIBCPP_NODEBUG = integral_constant<bool,
     is_copy_constructible<_Hash>::value &&
@@ -679,8 +678,6 @@ using __enable_hash_helper _LIBCPP_NODEBUG = __enable_hash_helper_imp<_Type,
 template <class _Type, class ...>
 using __enable_hash_helper _LIBCPP_NODEBUG = _Type;
 #endif
-
-#endif // !_LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_STD
 

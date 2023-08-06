@@ -51,13 +51,8 @@ private:
     _Engine_result_type __mask0_;
     _Engine_result_type __mask1_;
 
-#ifdef _LIBCPP_CXX03_LANG
-    static const _Working_result_type _Rp = _Engine::_Max - _Engine::_Min
-                                          + _Working_result_type(1);
-#else
     static constexpr const _Working_result_type _Rp = _Engine::max() - _Engine::min()
                                                       + _Working_result_type(1);
-#endif
     static constexpr const size_t __m = __log2<_Working_result_type, _Rp>::value;
     static constexpr const size_t _WDt = numeric_limits<_Working_result_type>::digits;
     static constexpr const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
@@ -187,17 +182,11 @@ private:
 
 public:
     // constructors and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI uniform_int_distribution() : uniform_int_distribution(0) {}
     _LIBCPP_HIDE_FROM_ABI explicit uniform_int_distribution(
         result_type __a, result_type __b = numeric_limits<result_type>::max())
         : __p_(param_type(__a, __b)) {}
-#else
-    explicit uniform_int_distribution(
-        result_type __a = 0,
-        result_type __b = numeric_limits<result_type>::max())
-        : __p_(param_type(__a, __b)) {}
-#endif
+
     _LIBCPP_HIDE_FROM_ABI explicit uniform_int_distribution(const param_type& __p) : __p_(__p) {}
     _LIBCPP_HIDE_FROM_ABI void reset() {}
 

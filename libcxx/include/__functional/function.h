@@ -45,8 +45,6 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 // bad_function_call
@@ -1226,7 +1224,5 @@ swap(function<_Rp(_ArgTypes...)>& __x, function<_Rp(_ArgTypes...)>& __y) noexcep
 {return __x.swap(__y);}
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___FUNCTIONAL_FUNCTION_H

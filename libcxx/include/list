@@ -547,9 +547,9 @@ protected:
     __list_imp(const allocator_type& __a);
     _LIBCPP_INLINE_VISIBILITY
     __list_imp(const __node_allocator& __a);
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_HIDE_FROM_ABI __list_imp(__node_allocator&& __a) noexcept;
-#endif
+
     _LIBCPP_HIDE_FROM_ABI ~__list_imp();
     _LIBCPP_HIDE_FROM_ABI void clear() noexcept;
     _LIBCPP_INLINE_VISIBILITY
@@ -653,11 +653,9 @@ template <class _Tp, class _Alloc>
 inline __list_imp<_Tp, _Alloc>::__list_imp(const __node_allocator& __a)
     : __size_alloc_(0, __a) {}
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Tp, class _Alloc>
 inline __list_imp<_Tp, _Alloc>::__list_imp(__node_allocator&& __a) noexcept
     : __size_alloc_(0, _VSTD::move(__a)) {}
-#endif
 
 template <class _Tp, class _Alloc>
 __list_imp<_Tp, _Alloc>::~__list_imp() {
@@ -791,7 +789,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI list(const list& __c, const __type_identity_t<allocator_type>& __a);
     _LIBCPP_INLINE_VISIBILITY
     list& operator=(const list& __c);
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_HIDE_FROM_ABI list(initializer_list<value_type> __il);
     _LIBCPP_HIDE_FROM_ABI list(initializer_list<value_type> __il, const allocator_type& __a);
 
@@ -813,7 +811,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void assign(initializer_list<value_type> __il)
         {assign(__il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
 
     template <class _InpIter>
     _LIBCPP_HIDE_FROM_ABI void assign(_InpIter __f, _InpIter __l,
@@ -901,7 +898,6 @@ public:
         return base::__end_.__prev_->__as_node()->__value_;
     }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI void push_front(value_type&& __x);
     _LIBCPP_HIDE_FROM_ABI void push_back(value_type&& __x);
 
@@ -939,19 +935,13 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     iterator insert(const_iterator __p, initializer_list<value_type> __il)
         {return insert(__p, __il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_HIDE_FROM_ABI void push_front(const value_type& __x);
     _LIBCPP_HIDE_FROM_ABI void push_back(const value_type& __x);
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class _Arg>
     _LIBCPP_INLINE_VISIBILITY
     void __emplace_back(_Arg&& __arg) { emplace_back(_VSTD::forward<_Arg>(__arg)); }
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    void __emplace_back(value_type const& __arg) { push_back(__arg); }
-#endif
 
     _LIBCPP_HIDE_FROM_ABI iterator insert(const_iterator __p, const value_type& __x);
     _LIBCPP_HIDE_FROM_ABI iterator insert(const_iterator __p, size_type __n, const value_type& __x);
@@ -989,7 +979,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI void resize(size_type __n, const value_type& __x);
 
     _LIBCPP_HIDE_FROM_ABI void splice(const_iterator __p, list& __c);
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     void splice(const_iterator __p, list&& __c) {splice(__p, __c);}
     _LIBCPP_INLINE_VISIBILITY
@@ -998,7 +988,7 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void splice(const_iterator __p, list&& __c, const_iterator __f, const_iterator __l)
         {splice(__p, __c, __f, __l);}
-#endif
+
     _LIBCPP_HIDE_FROM_ABI void splice(const_iterator __p, list& __c, const_iterator __i);
     _LIBCPP_HIDE_FROM_ABI void splice(const_iterator __p, list& __c, const_iterator __f, const_iterator __l);
 
@@ -1011,14 +1001,14 @@ public:
     _LIBCPP_HIDE_FROM_ABI __remove_return_type unique(_BinaryPred __binary_pred);
     _LIBCPP_INLINE_VISIBILITY
     void merge(list& __c);
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     void merge(list&& __c) {merge(__c);}
 
     template <class _Comp>
     _LIBCPP_INLINE_VISIBILITY
         void merge(list&& __c, _Comp __comp) {merge(__c, __comp);}
-#endif
+
     template <class _Comp>
     _LIBCPP_HIDE_FROM_ABI void merge(list& __c, _Comp __comp);
 
@@ -1144,11 +1134,7 @@ template <class _Tp, class _Alloc>
 list<_Tp, _Alloc>::list(size_type __n)
 {
     for (; __n > 0; --__n)
-#ifndef _LIBCPP_CXX03_LANG
         emplace_back();
-#else
-        push_back(value_type());
-#endif
 }
 
 #if _LIBCPP_STD_VER >= 14
@@ -1201,8 +1187,6 @@ list<_Tp, _Alloc>::list(const list& __c, const __type_identity_t<allocator_type>
     for (const_iterator __i = __c.begin(), __e = __c.end(); __i != __e; ++__i)
         push_back(*__i);
 }
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 list<_Tp, _Alloc>::list(initializer_list<value_type> __il, const allocator_type& __a)
@@ -1277,8 +1261,6 @@ list<_Tp, _Alloc>::__move_assign(list& __c, true_type)
     base::__move_assign_alloc(__c);
     splice(end(), __c);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 inline
@@ -1483,8 +1465,6 @@ list<_Tp, _Alloc>::push_back(const value_type& __x)
     __hold.release();
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp, class _Alloc>
 void
 list<_Tp, _Alloc>::push_front(value_type&& __x)
@@ -1580,8 +1560,6 @@ list<_Tp, _Alloc>::insert(const_iterator __p, value_type&& __x)
     __hold.release();
     return iterator(__nl);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 void

@@ -276,9 +276,6 @@ _LIBCPP_PUSH_MACROS
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#ifndef _LIBCPP_CXX03_LANG
-
-
 // __tuple_leaf
 
 template <size_t _Ip, class _Hp,
@@ -1855,8 +1852,6 @@ _LIBCPP_NOEXCEPT_RETURN(
 #undef _LIBCPP_NOEXCEPT_RETURN
 
 #endif // _LIBCPP_STD_VER >= 17
-
-#endif // !defined(_LIBCPP_CXX03_LANG)
 
 _LIBCPP_END_NAMESPACE_STD
 

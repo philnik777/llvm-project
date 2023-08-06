@@ -19,14 +19,10 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 typedef chrono::time_point<_FilesystemClock> file_time_type;
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___FILESYSTEM_FILE_TIME_TYPE_H

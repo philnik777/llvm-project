@@ -678,12 +678,10 @@ public:
             return *this;
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     set(set&& __s)
         noexcept(is_nothrow_move_constructible<__base>::value)
         : __tree_(_VSTD::move(__s.__tree_)) {}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     explicit set(const allocator_type& __a)
@@ -696,7 +694,6 @@ public:
             insert(__s.begin(), __s.end());
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI set(set&& __s, const allocator_type& __a);
 
     _LIBCPP_INLINE_VISIBILITY
@@ -734,7 +731,6 @@ public:
             __tree_ = _VSTD::move(__s.__tree_);
             return *this;
         }
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     ~set() {
@@ -780,7 +776,6 @@ public:
     size_type max_size() const noexcept {return __tree_.max_size();}
 
     // modifiers:
-#ifndef _LIBCPP_CXX03_LANG
     template <class... _Args>
         _LIBCPP_INLINE_VISIBILITY
         pair<iterator, bool> emplace(_Args&&... __args)
@@ -789,7 +784,6 @@ public:
         _LIBCPP_INLINE_VISIBILITY
         iterator emplace_hint(const_iterator __p, _Args&&... __args)
             {return __tree_.__emplace_hint_unique(__p, _VSTD::forward<_Args>(__args)...);}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator,bool> insert(const value_type& __v)
@@ -817,7 +811,6 @@ public:
     }
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator,bool> insert(value_type&& __v)
         {return __tree_.__insert_unique(_VSTD::move(__v));}
@@ -829,7 +822,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void insert(initializer_list<value_type> __il)
         {insert(__il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     iterator  erase(const_iterator __p) {return __tree_.erase(__p);}
@@ -1048,8 +1040,6 @@ set(initializer_list<_Key>, _Allocator)
   -> set<_Key, less<_Key>, _Allocator>;
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Key, class _Compare, class _Allocator>
 set<_Key, _Compare, _Allocator>::set(set&& __s, const allocator_type& __a)
     : __tree_(_VSTD::move(__s.__tree_), __a)
@@ -1061,8 +1051,6 @@ set<_Key, _Compare, _Allocator>::set(set&& __s, const allocator_type& __a)
             insert(__e, _VSTD::move(__s.__tree_.remove(__s.begin())->__value_));
     }
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _Key, class _Compare, class _Allocator>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -1271,14 +1259,13 @@ public:
             return *this;
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     multiset(multiset&& __s)
         noexcept(is_nothrow_move_constructible<__base>::value)
         : __tree_(_VSTD::move(__s.__tree_)) {}
 
     _LIBCPP_HIDE_FROM_ABI multiset(multiset&& __s, const allocator_type& __a);
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit multiset(const allocator_type& __a)
         : __tree_(__a) {}
@@ -1289,7 +1276,6 @@ public:
             insert(__s.begin(), __s.end());
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     multiset(initializer_list<value_type> __il, const value_compare& __comp = value_compare())
         : __tree_(__comp)
@@ -1325,7 +1311,6 @@ public:
             __tree_ = _VSTD::move(__s.__tree_);
             return *this;
         }
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     ~multiset() {
@@ -1371,7 +1356,6 @@ public:
     size_type max_size() const noexcept {return __tree_.max_size();}
 
     // modifiers:
-#ifndef _LIBCPP_CXX03_LANG
     template <class... _Args>
         _LIBCPP_INLINE_VISIBILITY
         iterator emplace(_Args&&... __args)
@@ -1380,7 +1364,6 @@ public:
         _LIBCPP_INLINE_VISIBILITY
         iterator emplace_hint(const_iterator __p, _Args&&... __args)
             {return __tree_.__emplace_hint_multi(__p, _VSTD::forward<_Args>(__args)...);}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     iterator insert(const value_type& __v)
@@ -1408,7 +1391,6 @@ public:
     }
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     iterator insert(value_type&& __v)
         {return __tree_.__insert_multi(_VSTD::move(__v));}
@@ -1420,7 +1402,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void insert(initializer_list<value_type> __il)
         {insert(__il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     iterator  erase(const_iterator __p) {return __tree_.erase(__p);}
@@ -1639,8 +1620,6 @@ multiset(initializer_list<_Key>, _Allocator)
   -> multiset<_Key, less<_Key>, _Allocator>;
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Key, class _Compare, class _Allocator>
 multiset<_Key, _Compare, _Allocator>::multiset(multiset&& __s, const allocator_type& __a)
     : __tree_(_VSTD::move(__s.__tree_), __a)
@@ -1652,8 +1631,6 @@ multiset<_Key, _Compare, _Allocator>::multiset(multiset&& __s, const allocator_t
             insert(__e, _VSTD::move(__s.__tree_.remove(__s.begin())->__value_));
     }
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _Key, class _Compare, class _Allocator>
 inline _LIBCPP_INLINE_VISIBILITY

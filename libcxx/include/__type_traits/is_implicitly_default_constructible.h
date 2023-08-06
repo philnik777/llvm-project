@@ -19,7 +19,6 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#ifndef _LIBCPP_CXX03_LANG
 // First of all, we can't implement this check in C++03 mode because the {}
 // default initialization syntax isn't valid.
 // Second, we implement the trait in a funny manner with two defaulted template
@@ -39,7 +38,6 @@ template <class _Tp>
 struct __is_implicitly_default_constructible<_Tp,
                                              decltype(std::__test_implicit_default_constructible<_Tp const&>({})),
                                              false_type> : false_type {};
-#endif // !C++03
 
 _LIBCPP_END_NAMESPACE_STD
 

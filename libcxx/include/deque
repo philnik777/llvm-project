@@ -642,7 +642,6 @@ public:
 
     _LIBCPP_HIDE_FROM_ABI deque& operator=(const deque& __c);
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI deque(initializer_list<value_type> __il);
     _LIBCPP_HIDE_FROM_ABI deque(initializer_list<value_type> __il, const allocator_type& __a);
 
@@ -660,7 +659,6 @@ public:
 
     _LIBCPP_HIDE_FROM_ABI
     void assign(initializer_list<value_type> __il) {assign(__il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
 
     template <class _InputIter>
     _LIBCPP_HIDE_FROM_ABI void assign(_InputIter __f, _InputIter __l,
@@ -785,7 +783,7 @@ public:
     // 23.2.2.3 modifiers:
     _LIBCPP_HIDE_FROM_ABI void push_front(const value_type& __v);
     _LIBCPP_HIDE_FROM_ABI void push_back(const value_type& __v);
-#ifndef _LIBCPP_CXX03_LANG
+
 #if _LIBCPP_STD_VER >= 17
     template <class... _Args> _LIBCPP_HIDE_FROM_ABI reference emplace_front(_Args&&... __args);
     template <class... _Args> _LIBCPP_HIDE_FROM_ABI reference emplace_back (_Args&&... __args);
@@ -817,7 +815,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI
     iterator insert(const_iterator __p, initializer_list<value_type> __il)
         {return insert(__p, __il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_HIDE_FROM_ABI iterator insert(const_iterator __p, const value_type& __v);
     _LIBCPP_HIDE_FROM_ABI iterator insert(const_iterator __p, size_type __n, const value_type& __v);
     template <class _InputIter>
@@ -1426,8 +1424,6 @@ deque<_Tp, _Allocator>::operator=(const deque& __c)
     return *this;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp, class _Allocator>
 deque<_Tp, _Allocator>::deque(initializer_list<value_type> __il)
     : __start_(0), __size_(0, __default_init_tag())
@@ -1510,8 +1506,6 @@ deque<_Tp, _Allocator>::__move_assign(deque& __c, true_type)
     shrink_to_fit();
     __move_assign(__c);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Allocator>
 template <class _InputIter>
@@ -1747,7 +1741,6 @@ deque<_Tp, _Allocator>::push_front(const value_type& __v)
     ++__size();
 }
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Tp, class _Allocator>
 void
 deque<_Tp, _Allocator>::push_back(value_type&& __v)
@@ -1936,9 +1929,6 @@ deque<_Tp, _Allocator>::emplace(const_iterator __p, _Args&&... __args)
     }
     return begin() + __pos;
 }
-
-#endif // _LIBCPP_CXX03_LANG
-
 
 template <class _Tp, class _Allocator>
 typename deque<_Tp, _Allocator>::iterator
@@ -2203,11 +2193,7 @@ template <class _InputIterator, class _Sentinel>
 _LIBCPP_HIDE_FROM_ABI
 void deque<_Tp, _Allocator>::__append_with_sentinel(_InputIterator __f, _Sentinel __l) {
     for (; __f != __l; ++__f)
-#ifdef _LIBCPP_CXX03_LANG
-        push_back(*__f);
-#else
         emplace_back(*__f);
-#endif
 }
 
 template <class _Tp, class _Allocator>

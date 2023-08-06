@@ -235,17 +235,11 @@ public:
     static constexpr const result_type default_seed = 1u;
 
     // constructors and seeding functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     linear_congruential_engine() : linear_congruential_engine(default_seed) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit linear_congruential_engine(result_type __s) { seed(__s); }
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit linear_congruential_engine(result_type __s = default_seed) {
-      seed(__s);
-    }
-#endif
+
     template<class _Sseq>
         _LIBCPP_INLINE_VISIBILITY
         explicit linear_congruential_engine(_Sseq& __q,

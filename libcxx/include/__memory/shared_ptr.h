@@ -504,7 +504,7 @@ public:
             // In C++03 we get errors when trying to do SFINAE with the
             // delete operator, so we always pretend that it's deletable.
             // The same happens on GCC.
-#if !defined(_LIBCPP_CXX03_LANG) && !defined(_LIBCPP_COMPILER_GCC)
+#if !defined(_LIBCPP_COMPILER_GCC)
             , _If<is_array<_Tp>::value, __is_array_deletable<_Yp*>, __is_deletable<_Yp*> >
 #endif
         >::value
@@ -529,11 +529,7 @@ public:
 #endif // _LIBCPP_HAS_NO_EXCEPTIONS
             typedef typename __shared_ptr_default_allocator<_Yp>::type _AllocT;
             typedef __shared_ptr_pointer<_Yp*, _Dp, _AllocT> _CntrlBlk;
-#ifndef _LIBCPP_CXX03_LANG
             __cntrl_ = new _CntrlBlk(__p, _VSTD::move(__d), _AllocT());
-#else
-            __cntrl_ = new _CntrlBlk(__p, __d, _AllocT());
-#endif // not _LIBCPP_CXX03_LANG
             __enable_weak_this(__p, __p);
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS
         }
@@ -560,11 +556,7 @@ public:
             _A2 __a2(__a);
             unique_ptr<_CntrlBlk, _D2> __hold2(__a2.allocate(1), _D2(__a2, 1));
             ::new ((void*)_VSTD::addressof(*__hold2.get()))
-#ifndef _LIBCPP_CXX03_LANG
                 _CntrlBlk(__p, _VSTD::move(__d), __a);
-#else
-                _CntrlBlk(__p, __d, __a);
-#endif // not _LIBCPP_CXX03_LANG
             __cntrl_ = _VSTD::addressof(*__hold2.release());
             __enable_weak_this(__p, __p);
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS
@@ -588,11 +580,7 @@ public:
 #endif // _LIBCPP_HAS_NO_EXCEPTIONS
             typedef typename __shared_ptr_default_allocator<_Tp>::type _AllocT;
             typedef __shared_ptr_pointer<nullptr_t, _Dp, _AllocT> _CntrlBlk;
-#ifndef _LIBCPP_CXX03_LANG
             __cntrl_ = new _CntrlBlk(__p, _VSTD::move(__d), _AllocT());
-#else
-            __cntrl_ = new _CntrlBlk(__p, __d, _AllocT());
-#endif // not _LIBCPP_CXX03_LANG
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS
         }
         catch (...)
@@ -618,11 +606,7 @@ public:
             _A2 __a2(__a);
             unique_ptr<_CntrlBlk, _D2> __hold2(__a2.allocate(1), _D2(__a2, 1));
             ::new ((void*)_VSTD::addressof(*__hold2.get()))
-#ifndef _LIBCPP_CXX03_LANG
                 _CntrlBlk(__p, _VSTD::move(__d), __a);
-#else
-                _CntrlBlk(__p, __d, __a);
-#endif // not _LIBCPP_CXX03_LANG
             __cntrl_ = _VSTD::addressof(*__hold2.release());
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS
         }

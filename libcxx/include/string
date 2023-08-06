@@ -909,7 +909,6 @@ public:
       __init_copy_ctor_external(std::__to_address(__str.__get_long_pointer()), __str.__get_long_size());
   }
 
-#ifndef _LIBCPP_CXX03_LANG
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string(basic_string&& __str)
 #  if _LIBCPP_STD_VER <= 14
       noexcept(is_nothrow_move_constructible<allocator_type>::value)
@@ -931,7 +930,6 @@ public:
       __str.__default_init();
     }
   }
-#endif // _LIBCPP_CXX03_LANG
 
   template <__enable_if_t<__is_allocator<_Allocator>::value, int> = 0>
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string(const _CharT* __s)
@@ -1079,7 +1077,6 @@ public:
   }
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string(initializer_list<_CharT> __il)
       : __r_(__default_init_tag(), __default_init_tag()) {
     __init(__il.begin(), __il.end());
@@ -1089,7 +1086,6 @@ public:
       : __r_(__default_init_tag(), __a) {
     __init(__il.begin(), __il.end());
   }
-#endif // _LIBCPP_CXX03_LANG
 
   inline _LIBCPP_CONSTEXPR_SINCE_CXX20 ~basic_string() {
     if (__is_long())
@@ -1108,7 +1104,6 @@ public:
       return assign(__sv);
     }
 
-#ifndef _LIBCPP_CXX03_LANG
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string& operator=(basic_string&& __str)
       noexcept((__noexcept_move_assign_container<_Allocator, __alloc_traits>::value)) {
     __move_assign(__str, integral_constant<bool, __alloc_traits::propagate_on_container_move_assignment::value>());
@@ -1117,7 +1112,7 @@ public:
 
      _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& operator=(initializer_list<value_type> __il) {return assign(__il.begin(), __il.size());}
-#endif
+
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& operator=(const value_type* __s) {return assign(__s);}
 #if _LIBCPP_STD_VER >= 23
@@ -1240,10 +1235,8 @@ public:
         return *this;
     }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& operator+=(initializer_list<value_type> __il) { return append(__il); }
-#endif // _LIBCPP_CXX03_LANG
 
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string& append(const basic_string& __str) {
         return append(__str.data(), __str.size());
@@ -1298,10 +1291,8 @@ public:
     }
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& append(initializer_list<value_type> __il) {return append(__il.begin(), __il.size());}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_CONSTEXPR_SINCE_CXX20 void push_back(value_type __c);
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 void pop_back();
@@ -1335,12 +1326,12 @@ public:
 
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& assign(const basic_string& __str) { return *this = __str; }
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& assign(basic_string&& __str)
         noexcept((__noexcept_move_assign_container<_Allocator, __alloc_traits>::value))
         {*this = std::move(__str); return *this;}
-#endif
+
     _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string& assign(const basic_string& __str, size_type __pos, size_type __n=npos);
 
     template <class _Tp,
@@ -1378,10 +1369,8 @@ public:
     }
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& assign(initializer_list<value_type> __il) {return assign(__il.begin(), __il.size());}
-#endif // _LIBCPP_CXX03_LANG
 
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string&
   insert(size_type __pos1, const basic_string& __str) {
@@ -1439,11 +1428,9 @@ public:
   _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS _LIBCPP_CONSTEXPR_SINCE_CXX20 iterator
   insert(const_iterator __pos, _ForwardIterator __first, _ForwardIterator __last);
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     iterator insert(const_iterator __pos, initializer_list<value_type> __il)
                     {return insert(__pos, __il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string& erase(size_type __pos = 0, size_type __n = npos);
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
@@ -1519,11 +1506,9 @@ public:
   }
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     basic_string& replace(const_iterator __i1, const_iterator __i2, initializer_list<value_type> __il)
         {return replace(__i1, __i2, __il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_CONSTEXPR_SINCE_CXX20 size_type copy(value_type* __s, size_type __n, size_type __pos = 0) const;
 
@@ -1982,7 +1967,6 @@ private:
     void __copy_assign_alloc(const basic_string&, false_type) noexcept
         {}
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
     void __move_assign(basic_string& __str, false_type)
         noexcept(__alloc_traits::is_always_equal::value);
@@ -1992,7 +1976,6 @@ private:
         noexcept;
 #else
         noexcept(is_nothrow_move_assignable<allocator_type>::value);
-#endif
 #endif
 
     _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
@@ -2501,8 +2484,6 @@ basic_string<_CharT, _Traits, _Allocator>::operator=(const basic_string& __str)
   return *this;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _CharT, class _Traits, class _Allocator>
 inline _LIBCPP_CONSTEXPR_SINCE_CXX20
 void
@@ -2544,8 +2525,6 @@ basic_string<_CharT, _Traits, _Allocator>::__move_assign(basic_string& __str, tr
     traits_type::assign(__str.__get_short_pointer()[0], value_type());
   }
 }
-
-#endif
 
 template <class _CharT, class _Traits, class _Allocator>
 template<class _InputIterator, __enable_if_t<__has_exactly_input_iterator_category<_InputIterator>::value, int> >
@@ -4191,8 +4170,6 @@ operator+(const basic_string<_CharT, _Traits, _Allocator>& __lhs, _CharT __rhs)
     return __r;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template<class _CharT, class _Traits, class _Allocator>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
 basic_string<_CharT, _Traits, _Allocator>
@@ -4250,8 +4227,6 @@ operator+(basic_string<_CharT, _Traits, _Allocator>&& __lhs, _CharT __rhs)
     __lhs.push_back(__rhs);
     return std::move(__lhs);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 // swap
 

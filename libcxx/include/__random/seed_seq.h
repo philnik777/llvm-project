@@ -36,13 +36,12 @@ public:
     // constructors
     _LIBCPP_INLINE_VISIBILITY
     seed_seq() noexcept {}
-#ifndef _LIBCPP_CXX03_LANG
+
     template<class _Tp, __enable_if_t<is_integral<_Tp>::value>* = nullptr>
     _LIBCPP_INLINE_VISIBILITY
     seed_seq(initializer_list<_Tp> __il) {
         __init(__il.begin(), __il.end());
     }
-#endif // _LIBCPP_CXX03_LANG
 
     template<class _InputIterator>
     _LIBCPP_INLINE_VISIBILITY

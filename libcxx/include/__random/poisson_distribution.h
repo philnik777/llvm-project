@@ -72,17 +72,12 @@ private:
 
 public:
     // constructors and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     poisson_distribution() : poisson_distribution(1.0) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit poisson_distribution(double __mean)
         : __p_(__mean) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit poisson_distribution(double __mean = 1.0)
-        : __p_(__mean) {}
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     explicit poisson_distribution(const param_type& __p) : __p_(__p) {}
     _LIBCPP_INLINE_VISIBILITY

@@ -116,11 +116,7 @@ random_shuffle(_RandomAccessIterator __first, _RandomAccessIterator __last)
 template <class _RandomAccessIterator, class _RandomNumberGenerator>
 _LIBCPP_HIDE_FROM_ABI _LIBCPP_DEPRECATED_IN_CXX14 void
 random_shuffle(_RandomAccessIterator __first, _RandomAccessIterator __last,
-#ifndef _LIBCPP_CXX03_LANG
                _RandomNumberGenerator&& __rand)
-#else
-               _RandomNumberGenerator& __rand)
-#endif
 {
     typedef typename iterator_traits<_RandomAccessIterator>::difference_type difference_type;
     difference_type __d = __last - __first;

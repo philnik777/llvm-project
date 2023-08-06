@@ -36,11 +36,6 @@ inline constexpr bool is_error_condition_enum_v = is_error_condition_enum<_Tp>::
 template <>
 struct _LIBCPP_TEMPLATE_VIS is_error_condition_enum<errc> : true_type {};
 
-#ifdef _LIBCPP_CXX03_LANG
-template <>
-struct _LIBCPP_TEMPLATE_VIS is_error_condition_enum<errc::__lx> : true_type {};
-#endif
-
 namespace __adl_only {
 // Those cause ADL to trigger but they are not viable candidates,
 // so they are never actually selected.

@@ -13,9 +13,6 @@
 
 // Perform a few sanity checks on libc++ and libc++abi macros to ensure that
 // the code below can be an exact copy of the code in libcxx/src/new.cpp.
-#if !defined(_THROW_BAD_ALLOC)
-#  error The _THROW_BAD_ALLOC macro should be already defined by libc++
-#endif
 
 #ifndef _LIBCPP_WEAK
 #  error The _LIBCPP_WEAK macro should be already defined by libc++
@@ -32,7 +29,7 @@
 
 _LIBCPP_WEAK
 void *
-operator new(std::size_t size) _THROW_BAD_ALLOC
+operator new(std::size_t size)
 {
     if (size == 0)
         size = 1;
@@ -75,7 +72,7 @@ operator new(size_t size, const std::nothrow_t&) noexcept
 
 _LIBCPP_WEAK
 void*
-operator new[](size_t size) _THROW_BAD_ALLOC
+operator new[](size_t size)
 {
     return ::operator new(size);
 }
@@ -145,7 +142,7 @@ operator delete[] (void* ptr, size_t) noexcept
 
 _LIBCPP_WEAK
 void *
-operator new(std::size_t size, std::align_val_t alignment) _THROW_BAD_ALLOC
+operator new(std::size_t size, std::align_val_t alignment)
 {
     if (size == 0)
         size = 1;
@@ -196,7 +193,7 @@ operator new(size_t size, std::align_val_t alignment, const std::nothrow_t&) noe
 
 _LIBCPP_WEAK
 void*
-operator new[](size_t size, std::align_val_t alignment) _THROW_BAD_ALLOC
+operator new[](size_t size, std::align_val_t alignment)
 {
     return ::operator new(size, alignment);
 }

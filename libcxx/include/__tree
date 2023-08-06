@@ -990,10 +990,8 @@ private:
 };
 
 template<class _Tp, class _Compare>
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_DIAGNOSE_WARNING(!__invokable<_Compare const&, _Tp const&, _Tp const&>::value,
         "the specified comparator type does not provide a viable const call operator")
-#endif
 int __diagnose_non_const_comparator();
 
 template <class _Tp, class _Compare, class _Allocator>

@@ -70,13 +70,9 @@ public:
     // engine characteristics
     static constexpr const size_t table_size = __k;
 
-#ifdef _LIBCPP_CXX03_LANG
-    static const result_type _Min = _Engine::_Min;
-    static const result_type _Max = _Engine::_Max;
-#else
     static constexpr const result_type _Min = _Engine::min();
     static constexpr const result_type _Max = _Engine::max();
-#endif
+
     static_assert(_Min < _Max, "shuffle_order_engine invalid parameters");
     _LIBCPP_INLINE_VISIBILITY
     static constexpr result_type min() { return _Min; }
@@ -91,11 +87,11 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     explicit shuffle_order_engine(const _Engine& __e)
         : __e_(__e) {__init();}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit shuffle_order_engine(_Engine&& __e)
         : __e_(_VSTD::move(__e)) {__init();}
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit shuffle_order_engine(result_type __sd) : __e_(__sd) {__init();}
     template<class _Sseq>

@@ -17,8 +17,6 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 enum class _LIBCPP_ENUM_VIS directory_options : unsigned char {
@@ -72,7 +70,5 @@ inline directory_options& operator^=(directory_options& __lhs,
 }
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___FILESYSTEM_DIRECTORY_OPTIONS_H

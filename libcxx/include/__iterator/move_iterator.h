@@ -304,7 +304,6 @@ auto operator<=>(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& 
 }
 #endif // _LIBCPP_STD_VER >= 20
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Iter1, class _Iter2>
 inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX17
 auto operator-(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y)
@@ -312,15 +311,6 @@ auto operator-(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __
 {
     return __x.base() - __y.base();
 }
-#else
-template <class _Iter1, class _Iter2>
-inline _LIBCPP_HIDE_FROM_ABI
-typename move_iterator<_Iter1>::difference_type
-operator-(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y)
-{
-    return __x.base() - __y.base();
-}
-#endif // !_LIBCPP_CXX03_LANG
 
 #if _LIBCPP_STD_VER >= 20
 template <class _Iter>

@@ -414,11 +414,6 @@ enum class future_errc
 template <>
 struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<future_errc> : public true_type {};
 
-#ifdef _LIBCPP_CXX03_LANG
-template <>
-struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<future_errc::__lx> : public true_type { };
-#endif
-
 //enum class launch
 enum class launch
 {
@@ -426,8 +421,6 @@ enum class launch
     deferred = 2,
     any = async | deferred
 };
-
-#ifndef _LIBCPP_CXX03_LANG
 
 typedef underlying_type<launch>::type __launch_underlying_type;
 
@@ -486,8 +479,6 @@ operator^=(launch& __x, launch __y)
 {
     __x = __x ^ __y; return __x;
 }
-
-#endif // !_LIBCPP_CXX03_LANG
 
 //enum class future_status
 enum class future_status
@@ -2161,8 +2152,6 @@ __make_async_assoc_state(_Fp&& __f)
     return future<_Rp>(__h.get());
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Fp, class... _Args>
 class _LIBCPP_HIDDEN __async_func
 {
@@ -2229,8 +2218,6 @@ async(_Fp&& __f, _Args&&... __args)
     return _VSTD::async(launch::any, _VSTD::forward<_Fp>(__f),
                                     _VSTD::forward<_Args>(__args)...);
 }
-
-#endif // C++03
 
 // shared_future
 

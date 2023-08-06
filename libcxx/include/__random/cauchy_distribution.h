@@ -61,17 +61,11 @@ private:
 
 public:
     // constructor and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     cauchy_distribution() : cauchy_distribution(0) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit cauchy_distribution(result_type __a, result_type __b = 1)
         : __p_(param_type(__a, __b)) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit cauchy_distribution(result_type __a = 0, result_type __b = 1)
-        : __p_(param_type(__a, __b)) {}
-#endif
     _LIBCPP_INLINE_VISIBILITY
     explicit cauchy_distribution(const param_type& __p)
         : __p_(__p) {}

@@ -88,21 +88,13 @@ public:
 template <class _Tp, class _Up, bool = __has_rebind<_Tp, _Up>::value>
 struct __pointer_traits_rebind
 {
-#ifndef _LIBCPP_CXX03_LANG
     typedef _LIBCPP_NODEBUG typename _Tp::template rebind<_Up> type;
-#else
-    typedef _LIBCPP_NODEBUG typename _Tp::template rebind<_Up>::other type;
-#endif
 };
 
 template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
 struct __pointer_traits_rebind<_Sp<_Tp, _Args...>, _Up, true>
 {
-#ifndef _LIBCPP_CXX03_LANG
     typedef _LIBCPP_NODEBUG typename _Sp<_Tp, _Args...>::template rebind<_Up> type;
-#else
-    typedef _LIBCPP_NODEBUG typename _Sp<_Tp, _Args...>::template rebind<_Up>::other type;
-#endif
 };
 
 template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
@@ -118,12 +110,7 @@ struct _LIBCPP_TEMPLATE_VIS pointer_traits
     typedef typename __pointer_traits_element_type<pointer>::type    element_type;
     typedef typename __pointer_traits_difference_type<pointer>::type difference_type;
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class _Up> using rebind = typename __pointer_traits_rebind<pointer, _Up>::type;
-#else
-    template <class _Up> struct rebind
-        {typedef typename __pointer_traits_rebind<pointer, _Up>::type other;};
-#endif // _LIBCPP_CXX03_LANG
 
 private:
     struct __nat {};
@@ -140,11 +127,7 @@ struct _LIBCPP_TEMPLATE_VIS pointer_traits<_Tp*>
     typedef _Tp       element_type;
     typedef ptrdiff_t difference_type;
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class _Up> using rebind = _Up*;
-#else
-    template <class _Up> struct rebind {typedef _Up* other;};
-#endif
 
 private:
     struct __nat {};
@@ -154,13 +137,8 @@ public:
         {return _VSTD::addressof(__r);}
 };
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _From, class _To>
 using __rebind_pointer_t = typename pointer_traits<_From>::template rebind<_To>;
-#else
-template <class _From, class _To>
-using __rebind_pointer_t = typename pointer_traits<_From>::template rebind<_To>::other;
-#endif
 
 // to_address
 

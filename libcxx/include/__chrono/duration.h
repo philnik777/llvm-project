@@ -244,11 +244,7 @@ private:
     rep __rep_;
 public:
 
-#ifndef _LIBCPP_CXX03_LANG
         constexpr duration() = default;
-#else
-        _LIBCPP_HIDE_FROM_ABI duration() {}
-#endif
 
     template <class _Rep2>
         _LIBCPP_INLINE_VISIBILITY constexpr

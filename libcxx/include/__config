@@ -323,11 +323,6 @@
 #  define _LIBCPP_TOSTRING2(x) #x
 #  define _LIBCPP_TOSTRING(x) _LIBCPP_TOSTRING2(x)
 
-// NOLINTNEXTLINE(libcpp-cpp-version-check)
-#  if __cplusplus < 201103L
-#    define _LIBCPP_CXX03_LANG
-#  endif
-
 #  ifndef __has_attribute
 #    define __has_attribute(__x) 0
 #  endif
@@ -878,11 +873,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
 #    define _LIBCPP_DEPRECATED_(m)
 #  endif
 
-#  if !defined(_LIBCPP_CXX03_LANG)
 #    define _LIBCPP_DEPRECATED_IN_CXX11 _LIBCPP_DEPRECATED
-#  else
-#    define _LIBCPP_DEPRECATED_IN_CXX11
-#  endif
 
 #  if _LIBCPP_STD_VER >= 14
 #    define _LIBCPP_DEPRECATED_IN_CXX14 _LIBCPP_DEPRECATED

@@ -418,11 +418,6 @@ enum class io_errc
 template <>
 struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<io_errc> : public true_type { };
 
-#ifdef _LIBCPP_CXX03_LANG
-template <>
-struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<io_errc::__lx> : public true_type { };
-#endif
-
 _LIBCPP_EXPORTED_FROM_ABI const error_category& iostream_category() noexcept;
 
 inline _LIBCPP_INLINE_VISIBILITY
@@ -620,15 +615,8 @@ public:
     static_assert((is_same<_CharT, typename traits_type::char_type>::value),
                   "traits_type::char_type must be the same type as CharT");
 
-#ifdef _LIBCPP_CXX03_LANG
-    // Preserve the ability to compare with literal 0,
-    // and implicitly convert to bool, but not implicitly convert to int.
-    _LIBCPP_INLINE_VISIBILITY
-    operator void*() const {return fail() ? nullptr : (void*)this;}
-#else
     _LIBCPP_INLINE_VISIBILITY
     explicit operator bool() const {return !fail();}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY bool operator!() const    {return  fail();}
     _LIBCPP_INLINE_VISIBILITY iostate rdstate() const   {return ios_base::rdstate();}

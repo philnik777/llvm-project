@@ -35,9 +35,8 @@ class _LIBCPP_TEMPLATE_VIS discard_block_engine
 
     static_assert(  0 <  __r, "discard_block_engine invalid parameters");
     static_assert(__r <= __p, "discard_block_engine invalid parameters");
-#ifndef _LIBCPP_CXX03_LANG // numeric_limits::max() is not constexpr in C++03
     static_assert(__r <= numeric_limits<int>::max(), "discard_block_engine invalid parameters");
-#endif
+
 public:
     // types
     typedef typename _Engine::result_type result_type;
@@ -46,13 +45,8 @@ public:
     static constexpr const size_t block_size = __p;
     static constexpr const size_t used_block = __r;
 
-#ifdef _LIBCPP_CXX03_LANG
-    static const result_type _Min = _Engine::_Min;
-    static const result_type _Max = _Engine::_Max;
-#else
     static constexpr const result_type _Min = _Engine::min();
     static constexpr const result_type _Max = _Engine::max();
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     static constexpr result_type min() { return _Engine::min(); }
@@ -65,11 +59,11 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     explicit discard_block_engine(const _Engine& __e)
         : __e_(__e), __n_(0) {}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit discard_block_engine(_Engine&& __e)
         : __e_(_VSTD::move(__e)), __n_(0) {}
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit discard_block_engine(result_type __sd) : __e_(__sd), __n_(0) {}
     template<class _Sseq>

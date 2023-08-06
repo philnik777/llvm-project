@@ -35,13 +35,8 @@ struct __is_swappable;
 template <class _Tp>
 struct __is_nothrow_swappable;
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Tp>
 using __swap_result_t = typename enable_if<is_move_constructible<_Tp>::value && is_move_assignable<_Tp>::value>::type;
-#else
-template <class>
-using __swap_result_t = void;
-#endif
 
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20 __swap_result_t<_Tp> swap(_Tp& __x, _Tp& __y)

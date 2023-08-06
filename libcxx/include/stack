@@ -178,8 +178,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     stack& operator=(const stack& __q) {c = __q.c; return *this;}
 
-
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     stack(stack&& __q)
         noexcept(is_nothrow_move_constructible<container_type>::value)
@@ -192,7 +190,6 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     explicit stack(container_type&& __c) : c(_VSTD::move(__c)) {}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     explicit stack(const container_type& __c) : c(__c) {}
@@ -212,7 +209,7 @@ public:
         stack(const stack& __s, const _Alloc& __a,
               __enable_if_t<uses_allocator<container_type, _Alloc>::value>* = 0)
             : c(__s.c, __a) {}
-#ifndef _LIBCPP_CXX03_LANG
+
     template <class _Alloc>
         _LIBCPP_INLINE_VISIBILITY
         stack(container_type&& __c, const _Alloc& __a,
@@ -223,7 +220,6 @@ public:
         stack(stack&& __s, const _Alloc& __a,
               __enable_if_t<uses_allocator<container_type, _Alloc>::value>* = 0)
             : c(_VSTD::move(__s.c), __a) {}
-#endif // _LIBCPP_CXX03_LANG
 
 #if _LIBCPP_STD_VER >= 23
     template <class _InputIterator,
@@ -262,7 +258,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void push(const value_type& __v) {c.push_back(__v);}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     void push(value_type&& __v) {c.push_back(_VSTD::move(__v));}
 
@@ -289,7 +285,6 @@ public:
         void      emplace(_Args&&... __args)
         {        c.emplace_back(_VSTD::forward<_Args>(__args)...);}
 #endif
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     void pop() {c.pop_back();}

@@ -693,22 +693,18 @@ struct __generic_container_node_destructor<__hash_node<_Tp, _VoidPtr>, _Alloc>
 
 template <class _Key, class _Hash, class _Equal>
 struct __enforce_unordered_container_requirements {
-#ifndef _LIBCPP_CXX03_LANG
     static_assert(__check_hash_requirements<_Key, _Hash>::value,
     "the specified hash does not meet the Hash requirements");
     static_assert(is_copy_constructible<_Equal>::value,
     "the specified comparator is required to be copy constructible");
-#endif
     typedef int type;
 };
 
 template <class _Key, class _Hash, class _Equal>
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_DIAGNOSE_WARNING(!__invokable<_Equal const&, _Key const&, _Key const&>::value,
     "the specified comparator type does not provide a viable const call operator")
     _LIBCPP_DIAGNOSE_WARNING(!__invokable<_Hash const&, _Key const&>::value,
     "the specified hash functor does not provide a viable const call operator")
-#endif
 typename __enforce_unordered_container_requirements<_Key, _Hash, _Equal>::type
 __diagnose_unordered_container_requirements(int);
 
@@ -1314,13 +1310,6 @@ __hash_table<_Tp, _Hash, _Equal, _Alloc>::__hash_table(__hash_table&& __u,
 template <class _Tp, class _Hash, class _Equal, class _Alloc>
 __hash_table<_Tp, _Hash, _Equal, _Alloc>::~__hash_table()
 {
-#if defined(_LIBCPP_CXX03_LANG)
-    static_assert((is_copy_constructible<key_equal>::value),
-                 "Predicate must be copy-constructible.");
-    static_assert((is_copy_constructible<hasher>::value),
-                 "Hasher must be copy-constructible.");
-#endif
-
     __deallocate_node(__p1_.first().__next_);
 }
 

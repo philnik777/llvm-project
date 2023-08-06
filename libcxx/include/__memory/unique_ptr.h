@@ -53,11 +53,7 @@ template <class _Tp>
 struct _LIBCPP_TEMPLATE_VIS default_delete {
     static_assert(!is_function<_Tp>::value,
                   "default_delete cannot be instantiated for function types");
-#ifndef _LIBCPP_CXX03_LANG
   _LIBCPP_INLINE_VISIBILITY constexpr default_delete() noexcept = default;
-#else
-  _LIBCPP_INLINE_VISIBILITY default_delete() {}
-#endif
   template <class _Up>
   _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX23 default_delete(
       const default_delete<_Up>&, typename enable_if<is_convertible<_Up*, _Tp*>::value>::type* = 0) noexcept {}
@@ -77,11 +73,7 @@ private:
       : enable_if<is_convertible<_Up(*)[], _Tp(*)[]>::value> {};
 
 public:
-#ifndef _LIBCPP_CXX03_LANG
   _LIBCPP_INLINE_VISIBILITY constexpr default_delete() noexcept = default;
-#else
-  _LIBCPP_INLINE_VISIBILITY default_delete() {}
-#endif
 
   template <class _Up>
   _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX23
@@ -256,11 +248,6 @@ public:
     reset(__p.release());
     return *this;
   }
-#endif
-
-#ifdef _LIBCPP_CXX03_LANG
-  unique_ptr(unique_ptr const&) = delete;
-  unique_ptr& operator=(unique_ptr const&) = delete;
 #endif
 
   _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX23 ~unique_ptr() { reset(); }
@@ -455,10 +442,6 @@ public:
     return *this;
   }
 
-#ifdef _LIBCPP_CXX03_LANG
-  unique_ptr(unique_ptr const&) = delete;
-  unique_ptr& operator=(unique_ptr const&) = delete;
-#endif
 public:
   _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX23 ~unique_ptr() { reset(); }
 
@@ -724,12 +707,8 @@ typename __unique_if<_Tp>::__unique_array_known_bound make_unique_for_overwrite(
 template <class _Tp> struct _LIBCPP_TEMPLATE_VIS hash;
 
 template <class _Tp, class _Dp>
-#ifdef _LIBCPP_CXX03_LANG
-struct _LIBCPP_TEMPLATE_VIS hash<unique_ptr<_Tp, _Dp> >
-#else
 struct _LIBCPP_TEMPLATE_VIS hash<__enable_hash_helper<
     unique_ptr<_Tp, _Dp>, typename unique_ptr<_Tp, _Dp>::pointer> >
-#endif
 {
 #if _LIBCPP_STD_VER <= 17 || defined(_LIBCPP_ENABLE_CXX20_REMOVED_BINDER_TYPEDEFS)
     _LIBCPP_DEPRECATED_IN_CXX17 typedef unique_ptr<_Tp, _Dp> argument_type;

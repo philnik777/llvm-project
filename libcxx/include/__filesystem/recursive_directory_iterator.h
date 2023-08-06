@@ -28,7 +28,7 @@
 #  pragma GCC system_header
 #endif
 
-#if !defined(_LIBCPP_CXX03_LANG) && !defined(_LIBCPP_HAS_NO_FILESYSTEM)
+#if !defined(_LIBCPP_HAS_NO_FILESYSTEM)
 
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
@@ -178,6 +178,6 @@ inline constexpr bool _VSTD::ranges::enable_view<_VSTD_FS::recursive_directory_i
 
 #endif // _LIBCPP_STD_VER >= 20
 
-#endif // !defined(_LIBCPP_CXX03_LANG) && !defined(_LIBCPP_HAS_NO_FILESYSTEM)
+#endif // !defined(_LIBCPP_HAS_NO_FILESYSTEM)
 
 #endif // _LIBCPP___FILESYSTEM_RECURSIVE_DIRECTORY_ITERATOR_H

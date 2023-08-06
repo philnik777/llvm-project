@@ -170,16 +170,12 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     thread() noexcept : __t_(_LIBCPP_NULL_THREAD) {}
-#ifndef _LIBCPP_CXX03_LANG
+
     template <class _Fp, class ..._Args,
               class = __enable_if_t<!is_same<__remove_cvref_t<_Fp>, thread>::value> >
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         explicit thread(_Fp&& __f, _Args&&... __args);
-#else  // _LIBCPP_CXX03_LANG
-    template <class _Fp>
-    _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
-    explicit thread(_Fp __f);
-#endif
+
     ~thread();
 
     _LIBCPP_INLINE_VISIBILITY
@@ -210,8 +206,6 @@ public:
 
     static unsigned hardware_concurrency() noexcept;
 };
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _TSp, class _Fp, class ..._Args, size_t ..._Indices>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -251,43 +245,6 @@ thread::thread(_Fp&& __f, _Args&&... __args)
     else
         __throw_system_error(__ec, "thread constructor failed");
 }
-
-#else  // _LIBCPP_CXX03_LANG
-
-template <class _Fp>
-struct __thread_invoke_pair {
-    // This type is used to pass memory for thread local storage and a functor
-    // to a newly created thread because std::pair doesn't work with
-    // std::unique_ptr in C++03.
-    _LIBCPP_HIDE_FROM_ABI __thread_invoke_pair(_Fp& __f) : __tsp_(new __thread_struct), __fn_(__f) {}
-    unique_ptr<__thread_struct> __tsp_;
-    _Fp __fn_;
-};
-
-template <class _Fp>
-_LIBCPP_HIDE_FROM_ABI void* __thread_proxy_cxx03(void* __vp)
-{
-    unique_ptr<_Fp> __p(static_cast<_Fp*>(__vp));
-    __thread_local_data().set_pointer(__p->__tsp_.release());
-    (__p->__fn_)();
-    return nullptr;
-}
-
-template <class _Fp>
-thread::thread(_Fp __f)
-{
-
-    typedef __thread_invoke_pair<_Fp> _InvokePair;
-    typedef unique_ptr<_InvokePair> _PairPtr;
-    _PairPtr __pp(new _InvokePair(__f));
-    int __ec = _VSTD::__libcpp_thread_create(&__t_, &__thread_proxy_cxx03<_InvokePair>, __pp.get());
-    if (__ec == 0)
-        __pp.release();
-    else
-        __throw_system_error(__ec, "thread constructor failed");
-}
-
-#endif // _LIBCPP_CXX03_LANG
 
 inline _LIBCPP_INLINE_VISIBILITY
 void swap(thread& __x, thread& __y) noexcept {__x.swap(__y);}

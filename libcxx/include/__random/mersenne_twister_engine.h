@@ -124,17 +124,11 @@ public:
     static constexpr const result_type default_seed = 5489u;
 
     // constructors and seeding functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     mersenne_twister_engine() : mersenne_twister_engine(default_seed) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit mersenne_twister_engine(result_type __sd) { seed(__sd); }
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit mersenne_twister_engine(result_type __sd = default_seed) {
-      seed(__sd);
-    }
-#endif
+
     template<class _Sseq>
         _LIBCPP_INLINE_VISIBILITY
         explicit mersenne_twister_engine(_Sseq& __q,

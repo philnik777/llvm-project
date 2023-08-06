@@ -35,7 +35,7 @@ struct _LIBCPP_EXPORTED_FROM_ABI adopt_lock_t {
 inline constexpr defer_lock_t defer_lock   = defer_lock_t();
 inline constexpr try_to_lock_t try_to_lock = try_to_lock_t();
 inline constexpr adopt_lock_t adopt_lock   = adopt_lock_t();
-#  elif !defined(_LIBCPP_CXX03_LANG)
+#  else
 constexpr defer_lock_t defer_lock   = defer_lock_t();
 constexpr try_to_lock_t try_to_lock = try_to_lock_t();
 constexpr adopt_lock_t adopt_lock   = adopt_lock_t();
