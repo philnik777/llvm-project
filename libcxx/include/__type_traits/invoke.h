@@ -285,60 +285,58 @@ __nat __invoke(__any, _Args&&... __args);
 
 // bullets 1, 2 and 3
 
-// clang-format off
 template <class _Fp, class _A0, class... _Args, class = __enable_if_bullet1<_Fp, _A0> >
-inline _LIBCPP_INLINE_VISIBILITY constexpr
-decltype((std::declval<_A0>().*std::declval<_Fp>())(std::declval<_Args>()...))
-__invoke(_Fp&& __f, _A0&& __a0, _Args&&... __args)
-    noexcept(noexcept((static_cast<_A0&&>(__a0).*__f)(static_cast<_Args&&>(__args)...)))
-               { return (static_cast<_A0&&>(__a0).*__f)(static_cast<_Args&&>(__args)...); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr auto __invoke(_Fp&& __f, _A0&& __a0, _Args&&... __args) noexcept(
+    noexcept(/*---*/ (static_cast<_A0&&>(__a0).*__f)(static_cast<_Args&&>(__args)...)))
+    -> decltype(/**/ (static_cast<_A0&&>(__a0).*__f)(static_cast<_Args&&>(__args)...)) {
+  return /*-------*/ (static_cast<_A0&&>(__a0).*__f)(static_cast<_Args&&>(__args)...);
+}
 
 template <class _Fp, class _A0, class... _Args, class = __enable_if_bullet2<_Fp, _A0> >
-inline _LIBCPP_INLINE_VISIBILITY constexpr
-decltype((std::declval<_A0>().get().*std::declval<_Fp>())(std::declval<_Args>()...))
-__invoke(_Fp&& __f, _A0&& __a0, _Args&&... __args)
-    noexcept(noexcept((__a0.get().*__f)(static_cast<_Args&&>(__args)...)))
-               { return (__a0.get().*__f)(static_cast<_Args&&>(__args)...); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr auto __invoke(_Fp&& __f, _A0&& __a0, _Args&&... __args) noexcept(
+    noexcept(/*---*/ (__a0.get().*__f)(static_cast<_Args&&>(__args)...)))
+    -> decltype(/**/ (__a0.get().*__f)(static_cast<_Args&&>(__args)...)) {
+  return /*-------*/ (__a0.get().*__f)(static_cast<_Args&&>(__args)...);
+}
 
 template <class _Fp, class _A0, class... _Args, class = __enable_if_bullet3<_Fp, _A0> >
-inline _LIBCPP_INLINE_VISIBILITY constexpr
-decltype(((*std::declval<_A0>()).*std::declval<_Fp>())(std::declval<_Args>()...))
-__invoke(_Fp&& __f, _A0&& __a0, _Args&&... __args)
-    noexcept(noexcept(((*static_cast<_A0&&>(__a0)).*__f)(static_cast<_Args&&>(__args)...)))
-               { return ((*static_cast<_A0&&>(__a0)).*__f)(static_cast<_Args&&>(__args)...); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr auto __invoke(_Fp&& __f, _A0&& __a0, _Args&&... __args) noexcept(
+    noexcept(/*---*/ ((*static_cast<_A0&&>(__a0)).*__f)(static_cast<_Args&&>(__args)...)))
+    -> decltype(/**/ ((*static_cast<_A0&&>(__a0)).*__f)(static_cast<_Args&&>(__args)...)) {
+  return /*-------*/ ((*static_cast<_A0&&>(__a0)).*__f)(static_cast<_Args&&>(__args)...);
+}
 
 // bullets 4, 5 and 6
 
 template <class _Fp, class _A0, class = __enable_if_bullet4<_Fp, _A0> >
-inline _LIBCPP_INLINE_VISIBILITY constexpr
-decltype(std::declval<_A0>().*std::declval<_Fp>())
-__invoke(_Fp&& __f, _A0&& __a0)
-    noexcept(noexcept(static_cast<_A0&&>(__a0).*__f))
-               { return static_cast<_A0&&>(__a0).*__f; }
+inline _LIBCPP_INLINE_VISIBILITY constexpr auto
+__invoke(_Fp&& __f, _A0&& __a0) noexcept(noexcept(static_cast<_A0&&>(__a0).*__f))
+    -> decltype(/*-----------------------------*/ static_cast<_A0&&>(__a0).*__f) {
+  return /*------------------------------------*/ static_cast<_A0&&>(__a0).*__f;
+}
 
 template <class _Fp, class _A0, class = __enable_if_bullet5<_Fp, _A0> >
-inline _LIBCPP_INLINE_VISIBILITY constexpr
-decltype(std::declval<_A0>().get().*std::declval<_Fp>())
-__invoke(_Fp&& __f, _A0&& __a0)
-    noexcept(noexcept(__a0.get().*__f))
-               { return __a0.get().*__f; }
+inline _LIBCPP_INLINE_VISIBILITY constexpr auto //
+__invoke(_Fp&& __f, _A0&& __a0) noexcept(noexcept(__a0.get().*__f))
+    -> decltype(/*-----------------------------*/ __a0.get().*__f) {
+  return /*------------------------------------*/ __a0.get().*__f;
+}
 
 template <class _Fp, class _A0, class = __enable_if_bullet6<_Fp, _A0> >
-inline _LIBCPP_INLINE_VISIBILITY constexpr
-decltype((*std::declval<_A0>()).*std::declval<_Fp>())
-__invoke(_Fp&& __f, _A0&& __a0)
-    noexcept(noexcept((*static_cast<_A0&&>(__a0)).*__f))
-               { return (*static_cast<_A0&&>(__a0)).*__f; }
+inline _LIBCPP_INLINE_VISIBILITY constexpr auto
+__invoke(_Fp&& __f, _A0&& __a0) noexcept(noexcept((*static_cast<_A0&&>(__a0)).*__f))
+    -> decltype(/*----------------------------*/ ((*static_cast<_A0&&>(__a0)).*__f)) {
+  return /*------------------------------------*/ (*static_cast<_A0&&>(__a0)).*__f;
+}
 
 // bullet 7
 
 template <class _Fp, class... _Args>
-inline _LIBCPP_INLINE_VISIBILITY constexpr
-decltype(std::declval<_Fp>()(std::declval<_Args>()...))
-__invoke(_Fp&& __f, _Args&&... __args)
-    noexcept(noexcept(static_cast<_Fp&&>(__f)(static_cast<_Args&&>(__args)...)))
-               { return static_cast<_Fp&&>(__f)(static_cast<_Args&&>(__args)...); }
-// clang-format on
+inline _LIBCPP_INLINE_VISIBILITY constexpr auto
+__invoke(_Fp&& __f, _Args&&... __args) noexcept(noexcept(static_cast<_Fp&&>(__f)(static_cast<_Args&&>(__args)...)))
+    -> decltype(/*------------------------------------*/ static_cast<_Fp&&>(__f)(static_cast<_Args&&>(__args)...)) {
+  return /*-------------------------------------------*/ static_cast<_Fp&&>(__f)(static_cast<_Args&&>(__args)...);
+}
 
 // __invokable
 template <class _Ret, class _Fp, class... _Args>
