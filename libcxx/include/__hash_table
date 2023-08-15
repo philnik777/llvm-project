@@ -196,16 +196,14 @@ struct __hash_key_value_types<__hash_value_type<_Key, _Tp> > {
 
   template <class _Up>
   _LIBCPP_INLINE_VISIBILITY
-  static __enable_if_t<__is_same_uncvref<_Up, __node_value_type>::value, __container_value_type const&>
+  static __container_value_type const&
   __get_value(_Up& __t) {
-    return __t.__get_value();
-  }
-
-  template <class _Up>
-  _LIBCPP_INLINE_VISIBILITY
-  static __enable_if_t<__is_same_uncvref<_Up, __container_value_type>::value, __container_value_type const&>
-  __get_value(_Up& __t) {
-    return __t;
+    if constexpr (__is_same_uncvref<_Up, __node_value_type>::value)
+      return __t.__get_value();
+    else if constexpr (__is_same_uncvref<_Up, __container_value_type>::value)
+      return __t;
+    else
+      static_assert(false);
   }
 
   _LIBCPP_INLINE_VISIBILITY

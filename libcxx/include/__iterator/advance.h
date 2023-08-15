@@ -34,30 +34,6 @@ _LIBCPP_PUSH_MACROS
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-template <class _InputIter>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX17
-void __advance(_InputIter& __i, typename iterator_traits<_InputIter>::difference_type __n, input_iterator_tag) {
-  for (; __n > 0; --__n)
-    ++__i;
-}
-
-template <class _BiDirIter>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX17
-void __advance(_BiDirIter& __i, typename iterator_traits<_BiDirIter>::difference_type __n, bidirectional_iterator_tag) {
-  if (__n >= 0)
-    for (; __n > 0; --__n)
-      ++__i;
-  else
-    for (; __n < 0; ++__n)
-      --__i;
-}
-
-template <class _RandIter>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX17
-void __advance(_RandIter& __i, typename iterator_traits<_RandIter>::difference_type __n, random_access_iterator_tag) {
-  __i += __n;
-}
-
 template <
     class _InputIter, class _Distance,
     class _IntegralDistance = decltype(_VSTD::__convert_to_integral(std::declval<_Distance>())),
@@ -66,9 +42,22 @@ _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX17
 void advance(_InputIter& __i, _Distance __orig_n) {
   typedef typename iterator_traits<_InputIter>::difference_type _Difference;
   _Difference __n = static_cast<_Difference>(_VSTD::__convert_to_integral(__orig_n));
-  _LIBCPP_ASSERT_UNCATEGORIZED(__n >= 0 || __has_bidirectional_iterator_category<_InputIter>::value,
-                               "Attempt to advance(it, n) with negative n on a non-bidirectional iterator");
-  _VSTD::__advance(__i, __n, typename iterator_traits<_InputIter>::iterator_category());
+
+  if constexpr (__has_random_access_iterator_category<_InputIter>::value) {
+    __i += __n;
+  } else if constexpr (__has_bidirectional_iterator_category<_InputIter>::value) {
+    if (__n >= 0)
+      for (; __n > 0; --__n)
+        ++__i;
+    else
+      for (; __n < 0; ++__n)
+        --__i;
+  } else {
+    _LIBCPP_ASSERT_UNCATEGORIZED(__n >= 0, "Attempt to advance(it, n) with negative n on a non-bidirectional iterator");
+
+    for (; __n > 0; --__n)
+      ++__i;
+  }
 }
 
 #if _LIBCPP_STD_VER >= 20

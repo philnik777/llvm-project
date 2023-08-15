@@ -56,26 +56,16 @@ struct _ProjectedPred {
 
 };
 
-template <class _Pred,
-          class _Proj,
-          __enable_if_t<!(!is_member_pointer<__decay_t<_Pred> >::value &&
-                            __is_identity<__decay_t<_Proj> >::value),
-                        int> = 0>
-_LIBCPP_HIDE_FROM_ABI constexpr _ProjectedPred<_Pred, _Proj>
-__make_projected(_Pred& __pred, _Proj& __proj) {
-  return _ProjectedPred<_Pred, _Proj>(__pred, __proj);
-}
-
 // Avoid creating the functor and just use the pristine comparator -- for certain algorithms, this would enable
 // optimizations that rely on the type of the comparator. Additionally, this results in less layers of indirection in
 // the call stack when the comparator is invoked, even in an unoptimized build.
-template <class _Pred,
-          class _Proj,
-          __enable_if_t<!is_member_pointer<__decay_t<_Pred> >::value &&
-                          __is_identity<__decay_t<_Proj> >::value,
-                        int> = 0>
-_LIBCPP_HIDE_FROM_ABI constexpr _Pred& __make_projected(_Pred& __pred, _Proj&) {
-  return __pred;
+template <class _Pred, class _Proj>
+_LIBCPP_HIDE_FROM_ABI constexpr _Pred& __make_projected(_Pred& __pred, _Proj& __proj) {
+  if constexpr (!is_member_pointer<__decay_t<_Pred> >::value && __is_identity<__decay_t<_Proj> >::value) {
+    return __pred;
+  } else {
+    return _ProjectedPred<_Pred, _Proj>(__pred, __proj);
+  }
 }
 
 _LIBCPP_END_NAMESPACE_STD

@@ -35,17 +35,6 @@ __move(_InIter __first, _Sent __last, _OutIter __result);
 
 template <class _AlgPolicy>
 struct __move_loop {
-  template <class _InIter, class _Sent, class _OutIter>
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
-  operator()(_InIter __first, _Sent __last, _OutIter __result) const {
-    while (__first != __last) {
-      *__result = _IterOps<_AlgPolicy>::__iter_move(__first);
-      ++__first;
-      ++__result;
-    }
-    return std::make_pair(std::move(__first), std::move(__result));
-  }
-
   template <class _InIter, class _OutIter>
   struct _MoveSegment {
     using _Traits = __segmented_iterator_traits<_InIter>;
@@ -60,38 +49,39 @@ struct __move_loop {
     }
   };
 
-  template <class _InIter, class _OutIter, __enable_if_t<__is_segmented_iterator<_InIter>::value, int> = 0>
+  template <class _InIter, class _Sent, class _OutIter>
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
-  operator()(_InIter __first, _InIter __last, _OutIter __result) const {
-    std::__for_each_segment(__first, __last, _MoveSegment<_InIter, _OutIter>(__result));
-    return std::make_pair(__last, std::move(__result));
-  }
-
-  template <class _InIter,
-            class _OutIter,
-            __enable_if_t<__has_random_access_iterator_category<_InIter>::value &&
-                              !__is_segmented_iterator<_InIter>::value && __is_segmented_iterator<_OutIter>::value,
-                          int> = 0>
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
-  operator()(_InIter __first, _InIter __last, _OutIter __result) const {
-    using _Traits = __segmented_iterator_traits<_OutIter>;
-    using _DiffT  = typename common_type<__iter_diff_t<_InIter>, __iter_diff_t<_OutIter> >::type;
-
-    if (__first == __last)
-      return std::make_pair(std::move(__first), std::move(__result));
-
-    auto __local_first      = _Traits::__local(__result);
-    auto __segment_iterator = _Traits::__segment(__result);
-    while (true) {
-      auto __local_last = _Traits::__end(__segment_iterator);
-      auto __size       = std::min<_DiffT>(__local_last - __local_first, __last - __first);
-      auto __iters      = std::__move<_AlgPolicy>(__first, __first + __size, __local_first);
-      __first           = std::move(__iters.first);
+  operator()(_InIter __first, _Sent __last, _OutIter __result) const {
+    if constexpr (__is_segmented_iterator<_InIter>::value) {
+      std::__for_each_segment(__first, __last, _MoveSegment<_InIter, _OutIter>(__result));
+      return std::make_pair(__last, std::move(__result));
+    } else if constexpr (__has_random_access_iterator_category<_InIter>::value && __is_segmented_iterator<_OutIter>::value) {
+      using _Traits = __segmented_iterator_traits<_OutIter>;
+      using _DiffT  = typename common_type<__iter_diff_t<_InIter>, __iter_diff_t<_OutIter> >::type;
 
       if (__first == __last)
-        return std::make_pair(std::move(__first), _Traits::__compose(__segment_iterator, std::move(__iters.second)));
+        return std::make_pair(std::move(__first), std::move(__result));
 
-      __local_first = _Traits::__begin(++__segment_iterator);
+      auto __local_first      = _Traits::__local(__result);
+      auto __segment_iterator = _Traits::__segment(__result);
+      while (true) {
+        auto __local_last = _Traits::__end(__segment_iterator);
+        auto __size       = std::min<_DiffT>(__local_last - __local_first, __last - __first);
+        auto __iters      = std::__move<_AlgPolicy>(__first, __first + __size, __local_first);
+        __first           = std::move(__iters.first);
+
+        if (__first == __last)
+          return std::make_pair(std::move(__first), _Traits::__compose(__segment_iterator, std::move(__iters.second)));
+
+        __local_first = _Traits::__begin(++__segment_iterator);
+      }
+    } else {
+      while (__first != __last) {
+        *__result = _IterOps<_AlgPolicy>::__iter_move(__first);
+        ++__first;
+        ++__result;
+      }
+      return std::make_pair(std::move(__first), std::move(__result));
     }
   }
 };

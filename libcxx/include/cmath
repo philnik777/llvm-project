@@ -571,62 +571,51 @@ hypot(_A1 __lcpp_x, _A2 __lcpp_y, _A3 __lcpp_z) noexcept
 
 template <class _A1>
 _LIBCPP_INLINE_VISIBILITY
-constexpr typename enable_if<is_floating_point<_A1>::value, bool>::type
+constexpr bool
 __constexpr_isnan(_A1 __lcpp_x) noexcept
 {
+  if constexpr (is_floating_point<_A1>::value) {
 #if __has_builtin(__builtin_isnan)
     return __builtin_isnan(__lcpp_x);
 #else
     return isnan(__lcpp_x);
 #endif
-}
-
-template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-constexpr typename enable_if<!is_floating_point<_A1>::value, bool>::type
-__constexpr_isnan(_A1 __lcpp_x) noexcept
-{
+  } else {
     return std::isnan(__lcpp_x);
+  }
 }
+
 
 template <class _A1>
 _LIBCPP_INLINE_VISIBILITY
-constexpr typename enable_if<is_floating_point<_A1>::value, bool>::type
+constexpr bool
 __constexpr_isinf(_A1 __lcpp_x) noexcept
 {
+  if constexpr (is_floating_point<_A1>::value) {
 #if __has_builtin(__builtin_isinf)
     return __builtin_isinf(__lcpp_x);
 #else
     return isinf(__lcpp_x);
 #endif
-}
-
-template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-constexpr typename enable_if<!is_floating_point<_A1>::value, bool>::type
-__constexpr_isinf(_A1 __lcpp_x) noexcept
-{
+  } else {
     return std::isinf(__lcpp_x);
+  }
 }
 
 template <class _A1>
 _LIBCPP_INLINE_VISIBILITY
-constexpr typename enable_if<is_floating_point<_A1>::value, bool>::type
+constexpr bool
 __constexpr_isfinite(_A1 __lcpp_x) noexcept
 {
+  if constexpr (is_floating_point<_A1>::value) {
 #if __has_builtin(__builtin_isfinite)
     return __builtin_isfinite(__lcpp_x);
 #else
     return isfinite(__lcpp_x);
 #endif
-}
-
-template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-constexpr typename enable_if<!is_floating_point<_A1>::value, bool>::type
-__constexpr_isfinite(_A1 __lcpp_x) noexcept
-{
+  } else {
     return __builtin_isfinite(__lcpp_x);
+  }
 }
 
 constexpr inline _LIBCPP_HIDE_FROM_ABI float __constexpr_copysign(float __x, float __y) noexcept {

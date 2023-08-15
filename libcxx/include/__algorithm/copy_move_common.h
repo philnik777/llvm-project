@@ -98,27 +98,17 @@ struct __can_rewrap<_InIter,
                     __enable_if_t< is_copy_constructible<_InIter>::value &&
                                    is_copy_constructible<_OutIter>::value > > : true_type {};
 
-template <class _Algorithm,
-          class _InIter,
-          class _Sent,
-          class _OutIter,
-          __enable_if_t<__can_rewrap<_InIter, _Sent, _OutIter>::value, int> = 0>
+template <class _Algorithm, class _InIter, class _Sent, class _OutIter>
 _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX17 pair<_InIter, _OutIter>
 __unwrap_and_dispatch(_InIter __first, _Sent __last, _OutIter __out_first) {
-  auto __range  = std::__unwrap_range(__first, std::move(__last));
-  auto __result = _Algorithm()(std::move(__range.first), std::move(__range.second), std::__unwrap_iter(__out_first));
-  return std::make_pair(std::__rewrap_range<_Sent>(std::move(__first), std::move(__result.first)),
-                                 std::__rewrap_iter(std::move(__out_first), std::move(__result.second)));
-}
-
-template <class _Algorithm,
-          class _InIter,
-          class _Sent,
-          class _OutIter,
-          __enable_if_t<!__can_rewrap<_InIter, _Sent, _OutIter>::value, int> = 0>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX17 pair<_InIter, _OutIter>
-__unwrap_and_dispatch(_InIter __first, _Sent __last, _OutIter __out_first) {
-  return _Algorithm()(std::move(__first), std::move(__last), std::move(__out_first));
+  if constexpr (__can_rewrap<_InIter, _Sent, _OutIter>::value) {
+    auto __range  = std::__unwrap_range(__first, std::move(__last));
+    auto __result = _Algorithm()(std::move(__range.first), std::move(__range.second), std::__unwrap_iter(__out_first));
+    return std::make_pair(std::__rewrap_range<_Sent>(std::move(__first), std::move(__result.first)),
+                          std::__rewrap_iter(std::move(__out_first), std::move(__result.second)));
+  } else {
+    return _Algorithm()(std::move(__first), std::move(__last), std::move(__out_first));
+  }
 }
 
 template <class _AlgPolicy,

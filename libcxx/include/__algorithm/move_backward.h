@@ -37,71 +37,61 @@ struct __move_backward_loop {
   template <class _InIter, class _Sent, class _OutIter>
   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
   operator()(_InIter __first, _Sent __last, _OutIter __result) const {
-    auto __last_iter          = _IterOps<_AlgPolicy>::next(__first, __last);
-    auto __original_last_iter = __last_iter;
+    if constexpr (__is_segmented_iterator<_InIter>::value) {
+      using _Traits = __segmented_iterator_traits<_InIter>;
+      auto __sfirst = _Traits::__segment(__first);
+      auto __slast  = _Traits::__segment(__last);
+      if (__sfirst == __slast) {
+        auto __iters =
+            std::__move_backward<_AlgPolicy>(_Traits::__local(__first), _Traits::__local(__last), std::move(__result));
+        return std::make_pair(__last, __iters.second);
+      }
 
-    while (__first != __last_iter) {
-      *--__result = _IterOps<_AlgPolicy>::__iter_move(--__last_iter);
-    }
-
-    return std::make_pair(std::move(__original_last_iter), std::move(__result));
-  }
-
-  template <class _InIter, class _OutIter, __enable_if_t<__is_segmented_iterator<_InIter>::value, int> = 0>
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
-  operator()(_InIter __first, _InIter __last, _OutIter __result) const {
-    using _Traits = __segmented_iterator_traits<_InIter>;
-    auto __sfirst = _Traits::__segment(__first);
-    auto __slast  = _Traits::__segment(__last);
-    if (__sfirst == __slast) {
-      auto __iters =
-          std::__move_backward<_AlgPolicy>(_Traits::__local(__first), _Traits::__local(__last), std::move(__result));
-      return std::make_pair(__last, __iters.second);
-    }
-
-    __result =
-        std::__move_backward<_AlgPolicy>(_Traits::__begin(__slast), _Traits::__local(__last), std::move(__result))
-            .second;
-    --__slast;
-    while (__sfirst != __slast) {
       __result =
-          std::__move_backward<_AlgPolicy>(_Traits::__begin(__slast), _Traits::__end(__slast), std::move(__result))
+          std::__move_backward<_AlgPolicy>(_Traits::__begin(__slast), _Traits::__local(__last), std::move(__result))
               .second;
       --__slast;
-    }
-    __result = std::__move_backward<_AlgPolicy>(_Traits::__local(__first), _Traits::__end(__slast), std::move(__result))
-                   .second;
-    return std::make_pair(__last, std::move(__result));
-  }
+      while (__sfirst != __slast) {
+        __result =
+            std::__move_backward<_AlgPolicy>(_Traits::__begin(__slast), _Traits::__end(__slast), std::move(__result))
+                .second;
+        --__slast;
+      }
+      __result = std::__move_backward<_AlgPolicy>(_Traits::__local(__first), _Traits::__end(__slast), std::move(__result))
+                    .second;
+      return std::make_pair(__last, std::move(__result));
+    } else if constexpr(__has_random_access_iterator_category<_InIter>::value && __is_segmented_iterator<_OutIter>::value) {
+      using _Traits = __segmented_iterator_traits<_OutIter>;
+      using _DiffT  = typename common_type<__iter_diff_t<_InIter>, __iter_diff_t<_OutIter> >::type;
 
-  template <class _InIter,
-            class _OutIter,
-            __enable_if_t<__has_random_access_iterator_category<_InIter>::value &&
-                              !__is_segmented_iterator<_InIter>::value && __is_segmented_iterator<_OutIter>::value,
-                          int> = 0>
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14 pair<_InIter, _OutIter>
-  operator()(_InIter __first, _InIter __last, _OutIter __result) const {
-    using _Traits = __segmented_iterator_traits<_OutIter>;
-    using _DiffT  = typename common_type<__iter_diff_t<_InIter>, __iter_diff_t<_OutIter> >::type;
-
-    // When the range contains no elements, __result might not be a valid iterator
-    if (__first == __last)
-      return std::make_pair(__first, __result);
-
-    auto __orig_last = __last;
-
-    auto __local_last       = _Traits::__local(__result);
-    auto __segment_iterator = _Traits::__segment(__result);
-    while (true) {
-      auto __local_first = _Traits::__begin(__segment_iterator);
-      auto __size        = std::min<_DiffT>(__local_last - __local_first, __last - __first);
-      auto __iter        = std::__move_backward<_AlgPolicy>(__last - __size, __last, __local_last).second;
-      __last -= __size;
-
+      // When the range contains no elements, __result might not be a valid iterator
       if (__first == __last)
-        return std::make_pair(std::move(__orig_last), _Traits::__compose(__segment_iterator, std::move(__iter)));
+        return std::make_pair(__first, __result);
 
-      __local_last = _Traits::__end(--__segment_iterator);
+      auto __orig_last = __last;
+
+      auto __local_last       = _Traits::__local(__result);
+      auto __segment_iterator = _Traits::__segment(__result);
+      while (true) {
+        auto __local_first = _Traits::__begin(__segment_iterator);
+        auto __size        = std::min<_DiffT>(__local_last - __local_first, __last - __first);
+        auto __iter        = std::__move_backward<_AlgPolicy>(__last - __size, __last, __local_last).second;
+        __last -= __size;
+
+        if (__first == __last)
+          return std::make_pair(std::move(__orig_last), _Traits::__compose(__segment_iterator, std::move(__iter)));
+
+        __local_last = _Traits::__end(--__segment_iterator);
+      }
+    } else {
+      auto __last_iter          = _IterOps<_AlgPolicy>::next(__first, __last);
+      auto __original_last_iter = __last_iter;
+
+      while (__first != __last_iter) {
+        *--__result = _IterOps<_AlgPolicy>::__iter_move(--__last_iter);
+      }
+
+      return std::make_pair(std::move(__original_last_iter), std::move(__result));
     }
   }
 };
