@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: c++11
 
 // Make sure that we don't blow up the template instantiation recursion depth
 // for tuples of size <= 1024.

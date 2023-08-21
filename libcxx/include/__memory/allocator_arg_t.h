@@ -27,11 +27,9 @@ struct _LIBCPP_TEMPLATE_VIS allocator_arg_t { explicit allocator_arg_t() = defau
 
 #if _LIBCPP_STD_VER >= 17
 inline constexpr allocator_arg_t allocator_arg = allocator_arg_t();
-#elif !defined(_LIBCPP_CXX03_LANG)
+#else
 constexpr allocator_arg_t allocator_arg = allocator_arg_t();
 #endif
-
-#ifndef _LIBCPP_CXX03_LANG
 
 // allocator construction
 
@@ -72,8 +70,6 @@ void __user_alloc_construct_impl (integral_constant<int, 2>, _Tp *__storage, con
 {
     new (__storage) _Tp (_VSTD::forward<_Args>(__args)..., __a);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_STD
 

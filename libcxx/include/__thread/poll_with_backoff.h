@@ -21,7 +21,7 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-static _LIBCPP_CONSTEXPR const int __libcpp_polling_count = 64;
+static constexpr const int __libcpp_polling_count = 64;
 
 // Polls a thread for a condition given by a predicate, and backs off based on a backoff policy
 // before polling again.
@@ -60,7 +60,7 @@ bool __libcpp_thread_poll_with_backoff(_Fn&& __f, _BFn&& __bf, chrono::nanosecon
 // so this should most likely only be used on single-threaded systems where there
 // are no other threads to compete with.
 struct __spinning_backoff_policy {
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
+  _LIBCPP_HIDE_FROM_ABI constexpr
   bool operator()(chrono::nanoseconds const&) const {
       return false;
   }

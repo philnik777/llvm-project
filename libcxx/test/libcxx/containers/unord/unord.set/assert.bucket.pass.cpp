@@ -15,7 +15,6 @@
 // size_type bucket(const key_type& __k) const;
 
 // REQUIRES: has-unix-headers
-// UNSUPPORTED: c++03
 // UNSUPPORTED: !libcpp-hardening-mode=debug
 // XFAIL: availability-verbose_abort-missing
 

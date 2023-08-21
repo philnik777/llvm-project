@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // Verify TEST_WORKAROUND_MSVC_BROKEN_ZA_CTOR_CHECK.
 

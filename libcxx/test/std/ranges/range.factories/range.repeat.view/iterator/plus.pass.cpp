@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // friend constexpr iterator operator+(iterator i, difference_type n);
 // friend constexpr iterator operator+(difference_type n, iterator i);

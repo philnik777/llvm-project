@@ -21,7 +21,7 @@ struct _LIBCPP_TEMPLATE_VIS piecewise_construct_t { explicit piecewise_construct
 
 #if _LIBCPP_STD_VER >= 17
 inline constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
-#elif !defined(_LIBCPP_CXX03_LANG)
+#else
 constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
 #endif
 

@@ -169,7 +169,7 @@ protected:
 public:
     _LIBCPP_INLINE_VISIBILITY
     stack()
-        _NOEXCEPT_(is_nothrow_default_constructible<container_type>::value)
+        noexcept(is_nothrow_default_constructible<container_type>::value)
         : c() {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -178,21 +178,18 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     stack& operator=(const stack& __q) {c = __q.c; return *this;}
 
-
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     stack(stack&& __q)
-        _NOEXCEPT_(is_nothrow_move_constructible<container_type>::value)
+        noexcept(is_nothrow_move_constructible<container_type>::value)
         : c(_VSTD::move(__q.c)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     stack& operator=(stack&& __q)
-        _NOEXCEPT_(is_nothrow_move_assignable<container_type>::value)
+        noexcept(is_nothrow_move_assignable<container_type>::value)
         {c = _VSTD::move(__q.c); return *this;}
 
     _LIBCPP_INLINE_VISIBILITY
     explicit stack(container_type&& __c) : c(_VSTD::move(__c)) {}
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     explicit stack(const container_type& __c) : c(__c) {}
@@ -212,7 +209,7 @@ public:
         stack(const stack& __s, const _Alloc& __a,
               __enable_if_t<uses_allocator<container_type, _Alloc>::value>* = 0)
             : c(__s.c, __a) {}
-#ifndef _LIBCPP_CXX03_LANG
+
     template <class _Alloc>
         _LIBCPP_INLINE_VISIBILITY
         stack(container_type&& __c, const _Alloc& __a,
@@ -223,7 +220,6 @@ public:
         stack(stack&& __s, const _Alloc& __a,
               __enable_if_t<uses_allocator<container_type, _Alloc>::value>* = 0)
             : c(_VSTD::move(__s.c), __a) {}
-#endif // _LIBCPP_CXX03_LANG
 
 #if _LIBCPP_STD_VER >= 23
     template <class _InputIterator,
@@ -262,7 +258,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void push(const value_type& __v) {c.push_back(__v);}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     void push(value_type&& __v) {c.push_back(_VSTD::move(__v));}
 
@@ -289,14 +285,13 @@ public:
         void      emplace(_Args&&... __args)
         {        c.emplace_back(_VSTD::forward<_Args>(__args)...);}
 #endif
-#endif // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     void pop() {c.pop_back();}
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(stack& __s)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value)
+        noexcept(__is_nothrow_swappable<container_type>::value)
     {
         using _VSTD::swap;
         swap(c, __s.c);
@@ -418,7 +413,7 @@ template <class _Tp, class _Container>
 inline _LIBCPP_INLINE_VISIBILITY
 __enable_if_t<__is_swappable<_Container>::value, void>
 swap(stack<_Tp, _Container>& __x, stack<_Tp, _Container>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }

@@ -113,7 +113,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 // for them:
 
 //enum class errc
-_LIBCPP_DECLARE_STRONG_ENUM(errc)
+enum class errc
 {
     address_family_not_supported        = EAFNOSUPPORT,
     address_in_use                      = EADDRINUSE,
@@ -210,7 +210,6 @@ _LIBCPP_DECLARE_STRONG_ENUM(errc)
     value_too_large                     = EOVERFLOW,
     wrong_protocol_type                 = EPROTOTYPE
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(errc)
 
 _LIBCPP_END_NAMESPACE_STD
 

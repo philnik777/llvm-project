@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // template<container-compatible-range<T> R>
 //   constexpr void append_range(R&& rg); // C++23

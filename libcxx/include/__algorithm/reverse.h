@@ -21,11 +21,15 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-template <class _AlgPolicy, class _BidirectionalIterator>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-void
-__reverse_impl(_BidirectionalIterator __first, _BidirectionalIterator __last, bidirectional_iterator_tag)
-{
+template <class _AlgPolicy, class _BidirectionalIterator, class _Sentinel>
+_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
+void __reverse(_BidirectionalIterator __first, _Sentinel __last) {
+  using _IterCategory = typename _IterOps<_AlgPolicy>::template __iterator_category<_BidirectionalIterator>;
+  if constexpr (is_base_of<random_access_iterator_tag, _IterCategory>::value) {
+    if (__first != __last)
+        for (; __first < --__last; ++__first)
+            _IterOps<_AlgPolicy>::iter_swap(__first, __last);
+  } else {
     while (__first != __last)
     {
         if (__first == --__last)
@@ -33,23 +37,7 @@ __reverse_impl(_BidirectionalIterator __first, _BidirectionalIterator __last, bi
         _IterOps<_AlgPolicy>::iter_swap(__first, __last);
         ++__first;
     }
-}
-
-template <class _AlgPolicy, class _RandomAccessIterator>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-void
-__reverse_impl(_RandomAccessIterator __first, _RandomAccessIterator __last, random_access_iterator_tag)
-{
-    if (__first != __last)
-        for (; __first < --__last; ++__first)
-            _IterOps<_AlgPolicy>::iter_swap(__first, __last);
-}
-
-template <class _AlgPolicy, class _BidirectionalIterator, class _Sentinel>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20
-void __reverse(_BidirectionalIterator __first, _Sentinel __last) {
-  using _IterCategory = typename _IterOps<_AlgPolicy>::template __iterator_category<_BidirectionalIterator>;
-  std::__reverse_impl<_AlgPolicy>(std::move(__first), std::move(__last), _IterCategory());
+  }
 }
 
 template <class _BidirectionalIterator>

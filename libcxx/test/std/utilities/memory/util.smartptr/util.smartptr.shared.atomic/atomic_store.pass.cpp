@@ -16,7 +16,6 @@
 // void
 // atomic_store(shared_ptr<T>* p, shared_ptr<T> r)
 
-// UNSUPPORTED: c++03
 
 #include <memory>
 #include <cassert>

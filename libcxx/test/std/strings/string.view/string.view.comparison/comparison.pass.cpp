@@ -10,7 +10,7 @@
 // comparison in that context, thus doesn't support older language versions.
 // These are tested per operator.
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // <string_view>
 

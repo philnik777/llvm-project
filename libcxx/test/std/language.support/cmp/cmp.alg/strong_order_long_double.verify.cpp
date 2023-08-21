@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // The following platforms have sizeof(long double) == sizeof(double), so this test doesn't apply to them.
 // This test does apply to aarch64 where Arm's AAPCS64 is followed. There they are different sizes.

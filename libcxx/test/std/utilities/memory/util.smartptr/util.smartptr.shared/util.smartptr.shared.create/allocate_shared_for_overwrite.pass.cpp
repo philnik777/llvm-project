@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // template<class T, class A>
 //   shared_ptr<T> make_shared_for_overwrite(const A& a); // T is not U[]

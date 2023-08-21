@@ -33,7 +33,7 @@ private:
 
 public:
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    __mem_fn(type __f) _NOEXCEPT : __f_(__f) {}
+    __mem_fn(type __f) noexcept : __f_(__f) {}
 
     // invoke
     template <class... _ArgTypes>
@@ -48,7 +48,7 @@ public:
 template<class _Rp, class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
 __mem_fn<_Rp _Tp::*>
-mem_fn(_Rp _Tp::* __pm) _NOEXCEPT
+mem_fn(_Rp _Tp::* __pm) noexcept
 {
     return __mem_fn<_Rp _Tp::*>(__pm);
 }

@@ -9,7 +9,7 @@
 // Make sure we get compile-time availability errors when trying to use aligned
 // allocation/deallocation on deployment targets that don't support it (before macosx10.13).
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 // REQUIRES: availability-aligned_allocation-missing
 
 #include <new>

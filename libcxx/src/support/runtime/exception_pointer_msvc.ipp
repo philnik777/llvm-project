@@ -69,14 +69,14 @@ exception_ptr current_exception() noexcept {
   return __ret;
 }
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void rethrow_exception(exception_ptr p) { __ExceptionPtrRethrow(&p); }
 
 nested_exception::nested_exception() noexcept : __ptr_(current_exception()) {}
 
 nested_exception::~nested_exception() noexcept {}
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void nested_exception::rethrow_nested() const {
   if (__ptr_ == nullptr)
     terminate();

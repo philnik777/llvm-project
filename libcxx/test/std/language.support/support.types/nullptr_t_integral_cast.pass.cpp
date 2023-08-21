@@ -8,7 +8,6 @@
 
 // NOTE: nullptr_t emulation (used in libc++ ABI v.1) cannot handle a
 // reinterpret_cast to an integral type
-// UNSUPPORTED: c++03
 
 // typedef decltype(nullptr) nullptr_t;
 

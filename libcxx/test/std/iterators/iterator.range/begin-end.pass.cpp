@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // <iterator>
 // template <class C> constexpr auto begin(C& c) -> decltype(c.begin());

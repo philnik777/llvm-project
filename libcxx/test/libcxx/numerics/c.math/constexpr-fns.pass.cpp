@@ -14,7 +14,6 @@
 // constexpr-evaluatable, but that's what we check here, since we can't check
 // true constexpr-ness.
 //
-// UNSUPPORTED: c++03
 
 #include <cmath>
 

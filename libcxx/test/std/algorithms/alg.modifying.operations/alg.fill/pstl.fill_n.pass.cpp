@@ -8,7 +8,7 @@
 
 // <algorithm>
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // UNSUPPORTED: libcpp-has-no-incomplete-pstl
 

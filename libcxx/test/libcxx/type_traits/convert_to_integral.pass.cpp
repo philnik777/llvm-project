@@ -5,9 +5,6 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-//
-// TODO: Make this test pass for all standards.
-// XFAIL: c++03
 
 // <type_traits>
 

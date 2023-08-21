@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 // REQUIRES: availability-pmr-missing
 
 // TODO: This test doesn't work until https://github.com/llvm/llvm-project/issues/40340

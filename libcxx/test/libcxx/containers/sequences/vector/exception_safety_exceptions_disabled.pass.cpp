@@ -8,7 +8,6 @@
 
 // ADDITIONAL_COMPILE_FLAGS: -fno-exceptions
 
-// UNSUPPORTED: c++03
 
 // <vector>
 

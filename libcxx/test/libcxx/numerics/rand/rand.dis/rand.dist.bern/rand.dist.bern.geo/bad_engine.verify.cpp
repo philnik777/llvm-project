@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // ADDITIONAL_COMPILE_FLAGS: -Wno-sign-compare -Wno-shift-count-negative
 
 // <random>

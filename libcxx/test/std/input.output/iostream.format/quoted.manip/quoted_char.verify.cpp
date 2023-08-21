@@ -10,7 +10,7 @@
 
 // quoted
 
-// UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: c++11
 // XFAIL: no-wide-characters
 
 #include <iomanip>

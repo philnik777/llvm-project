@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: no-threads
-// UNSUPPORTED: c++98, c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // XFAIL: availability-shared_mutex-missing
 

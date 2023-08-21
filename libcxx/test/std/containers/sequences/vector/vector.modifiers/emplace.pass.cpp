@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03 && !stdlib=libc++
-
 // <vector>
 
 // template <class... Args> iterator emplace(const_iterator pos, Args&&... args);

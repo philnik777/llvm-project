@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 //  using iterator_category = If<
 //    derived_from<typename iterator_traits<iterator_t<Base>>::iterator_category, forward_iterator_tag>,

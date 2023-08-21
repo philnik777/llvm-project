@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // FIXME: Building this in MSVC mode fails when instantiating two cases of
 // std::function that only differ in constness of the return type, with this

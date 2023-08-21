@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // Test that the "mandates" requirements on the given container are checked correctly using `static_assert`.
 

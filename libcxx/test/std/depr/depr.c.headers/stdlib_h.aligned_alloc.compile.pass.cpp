@@ -9,7 +9,7 @@
 // test <stdlib.h>
 // ::aligned_alloc
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // ::aligned_alloc is provided by the C library, but it's marked as unavailable
 // until macOS 10.15

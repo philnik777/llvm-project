@@ -8,7 +8,6 @@
 
 // std::function support for "blocks" when ARC is enabled
 
-// UNSUPPORTED: c++03
 
 // This test requires the Blocks runtime, which is (only?) available on Darwin
 // out-of-the-box.

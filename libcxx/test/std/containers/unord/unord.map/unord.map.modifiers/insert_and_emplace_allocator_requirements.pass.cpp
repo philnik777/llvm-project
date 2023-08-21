@@ -13,7 +13,6 @@
 // insert(...);
 // emplace(...);
 
-// UNSUPPORTED: c++03
 
 
 #include <unordered_map>

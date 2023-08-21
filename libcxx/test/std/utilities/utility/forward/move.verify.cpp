@@ -6,12 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// This test should pass in C++03 with Clang extensions because Clang does
-// not implicitly delete the copy constructor when move constructors are
-// defaulted using extensions.
-
-// XFAIL: c++03
-
 // test move
 
 #include <utility>

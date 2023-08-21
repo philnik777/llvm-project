@@ -23,7 +23,7 @@ _LIBCPP_INLINE_VISIBILITY inline constexpr bool is_constant_evaluated() noexcept
 }
 #endif
 
-_LIBCPP_HIDE_FROM_ABI inline _LIBCPP_CONSTEXPR bool __libcpp_is_constant_evaluated() _NOEXCEPT {
+_LIBCPP_HIDE_FROM_ABI inline constexpr bool __libcpp_is_constant_evaluated() noexcept {
   return __builtin_is_constant_evaluated();
 }
 

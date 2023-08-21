@@ -8,7 +8,7 @@
 
 // <algorithm>
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // template<class T, output_iterator<const T&> O, sentinel_for<O> S>
 //   constexpr O ranges::fill(O first, S last, const T& value);

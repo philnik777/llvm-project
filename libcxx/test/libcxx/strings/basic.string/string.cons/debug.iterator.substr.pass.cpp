@@ -12,7 +12,7 @@
 // basic_string(basic_string&&, size_type, size_type, Allocator) inserts the container into the debug database
 
 // REQUIRES: has-unix-headers
-// UNSUPPORTED: !libcpp-has-legacy-debug-mode, c++03
+// UNSUPPORTED: !libcpp-has-legacy-debug-mode
 
 #include <cassert>
 #include <string>

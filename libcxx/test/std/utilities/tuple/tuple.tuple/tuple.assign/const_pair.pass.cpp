@@ -13,7 +13,6 @@
 // template <class U1, class U2>
 //   tuple& operator=(const pair<U1, U2>& u);
 
-// UNSUPPORTED: c++03
 
 #include <cassert>
 #include <memory>

@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03 && !stdlib=libc++
-
 // <vector>
 
 // template <class... Args> reference emplace_back(Args&&... args);

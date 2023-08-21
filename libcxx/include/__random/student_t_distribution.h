@@ -59,17 +59,12 @@ private:
 
 public:
     // constructor and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     student_t_distribution() : student_t_distribution(1) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit student_t_distribution(result_type __n)
         : __p_(param_type(__n)) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit student_t_distribution(result_type __n = 1)
-        : __p_(param_type(__n)) {}
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     explicit student_t_distribution(const param_type& __p)
         : __p_(__p) {}

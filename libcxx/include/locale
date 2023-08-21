@@ -1484,7 +1484,7 @@ num_put<_CharT, _OutputIterator>::__do_put_integral(iter_type __s, ios_base& __i
     // Worst case is octal, with showbase enabled. Note that octal is always
     // printed as an unsigned value.
     using _Unsigned = typename make_unsigned<_Integral>::type;
-    _LIBCPP_CONSTEXPR const unsigned __nbuf
+    constexpr const unsigned __nbuf
         = (numeric_limits<_Unsigned>::digits / 3)        // 1 char per 3 bits
         + ((numeric_limits<_Unsigned>::digits % 3) != 0) // round up
         + 2; // base prefix + terminating null character
@@ -3613,25 +3613,19 @@ private:
     wstring_convert(const wstring_convert& __wc);
     wstring_convert& operator=(const wstring_convert& __wc);
 public:
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     wstring_convert() : wstring_convert(new _Codecvt) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit wstring_convert(_Codecvt* __pcvt);
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_EXPLICIT_SINCE_CXX14
-    wstring_convert(_Codecvt* __pcvt = new _Codecvt);
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     wstring_convert(_Codecvt* __pcvt, state_type __state);
     _LIBCPP_EXPLICIT_SINCE_CXX14 _LIBCPP_HIDE_FROM_ABI wstring_convert(const byte_string& __byte_err,
                     const wide_string& __wide_err = wide_string());
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     wstring_convert(wstring_convert&& __wc);
-#endif
+
     _LIBCPP_HIDE_FROM_ABI ~wstring_convert();
 
     _LIBCPP_INLINE_VISIBILITY
@@ -3657,7 +3651,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI byte_string to_bytes(const _Elem* __first, const _Elem* __last);
 
     _LIBCPP_INLINE_VISIBILITY
-    size_t converted() const _NOEXCEPT {return __cvtcount_;}
+    size_t converted() const noexcept {return __cvtcount_;}
     _LIBCPP_INLINE_VISIBILITY
     state_type state() const {return __cvtstate_;}
 };
@@ -3689,8 +3683,6 @@ wstring_convert<_Codecvt, _Elem, _WideAlloc, _ByteAlloc>::
     __cvtptr_ = new _Codecvt;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template<class _Codecvt, class _Elem, class _WideAlloc, class _ByteAlloc>
 inline
 wstring_convert<_Codecvt, _Elem, _WideAlloc, _ByteAlloc>::
@@ -3702,8 +3694,6 @@ wstring_convert<_Codecvt, _Elem, _WideAlloc, _ByteAlloc>::
 {
     __wc.__cvtptr_ = nullptr;
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 _LIBCPP_SUPPRESS_DEPRECATED_PUSH
 template<class _Codecvt, class _Elem, class _WideAlloc, class _ByteAlloc>
@@ -3896,17 +3886,10 @@ private:
     wbuffer_convert& operator=(const wbuffer_convert&);
 
 public:
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI wbuffer_convert() : wbuffer_convert(nullptr) {}
     explicit _LIBCPP_HIDE_FROM_ABI wbuffer_convert(streambuf* __bytebuf,
                              _Codecvt* __pcvt = new _Codecvt,
                              state_type __state = state_type());
-#else
-    _LIBCPP_EXPLICIT_SINCE_CXX14 _LIBCPP_HIDE_FROM_ABI
-    wbuffer_convert(streambuf* __bytebuf = nullptr,
-                    _Codecvt* __pcvt = new _Codecvt,
-                    state_type __state = state_type());
-#endif
 
     _LIBCPP_HIDE_FROM_ABI ~wbuffer_convert();
 

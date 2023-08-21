@@ -24,18 +24,18 @@ _LIBCPP_PUSH_MACROS
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-int __libcpp_clz(unsigned __x)           _NOEXCEPT { return __builtin_clz(__x); }
+_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI constexpr
+int __libcpp_clz(unsigned __x)           noexcept { return __builtin_clz(__x); }
 
-_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-int __libcpp_clz(unsigned long __x)      _NOEXCEPT { return __builtin_clzl(__x); }
+_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI constexpr
+int __libcpp_clz(unsigned long __x)      noexcept { return __builtin_clzl(__x); }
 
-_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
-int __libcpp_clz(unsigned long long __x) _NOEXCEPT { return __builtin_clzll(__x); }
+_LIBCPP_NODISCARD inline _LIBCPP_HIDE_FROM_ABI constexpr
+int __libcpp_clz(unsigned long long __x) noexcept { return __builtin_clzll(__x); }
 
 #  ifndef _LIBCPP_HAS_NO_INT128
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __libcpp_clz(__uint128_t __x) _NOEXCEPT {
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __libcpp_clz(__uint128_t __x) noexcept {
   // The function is written in this form due to C++ constexpr limitations.
   // The algorithm:
   // - Test whether any bit in the high 64-bits is set
@@ -53,7 +53,7 @@ int __libcpp_clz(__uint128_t __x) _NOEXCEPT {
 
 template<class _Tp>
 _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX14
-int __countl_zero(_Tp __t) _NOEXCEPT
+int __countl_zero(_Tp __t) noexcept
 {
     static_assert(__libcpp_is_unsigned_integer<_Tp>::value, "__countl_zero requires an unsigned integer type");
     if (__t == 0)

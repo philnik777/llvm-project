@@ -17,8 +17,6 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <size_t...> struct __tuple_indices {};
@@ -31,7 +29,5 @@ struct __make_tuple_indices
 };
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___TUPLE_MAKE_TUPLE_INDICES_H

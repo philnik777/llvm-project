@@ -63,18 +63,12 @@ private:
 
 public:
     // constructor and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     negative_binomial_distribution() : negative_binomial_distribution(1) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit negative_binomial_distribution(result_type __k, double __p = 0.5)
         : __p_(__k, __p) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit negative_binomial_distribution(result_type __k = 1,
-                                            double __p = 0.5)
-        : __p_(__k, __p) {}
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     explicit negative_binomial_distribution(const param_type& __p) : __p_(__p) {}
     _LIBCPP_INLINE_VISIBILITY

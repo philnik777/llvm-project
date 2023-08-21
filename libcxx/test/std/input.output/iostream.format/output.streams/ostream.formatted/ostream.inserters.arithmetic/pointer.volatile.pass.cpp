@@ -8,7 +8,7 @@
 
 // <ostream>
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // This test fails in Windows DLL configurations, due to
 // __exclude_from_explicit_instantiation__ not behaving as it should in

@@ -36,12 +36,12 @@ private:
   bool __owns_;
 
 public:
-  _LIBCPP_HIDE_FROM_ABI unique_lock() _NOEXCEPT : __m_(nullptr), __owns_(false) {}
+  _LIBCPP_HIDE_FROM_ABI unique_lock() noexcept : __m_(nullptr), __owns_(false) {}
   _LIBCPP_HIDE_FROM_ABI explicit unique_lock(mutex_type& __m) : __m_(std::addressof(__m)), __owns_(true) {
     __m_->lock();
   }
 
-  _LIBCPP_HIDE_FROM_ABI unique_lock(mutex_type& __m, defer_lock_t) _NOEXCEPT
+  _LIBCPP_HIDE_FROM_ABI unique_lock(mutex_type& __m, defer_lock_t) noexcept
       : __m_(std::addressof(__m)),
         __owns_(false) {}
 
@@ -66,12 +66,12 @@ public:
   unique_lock(unique_lock const&)            = delete;
   unique_lock& operator=(unique_lock const&) = delete;
 
-  _LIBCPP_HIDE_FROM_ABI unique_lock(unique_lock&& __u) _NOEXCEPT : __m_(__u.__m_), __owns_(__u.__owns_) {
+  _LIBCPP_HIDE_FROM_ABI unique_lock(unique_lock&& __u) noexcept : __m_(__u.__m_), __owns_(__u.__owns_) {
     __u.__m_    = nullptr;
     __u.__owns_ = false;
   }
 
-  _LIBCPP_HIDE_FROM_ABI unique_lock& operator=(unique_lock&& __u) _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI unique_lock& operator=(unique_lock&& __u) noexcept {
     if (__owns_)
       __m_->unlock();
 
@@ -93,21 +93,21 @@ public:
 
   void unlock();
 
-  _LIBCPP_HIDE_FROM_ABI void swap(unique_lock& __u) _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI void swap(unique_lock& __u) noexcept {
     std::swap(__m_, __u.__m_);
     std::swap(__owns_, __u.__owns_);
   }
 
-  _LIBCPP_HIDE_FROM_ABI mutex_type* release() _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI mutex_type* release() noexcept {
     mutex_type* __m = __m_;
     __m_            = nullptr;
     __owns_         = false;
     return __m;
   }
 
-  _LIBCPP_HIDE_FROM_ABI bool owns_lock() const _NOEXCEPT { return __owns_; }
-  _LIBCPP_HIDE_FROM_ABI explicit operator bool() const _NOEXCEPT { return __owns_; }
-  _LIBCPP_HIDE_FROM_ABI mutex_type* mutex() const _NOEXCEPT { return __m_; }
+  _LIBCPP_HIDE_FROM_ABI bool owns_lock() const noexcept { return __owns_; }
+  _LIBCPP_HIDE_FROM_ABI explicit operator bool() const noexcept { return __owns_; }
+  _LIBCPP_HIDE_FROM_ABI mutex_type* mutex() const noexcept { return __m_; }
 };
 _LIBCPP_CTAD_SUPPORTED_FOR_TYPE(unique_lock);
 
@@ -162,7 +162,7 @@ void unique_lock<_Mutex>::unlock() {
 }
 
 template <class _Mutex>
-inline _LIBCPP_HIDE_FROM_ABI void swap(unique_lock<_Mutex>& __x, unique_lock<_Mutex>& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI void swap(unique_lock<_Mutex>& __x, unique_lock<_Mutex>& __y) noexcept {
   __x.swap(__y);
 }
 

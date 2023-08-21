@@ -88,21 +88,13 @@ public:
 template <class _Tp, class _Up, bool = __has_rebind<_Tp, _Up>::value>
 struct __pointer_traits_rebind
 {
-#ifndef _LIBCPP_CXX03_LANG
     typedef _LIBCPP_NODEBUG typename _Tp::template rebind<_Up> type;
-#else
-    typedef _LIBCPP_NODEBUG typename _Tp::template rebind<_Up>::other type;
-#endif
 };
 
 template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
 struct __pointer_traits_rebind<_Sp<_Tp, _Args...>, _Up, true>
 {
-#ifndef _LIBCPP_CXX03_LANG
     typedef _LIBCPP_NODEBUG typename _Sp<_Tp, _Args...>::template rebind<_Up> type;
-#else
-    typedef _LIBCPP_NODEBUG typename _Sp<_Tp, _Args...>::template rebind<_Up>::other type;
-#endif
 };
 
 template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
@@ -118,12 +110,7 @@ struct _LIBCPP_TEMPLATE_VIS pointer_traits
     typedef typename __pointer_traits_element_type<pointer>::type    element_type;
     typedef typename __pointer_traits_difference_type<pointer>::type difference_type;
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class _Up> using rebind = typename __pointer_traits_rebind<pointer, _Up>::type;
-#else
-    template <class _Up> struct rebind
-        {typedef typename __pointer_traits_rebind<pointer, _Up>::type other;};
-#endif // _LIBCPP_CXX03_LANG
 
 private:
     struct __nat {};
@@ -140,27 +127,18 @@ struct _LIBCPP_TEMPLATE_VIS pointer_traits<_Tp*>
     typedef _Tp       element_type;
     typedef ptrdiff_t difference_type;
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class _Up> using rebind = _Up*;
-#else
-    template <class _Up> struct rebind {typedef _Up* other;};
-#endif
 
 private:
     struct __nat {};
 public:
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    static pointer pointer_to(__conditional_t<is_void<element_type>::value, __nat, element_type>& __r) _NOEXCEPT
+    static pointer pointer_to(__conditional_t<is_void<element_type>::value, __nat, element_type>& __r) noexcept
         {return _VSTD::addressof(__r);}
 };
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _From, class _To>
 using __rebind_pointer_t = typename pointer_traits<_From>::template rebind<_To>;
-#else
-template <class _From, class _To>
-using __rebind_pointer_t = typename pointer_traits<_From>::template rebind<_To>::other;
-#endif
 
 // to_address
 
@@ -168,8 +146,8 @@ template <class _Pointer, class = void>
 struct __to_address_helper;
 
 template <class _Tp>
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-_Tp* __to_address(_Tp* __p) _NOEXCEPT {
+_LIBCPP_INLINE_VISIBILITY constexpr
+_Tp* __to_address(_Tp* __p) noexcept {
     static_assert(!is_function<_Tp>::value, "_Tp is a function type");
     return __p;
 }
@@ -199,26 +177,26 @@ struct _IsFancyPointer {
 template <class _Pointer, class = __enable_if_t<
     _And<is_class<_Pointer>, _IsFancyPointer<_Pointer> >::value
 > >
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 __decay_t<decltype(__to_address_helper<_Pointer>::__call(std::declval<const _Pointer&>()))>
-__to_address(const _Pointer& __p) _NOEXCEPT {
+__to_address(const _Pointer& __p) noexcept {
     return __to_address_helper<_Pointer>::__call(__p);
 }
 
 template <class _Pointer, class>
 struct __to_address_helper {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+    _LIBCPP_INLINE_VISIBILITY constexpr
     static decltype(_VSTD::__to_address(std::declval<const _Pointer&>().operator->()))
-    __call(const _Pointer& __p) _NOEXCEPT {
+    __call(const _Pointer& __p) noexcept {
         return _VSTD::__to_address(__p.operator->());
     }
 };
 
 template <class _Pointer>
 struct __to_address_helper<_Pointer, decltype((void)pointer_traits<_Pointer>::to_address(std::declval<const _Pointer&>()))> {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+    _LIBCPP_INLINE_VISIBILITY constexpr
     static decltype(pointer_traits<_Pointer>::to_address(std::declval<const _Pointer&>()))
-    __call(const _Pointer& __p) _NOEXCEPT {
+    __call(const _Pointer& __p) noexcept {
         return pointer_traits<_Pointer>::to_address(__p);
     }
 };

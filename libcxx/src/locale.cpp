@@ -94,7 +94,7 @@ T& make(Args ...args)
 
 template <typename T, size_t N>
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 size_t
 countof(const T (&)[N])
 {
@@ -103,7 +103,7 @@ countof(const T (&)[N])
 
 template <typename T>
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 size_t
 countof(const T * const begin, const T * const end)
 {
@@ -1097,7 +1097,7 @@ extern "C" const int ** __ctype_toupper_loc();
 const ctype<char>::mask*
 ctype<char>::classic_table() noexcept
 {
-    static _LIBCPP_CONSTEXPR const ctype<char>::mask builtin_table[table_size] = {
+    static constexpr const ctype<char>::mask builtin_table[table_size] = {
         cntrl,                          cntrl,
         cntrl,                          cntrl,
         cntrl,                          cntrl,
@@ -1248,7 +1248,7 @@ ctype<char>::__classic_upper_table() noexcept
 }
 #elif defined(__MVS__)
 const unsigned short*
-ctype<char>::__classic_lower_table() _NOEXCEPT
+ctype<char>::__classic_lower_table() noexcept
 {
 # if defined(__NATIVE_ASCII_F)
   return const_cast<const unsigned short*>(__OBJ_DATA(__lc_ctype_a)->lower);
@@ -1257,7 +1257,7 @@ ctype<char>::__classic_lower_table() _NOEXCEPT
 # endif
 }
 const unsigned short *
-ctype<char>::__classic_upper_table() _NOEXCEPT
+ctype<char>::__classic_upper_table() noexcept
 {
 # if defined(__NATIVE_ASCII_F)
   return const_cast<const unsigned short*>(__OBJ_DATA(__lc_ctype_a)->upper);

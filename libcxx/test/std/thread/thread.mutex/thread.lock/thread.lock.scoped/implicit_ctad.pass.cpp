@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: no-threads
-// UNSUPPORTED: c++98, c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // <mutex>
 
@@ -38,4 +38,3 @@ int main(int, char**) {
 
   return 0;
 }
-

@@ -125,7 +125,7 @@ struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>
     : public __unary_function<__thread_id, size_t>
 {
     _LIBCPP_INLINE_VISIBILITY
-    size_t operator()(__thread_id __v) const _NOEXCEPT
+    size_t operator()(__thread_id __v) const noexcept
     {
         return hash<__libcpp_thread_id>()(__v.__id_);
     }
@@ -169,26 +169,22 @@ public:
     typedef __libcpp_thread_t native_handle_type;
 
     _LIBCPP_INLINE_VISIBILITY
-    thread() _NOEXCEPT : __t_(_LIBCPP_NULL_THREAD) {}
-#ifndef _LIBCPP_CXX03_LANG
+    thread() noexcept : __t_(_LIBCPP_NULL_THREAD) {}
+
     template <class _Fp, class ..._Args,
               class = __enable_if_t<!is_same<__remove_cvref_t<_Fp>, thread>::value> >
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         explicit thread(_Fp&& __f, _Args&&... __args);
-#else  // _LIBCPP_CXX03_LANG
-    template <class _Fp>
-    _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
-    explicit thread(_Fp __f);
-#endif
+
     ~thread();
 
     _LIBCPP_INLINE_VISIBILITY
-    thread(thread&& __t) _NOEXCEPT : __t_(__t.__t_) {
+    thread(thread&& __t) noexcept : __t_(__t.__t_) {
         __t.__t_ = _LIBCPP_NULL_THREAD;
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    thread& operator=(thread&& __t) _NOEXCEPT {
+    thread& operator=(thread&& __t) noexcept {
         if (!__libcpp_thread_isnull(&__t_))
             terminate();
         __t_ = __t.__t_;
@@ -197,21 +193,19 @@ public:
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    void swap(thread& __t) _NOEXCEPT {_VSTD::swap(__t_, __t.__t_);}
+    void swap(thread& __t) noexcept {_VSTD::swap(__t_, __t.__t_);}
 
     _LIBCPP_INLINE_VISIBILITY
-    bool joinable() const _NOEXCEPT {return !__libcpp_thread_isnull(&__t_);}
+    bool joinable() const noexcept {return !__libcpp_thread_isnull(&__t_);}
     void join();
     void detach();
     _LIBCPP_INLINE_VISIBILITY
-    id get_id() const _NOEXCEPT {return __libcpp_thread_get_id(&__t_);}
+    id get_id() const noexcept {return __libcpp_thread_get_id(&__t_);}
     _LIBCPP_INLINE_VISIBILITY
-    native_handle_type native_handle() _NOEXCEPT {return __t_;}
+    native_handle_type native_handle() noexcept {return __t_;}
 
-    static unsigned hardware_concurrency() _NOEXCEPT;
+    static unsigned hardware_concurrency() noexcept;
 };
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _TSp, class _Fp, class ..._Args, size_t ..._Indices>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -252,45 +246,8 @@ thread::thread(_Fp&& __f, _Args&&... __args)
         __throw_system_error(__ec, "thread constructor failed");
 }
 
-#else  // _LIBCPP_CXX03_LANG
-
-template <class _Fp>
-struct __thread_invoke_pair {
-    // This type is used to pass memory for thread local storage and a functor
-    // to a newly created thread because std::pair doesn't work with
-    // std::unique_ptr in C++03.
-    _LIBCPP_HIDE_FROM_ABI __thread_invoke_pair(_Fp& __f) : __tsp_(new __thread_struct), __fn_(__f) {}
-    unique_ptr<__thread_struct> __tsp_;
-    _Fp __fn_;
-};
-
-template <class _Fp>
-_LIBCPP_HIDE_FROM_ABI void* __thread_proxy_cxx03(void* __vp)
-{
-    unique_ptr<_Fp> __p(static_cast<_Fp*>(__vp));
-    __thread_local_data().set_pointer(__p->__tsp_.release());
-    (__p->__fn_)();
-    return nullptr;
-}
-
-template <class _Fp>
-thread::thread(_Fp __f)
-{
-
-    typedef __thread_invoke_pair<_Fp> _InvokePair;
-    typedef unique_ptr<_InvokePair> _PairPtr;
-    _PairPtr __pp(new _InvokePair(__f));
-    int __ec = _VSTD::__libcpp_thread_create(&__t_, &__thread_proxy_cxx03<_InvokePair>, __pp.get());
-    if (__ec == 0)
-        __pp.release();
-    else
-        __throw_system_error(__ec, "thread constructor failed");
-}
-
-#endif // _LIBCPP_CXX03_LANG
-
 inline _LIBCPP_INLINE_VISIBILITY
-void swap(thread& __x, thread& __y) _NOEXCEPT {__x.swap(__y);}
+void swap(thread& __x, thread& __y) noexcept {__x.swap(__y);}
 
 _LIBCPP_END_NAMESPACE_STD
 

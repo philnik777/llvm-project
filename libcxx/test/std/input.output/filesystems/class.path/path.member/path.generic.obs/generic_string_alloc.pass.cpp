@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // UNSUPPORTED: availability-filesystem-missing
 
 // These tests require locale for non-char paths

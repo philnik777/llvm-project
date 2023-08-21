@@ -78,7 +78,7 @@ struct __non_trivial_if { };
 template <class _Unique>
 struct __non_trivial_if<true, _Unique> {
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR __non_trivial_if() _NOEXCEPT { }
+    constexpr __non_trivial_if() noexcept { }
 };
 
 // allocator
@@ -98,11 +98,11 @@ public:
     typedef true_type   propagate_on_container_move_assignment;
     typedef true_type   is_always_equal;
 
-    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 allocator() _NOEXCEPT = default;
+    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 allocator() noexcept = default;
 
     template <class _Up>
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    allocator(const allocator<_Up>&) _NOEXCEPT { }
+    allocator(const allocator<_Up>&) noexcept { }
 
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
     _Tp* allocate(size_t __n) {
@@ -111,7 +111,7 @@ public:
         if (__libcpp_is_constant_evaluated()) {
             return static_cast<_Tp*>(::operator new(__n * sizeof(_Tp)));
         } else {
-            return static_cast<_Tp*>(_VSTD::__libcpp_allocate(__n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp)));
+            return static_cast<_Tp*>(_VSTD::__libcpp_allocate(__n * sizeof(_Tp), alignof(_Tp)));
         }
     }
 
@@ -123,11 +123,11 @@ public:
 #endif
 
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    void deallocate(_Tp* __p, size_t __n) _NOEXCEPT {
+    void deallocate(_Tp* __p, size_t __n) noexcept {
         if (__libcpp_is_constant_evaluated()) {
             ::operator delete(__p);
         } else {
-            _VSTD::__libcpp_deallocate((void*)__p, __n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp));
+            _VSTD::__libcpp_deallocate((void*)__p, __n * sizeof(_Tp), alignof(_Tp));
         }
     }
 
@@ -144,11 +144,11 @@ public:
     };
 
     _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_INLINE_VISIBILITY
-    pointer address(reference __x) const _NOEXCEPT {
+    pointer address(reference __x) const noexcept {
         return _VSTD::addressof(__x);
     }
     _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_INLINE_VISIBILITY
-    const_pointer address(const_reference __x) const _NOEXCEPT {
+    const_pointer address(const_reference __x) const noexcept {
         return _VSTD::addressof(__x);
     }
 
@@ -157,7 +157,7 @@ public:
         return allocate(__n);
     }
 
-    _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_INLINE_VISIBILITY size_type max_size() const _NOEXCEPT {
+    _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_INLINE_VISIBILITY size_type max_size() const noexcept {
         return size_type(~0) / sizeof(_Tp);
     }
 
@@ -186,11 +186,11 @@ public:
     typedef true_type   propagate_on_container_move_assignment;
     typedef true_type   is_always_equal;
 
-    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 allocator() _NOEXCEPT = default;
+    _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 allocator() noexcept = default;
 
     template <class _Up>
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-    allocator(const allocator<_Up>&) _NOEXCEPT { }
+    allocator(const allocator<_Up>&) noexcept { }
 
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
     const _Tp* allocate(size_t __n) {
@@ -199,7 +199,7 @@ public:
         if (__libcpp_is_constant_evaluated()) {
             return static_cast<const _Tp*>(::operator new(__n * sizeof(_Tp)));
         } else {
-            return static_cast<const _Tp*>(_VSTD::__libcpp_allocate(__n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp)));
+            return static_cast<const _Tp*>(_VSTD::__libcpp_allocate(__n * sizeof(_Tp), alignof(_Tp)));
         }
     }
 
@@ -215,7 +215,7 @@ public:
         if (__libcpp_is_constant_evaluated()) {
             ::operator delete(const_cast<_Tp*>(__p));
         } else {
-            _VSTD::__libcpp_deallocate((void*) const_cast<_Tp *>(__p), __n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp));
+            _VSTD::__libcpp_deallocate((void*) const_cast<_Tp *>(__p), __n * sizeof(_Tp), alignof(_Tp));
         }
     }
 
@@ -232,7 +232,7 @@ public:
     };
 
     _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_INLINE_VISIBILITY
-    const_pointer address(const_reference __x) const _NOEXCEPT {
+    const_pointer address(const_reference __x) const noexcept {
         return _VSTD::addressof(__x);
     }
 
@@ -241,7 +241,7 @@ public:
         return allocate(__n);
     }
 
-    _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_INLINE_VISIBILITY size_type max_size() const _NOEXCEPT {
+    _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_INLINE_VISIBILITY size_type max_size() const noexcept {
         return size_type(~0) / sizeof(_Tp);
     }
 
@@ -260,13 +260,13 @@ public:
 
 template <class _Tp, class _Up>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
-bool operator==(const allocator<_Tp>&, const allocator<_Up>&) _NOEXCEPT {return true;}
+bool operator==(const allocator<_Tp>&, const allocator<_Up>&) noexcept {return true;}
 
 #if _LIBCPP_STD_VER <= 17
 
 template <class _Tp, class _Up>
 inline _LIBCPP_INLINE_VISIBILITY
-bool operator!=(const allocator<_Tp>&, const allocator<_Up>&) _NOEXCEPT {return false;}
+bool operator!=(const allocator<_Tp>&, const allocator<_Up>&) noexcept {return false;}
 
 #endif
 

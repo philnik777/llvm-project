@@ -29,7 +29,7 @@ class _MinmaxElementLessFunc {
   _Proj& __proj_;
 
 public:
-  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR
+  _LIBCPP_HIDE_FROM_ABI constexpr
   _MinmaxElementLessFunc(_Comp& __comp, _Proj& __proj) : __comp_(__comp), __proj_(__proj) {}
 
   template <class _Iter>

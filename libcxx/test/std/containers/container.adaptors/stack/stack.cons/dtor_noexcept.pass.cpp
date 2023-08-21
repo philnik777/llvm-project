@@ -10,7 +10,6 @@
 
 // ~stack() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <stack>
 #include <cassert>

@@ -80,8 +80,6 @@ struct is_placeholder<placeholders::__ph<_Np> >
     : public integral_constant<int, _Np> {};
 
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp, class _Uj>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX20
 _Tp&
@@ -378,8 +376,6 @@ bind(_Fp&& __f, _BoundArgs&&... __bound_args)
     typedef __bind_r<_Rp, _Fp, _BoundArgs...> type;
     return type(_VSTD::forward<_Fp>(__f), _VSTD::forward<_BoundArgs>(__bound_args)...);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_STD
 

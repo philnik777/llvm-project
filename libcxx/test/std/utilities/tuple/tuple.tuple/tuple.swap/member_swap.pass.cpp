@@ -12,7 +12,6 @@
 
 // void swap(tuple& rhs);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <cassert>

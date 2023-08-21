@@ -9,7 +9,7 @@
 // template<class T> struct is_execution_policy;
 // template<class T> constexpr bool is_execution_policy_v = is_execution_policy<T>::value;
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // UNSUPPORTED: libcpp-has-no-incomplete-pstl
 

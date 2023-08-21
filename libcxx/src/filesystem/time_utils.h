@@ -147,7 +147,7 @@ struct time_util_base {
           .count();
 
 private:
-  static _LIBCPP_CONSTEXPR fs_duration get_min_nsecs() {
+  static constexpr fs_duration get_min_nsecs() {
     return duration_cast<fs_duration>(
         fs_nanoseconds(min_nsec_timespec) -
         duration_cast<fs_nanoseconds>(fs_seconds(1)));

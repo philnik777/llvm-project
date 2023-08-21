@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // REQUIRES: long_tests
 // UNSUPPORTED: no-filesystem
 // UNSUPPORTED: availability-filesystem-missing

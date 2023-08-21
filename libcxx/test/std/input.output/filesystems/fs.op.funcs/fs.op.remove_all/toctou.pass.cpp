@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // UNSUPPORTED: no-localization
 // UNSUPPORTED: no-threads
 // UNSUPPORTED: no-filesystem

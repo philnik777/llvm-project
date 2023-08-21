@@ -11,7 +11,7 @@
 // template <class T1, class T2> struct pair
 // void swap(const pair& p) const;
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 #include <cassert>
 #include <utility>

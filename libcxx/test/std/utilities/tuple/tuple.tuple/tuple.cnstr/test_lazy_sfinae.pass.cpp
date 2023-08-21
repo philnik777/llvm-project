@@ -10,7 +10,6 @@
 
 // template <class... Types> class tuple;
 
-// UNSUPPORTED: c++03
 
 // Test the following constructors:
 // (1) tuple(Types const&...)

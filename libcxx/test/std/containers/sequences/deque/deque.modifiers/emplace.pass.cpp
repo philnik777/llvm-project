@@ -10,7 +10,6 @@
 
 // template <class... Args> iterator emplace(const_iterator p, Args&&... args);
 
-// UNSUPPORTED: c++03
 
 #include "asan_testing.h"
 #include <deque>

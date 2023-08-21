@@ -7,7 +7,6 @@
 //===----------------------------------------------------------------------===//
 
 // <regex>
-// UNSUPPORTED: c++03
 
 // Make sure that we correctly match inverted character classes.
 

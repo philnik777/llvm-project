@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // A program that instantiates the definition of unexpected for a non-object type, an array type, a specialization of unexpected, or a cv-qualified type is ill-formed.
 

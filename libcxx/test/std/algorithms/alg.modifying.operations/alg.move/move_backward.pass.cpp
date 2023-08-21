@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03 && !stdlib=libc++
-
 // <algorithm>
 
 // template<BidirectionalIterator InIter, BidirectionalIterator OutIter>

@@ -16,7 +16,6 @@
 // is not in the map.
 
 // REQUIRES: no-exceptions
-// UNSUPPORTED: c++03
 
 #include <csignal>
 #include <cstdlib>

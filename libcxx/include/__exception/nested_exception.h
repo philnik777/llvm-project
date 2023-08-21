@@ -32,14 +32,14 @@ class _LIBCPP_EXPORTED_FROM_ABI nested_exception {
   exception_ptr __ptr_;
 
 public:
-  nested_exception() _NOEXCEPT;
+  nested_exception() noexcept;
   //     nested_exception(const nested_exception&) noexcept = default;
   //     nested_exception& operator=(const nested_exception&) noexcept = default;
-  virtual ~nested_exception() _NOEXCEPT;
+  virtual ~nested_exception() noexcept;
 
   // access functions
-  _LIBCPP_NORETURN void rethrow_nested() const;
-  _LIBCPP_HIDE_FROM_ABI exception_ptr nested_ptr() const _NOEXCEPT { return __ptr_; }
+  [[noreturn]] void rethrow_nested() const;
+  _LIBCPP_HIDE_FROM_ABI exception_ptr nested_ptr() const noexcept { return __ptr_; }
 };
 
 template <class _Tp>
@@ -53,19 +53,19 @@ struct __throw_with_nested;
 
 template <class _Tp, class _Up>
 struct __throw_with_nested<_Tp, _Up, true> {
-  _LIBCPP_NORETURN static inline _LIBCPP_INLINE_VISIBILITY void __do_throw(_Tp&& __t) {
+  [[noreturn]] static inline _LIBCPP_INLINE_VISIBILITY void __do_throw(_Tp&& __t) {
     throw __nested<_Up>(std::forward<_Tp>(__t));
   }
 };
 
 template <class _Tp, class _Up>
 struct __throw_with_nested<_Tp, _Up, false> {
-  _LIBCPP_NORETURN static inline _LIBCPP_INLINE_VISIBILITY void __do_throw(_Tp&& __t) { throw std::forward<_Tp>(__t); }
+  [[noreturn]] static inline _LIBCPP_INLINE_VISIBILITY void __do_throw(_Tp&& __t) { throw std::forward<_Tp>(__t); }
 };
 #endif
 
 template <class _Tp>
-_LIBCPP_NORETURN _LIBCPP_HIDE_FROM_ABI void throw_with_nested(_Tp&& __t) {
+[[noreturn]] _LIBCPP_HIDE_FROM_ABI void throw_with_nested(_Tp&& __t) {
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS
   using _Up = __decay_t<_Tp>;
   static_assert(is_copy_constructible<_Up>::value, "type thrown must be CopyConstructible");

@@ -16,7 +16,6 @@
 // template <class... UTypes>
 //   tuple& operator=(const tuple<UTypes...>& u);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <string>

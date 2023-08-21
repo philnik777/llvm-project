@@ -9,7 +9,6 @@
 // This test makes sure that we don't evaluate `is_default_constructible<T>`
 // too early in std::tuple's default constructor.
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 

@@ -10,7 +10,6 @@
 
 // ~queue() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <queue>
 #include <cassert>

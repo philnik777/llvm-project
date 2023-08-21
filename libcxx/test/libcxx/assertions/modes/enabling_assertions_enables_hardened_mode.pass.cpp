@@ -10,7 +10,7 @@
 // This test ensures that enabling assertions now enables the hardened mode.
 
 // `check_assertion.h` is only available starting from C++11 and requires Unix headers.
-// UNSUPPORTED: c++03, !has-unix-headers
+// UNSUPPORTED: !has-unix-headers
 // The ability to set a custom abort message is required to compare the assertion message.
 // XFAIL: availability-verbose_abort-missing
 // Debug mode is mutually exclusive with hardened mode.

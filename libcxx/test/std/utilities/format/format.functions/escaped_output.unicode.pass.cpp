@@ -5,7 +5,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 // UNSUPPORTED: GCC-ALWAYS_INLINE-FIXME
 
 // This version runs the test when the platform has Unicode support.

@@ -10,7 +10,6 @@
 
 // constexpr unspecified ignore;
 
-// UNSUPPORTED: c++03
 
 #include <cassert>
 #include <tuple>

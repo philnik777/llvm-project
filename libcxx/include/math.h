@@ -388,12 +388,12 @@ namespace __math {
 // fpclassify
 
 template <class _A1, std::__enable_if_t<std::is_floating_point<_A1>::value, int> = 0>
-_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(_A1 __x) _NOEXCEPT {
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(_A1 __x) noexcept {
   return __builtin_fpclassify(FP_NAN, FP_INFINITE, FP_NORMAL, FP_SUBNORMAL, FP_ZERO, __x);
 }
 
 template <class _A1, std::__enable_if_t<std::is_integral<_A1>::value, int> = 0>
-_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(_A1 __x) _NOEXCEPT {
+_LIBCPP_NODISCARD_EXT inline _LIBCPP_HIDE_FROM_ABI int fpclassify(_A1 __x) noexcept {
   return __x == 0 ? FP_ZERO : FP_NORMAL;
 }
 

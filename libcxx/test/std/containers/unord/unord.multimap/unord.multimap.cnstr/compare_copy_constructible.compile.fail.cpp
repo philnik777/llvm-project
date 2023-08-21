@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 // The test requires access control SFINAE.
 
 // <unordered_map>

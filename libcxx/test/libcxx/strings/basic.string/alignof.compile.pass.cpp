@@ -8,7 +8,6 @@
 
 // Ensure that we never change the size or alignment of `basic_string`
 
-// UNSUPPORTED: c++03
 
 #include <string>
 

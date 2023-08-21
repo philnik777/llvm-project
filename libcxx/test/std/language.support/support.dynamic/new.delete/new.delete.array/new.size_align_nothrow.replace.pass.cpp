@@ -10,7 +10,7 @@
 
 // Test that we can replace the operator by defining our own.
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 // UNSUPPORTED: sanitizer-new-delete
 
 // We get availability markup errors when aligned allocation is missing

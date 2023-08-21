@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // Test that the CityHash implementation returns the results we expect.
 //

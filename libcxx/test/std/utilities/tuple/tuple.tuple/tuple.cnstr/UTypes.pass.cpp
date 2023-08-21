@@ -13,7 +13,6 @@
 // template <class... UTypes>
 //   explicit tuple(UTypes&&... u);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <cassert>

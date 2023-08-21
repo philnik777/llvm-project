@@ -12,7 +12,6 @@
 
 // tuple(const tuple& u) = default;
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <cassert>

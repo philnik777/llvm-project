@@ -11,7 +11,7 @@
 // class match_results<BidirectionalIterator, Allocator>
 // bool empty() const;
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <regex>
 

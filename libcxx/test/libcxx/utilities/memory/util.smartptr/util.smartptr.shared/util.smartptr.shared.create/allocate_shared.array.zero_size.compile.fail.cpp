@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // Make sure that std::allocate_shared<T[0]>(...) fails at compile-time.
 // While Clang and GCC appear to support T[0] as a language extension, that support is

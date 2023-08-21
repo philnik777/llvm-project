@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // constexpr auto data() requires contiguous_range<R>
 // constexpr auto data() const requires contiguous_range<const R>

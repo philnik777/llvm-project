@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // friend constexpr decltype(auto) iter_move(const inner-iterator& i)
 //   noexcept(noexcept(ranges::iter_move(i.i_.<current>)));

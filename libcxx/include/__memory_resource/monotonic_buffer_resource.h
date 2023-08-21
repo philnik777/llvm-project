@@ -104,7 +104,7 @@ protected:
 
   _LIBCPP_HIDE_FROM_ABI_VIRTUAL void do_deallocate(void*, size_t, size_t) override {}
 
-  _LIBCPP_HIDE_FROM_ABI_VIRTUAL bool do_is_equal(const memory_resource& __other) const _NOEXCEPT override {
+  _LIBCPP_HIDE_FROM_ABI_VIRTUAL bool do_is_equal(const memory_resource& __other) const noexcept override {
     return this == std::addressof(__other);
   }
 

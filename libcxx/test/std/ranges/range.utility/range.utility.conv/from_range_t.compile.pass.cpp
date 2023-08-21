@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // struct from_range_t { explicit from_range_t() = default; };  // Since C++23
 // inline constexpr from_range_t from_range{};                  // Since C++23

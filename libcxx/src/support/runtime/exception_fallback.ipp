@@ -27,7 +27,7 @@ get_unexpected() noexcept
   return __libcpp_atomic_load(&__unexpected_handler);
 }
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void unexpected()
 {
     (*get_unexpected())();
@@ -47,7 +47,7 @@ get_terminate() noexcept
   return __libcpp_atomic_load(&__terminate_handler);
 }
 
-_LIBCPP_NORETURN
+[[noreturn]]
 void
 terminate() noexcept
 {

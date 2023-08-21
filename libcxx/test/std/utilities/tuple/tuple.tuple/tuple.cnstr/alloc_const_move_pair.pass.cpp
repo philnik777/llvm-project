@@ -19,7 +19,7 @@
 // - is_constructible_v<T0, decltype(get<0>(FWD(u)))> is true and
 // - is_constructible_v<T1, decltype(get<1>(FWD(u)))> is true.
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 #include <cassert>
 #include <tuple>

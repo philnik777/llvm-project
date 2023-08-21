@@ -58,12 +58,12 @@ struct __allocation_guard {
     { }
 
     _LIBCPP_HIDE_FROM_ABI
-    ~__allocation_guard() _NOEXCEPT {
+    ~__allocation_guard() noexcept {
         __destroy();
     }
 
     _LIBCPP_HIDE_FROM_ABI __allocation_guard(const __allocation_guard&) = delete;
-    _LIBCPP_HIDE_FROM_ABI __allocation_guard(__allocation_guard&& __other) _NOEXCEPT
+    _LIBCPP_HIDE_FROM_ABI __allocation_guard(__allocation_guard&& __other) noexcept
         : __alloc_(std::move(__other.__alloc_))
         , __n_(__other.__n_)
         , __ptr_(__other.__ptr_) {
@@ -71,7 +71,7 @@ struct __allocation_guard {
     }
 
     _LIBCPP_HIDE_FROM_ABI __allocation_guard& operator=(const __allocation_guard& __other) = delete;
-    _LIBCPP_HIDE_FROM_ABI __allocation_guard& operator=(__allocation_guard&& __other) _NOEXCEPT {
+    _LIBCPP_HIDE_FROM_ABI __allocation_guard& operator=(__allocation_guard&& __other) noexcept {
         if (std::addressof(__other) != this) {
             __destroy();
 
@@ -85,20 +85,20 @@ struct __allocation_guard {
     }
 
     _LIBCPP_HIDE_FROM_ABI
-    _Pointer __release_ptr() _NOEXCEPT { // not called __release() because it's a keyword in objective-c++
+    _Pointer __release_ptr() noexcept { // not called __release() because it's a keyword in objective-c++
         _Pointer __tmp = __ptr_;
         __ptr_ = nullptr;
         return __tmp;
     }
 
     _LIBCPP_HIDE_FROM_ABI
-    _Pointer __get() const _NOEXCEPT {
+    _Pointer __get() const noexcept {
         return __ptr_;
     }
 
 private:
     _LIBCPP_HIDE_FROM_ABI
-    void __destroy() _NOEXCEPT {
+    void __destroy() noexcept {
         if (__ptr_ != nullptr) {
             allocator_traits<_Alloc>::deallocate(__alloc_, __ptr_, __n_);
         }

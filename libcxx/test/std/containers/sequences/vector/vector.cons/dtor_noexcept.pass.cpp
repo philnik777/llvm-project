@@ -10,7 +10,6 @@
 
 // ~vector() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <vector>
 #include <cassert>

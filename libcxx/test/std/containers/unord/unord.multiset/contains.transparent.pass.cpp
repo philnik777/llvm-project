@@ -15,7 +15,7 @@
 // template <typename K>
 // bool contains(const K& x) const;
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <unordered_set>
 #include "test_transparent_unordered.h"

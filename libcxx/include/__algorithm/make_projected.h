@@ -32,14 +32,14 @@ struct _ProjectedPred {
   _Pred& __pred; // Can be a unary or a binary predicate.
   _Proj& __proj;
 
-  _LIBCPP_CONSTEXPR _LIBCPP_HIDE_FROM_ABI _ProjectedPred(_Pred& __pred_arg, _Proj& __proj_arg)
+  constexpr _LIBCPP_HIDE_FROM_ABI _ProjectedPred(_Pred& __pred_arg, _Proj& __proj_arg)
       : __pred(__pred_arg), __proj(__proj_arg) {}
 
   template <class _Tp>
   typename __invoke_of<_Pred&,
                        decltype(std::__invoke(std::declval<_Proj&>(), std::declval<_Tp>()))
   >::type
-  _LIBCPP_CONSTEXPR _LIBCPP_HIDE_FROM_ABI operator()(_Tp&& __v) const {
+  constexpr _LIBCPP_HIDE_FROM_ABI operator()(_Tp&& __v) const {
     return std::__invoke(__pred, std::__invoke(__proj, std::forward<_Tp>(__v)));
   }
 
@@ -48,7 +48,7 @@ struct _ProjectedPred {
                        decltype(std::__invoke(std::declval<_Proj&>(), std::declval<_T1>())),
                        decltype(std::__invoke(std::declval<_Proj&>(), std::declval<_T2>()))
   >::type
-  _LIBCPP_CONSTEXPR _LIBCPP_HIDE_FROM_ABI operator()(_T1&& __lhs, _T2&& __rhs) const {
+  constexpr _LIBCPP_HIDE_FROM_ABI operator()(_T1&& __lhs, _T2&& __rhs) const {
     return std::__invoke(__pred,
                       std::__invoke(__proj, std::forward<_T1>(__lhs)),
                       std::__invoke(__proj, std::forward<_T2>(__rhs)));
@@ -56,26 +56,16 @@ struct _ProjectedPred {
 
 };
 
-template <class _Pred,
-          class _Proj,
-          __enable_if_t<!(!is_member_pointer<__decay_t<_Pred> >::value &&
-                            __is_identity<__decay_t<_Proj> >::value),
-                        int> = 0>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _ProjectedPred<_Pred, _Proj>
-__make_projected(_Pred& __pred, _Proj& __proj) {
-  return _ProjectedPred<_Pred, _Proj>(__pred, __proj);
-}
-
 // Avoid creating the functor and just use the pristine comparator -- for certain algorithms, this would enable
 // optimizations that rely on the type of the comparator. Additionally, this results in less layers of indirection in
 // the call stack when the comparator is invoked, even in an unoptimized build.
-template <class _Pred,
-          class _Proj,
-          __enable_if_t<!is_member_pointer<__decay_t<_Pred> >::value &&
-                          __is_identity<__decay_t<_Proj> >::value,
-                        int> = 0>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _Pred& __make_projected(_Pred& __pred, _Proj&) {
-  return __pred;
+template <class _Pred, class _Proj>
+_LIBCPP_HIDE_FROM_ABI constexpr _Pred& __make_projected(_Pred& __pred, _Proj& __proj) {
+  if constexpr (!is_member_pointer<__decay_t<_Pred> >::value && __is_identity<__decay_t<_Proj> >::value) {
+    return __pred;
+  } else {
+    return _ProjectedPred<_Pred, _Proj>(__pred, __proj);
+  }
 }
 
 _LIBCPP_END_NAMESPACE_STD

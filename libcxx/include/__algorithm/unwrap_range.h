@@ -82,12 +82,12 @@ _LIBCPP_HIDE_FROM_ABI constexpr _Iter __rewrap_range(_Iter __orig_iter, _Unwrapp
 }
 #else  // _LIBCPP_STD_VER >= 20
 template <class _Iter, class _Unwrapped = decltype(std::__unwrap_iter(std::declval<_Iter>()))>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR pair<_Unwrapped, _Unwrapped> __unwrap_range(_Iter __first, _Iter __last) {
+_LIBCPP_HIDE_FROM_ABI constexpr pair<_Unwrapped, _Unwrapped> __unwrap_range(_Iter __first, _Iter __last) {
   return std::make_pair(std::__unwrap_iter(std::move(__first)), std::__unwrap_iter(std::move(__last)));
 }
 
 template <class _Iter, class _Unwrapped = decltype(std::__unwrap_iter(std::declval<_Iter>()))>
-_LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _Iter __rewrap_range(_Iter __orig_iter, _Unwrapped __iter) {
+_LIBCPP_HIDE_FROM_ABI constexpr _Iter __rewrap_range(_Iter __orig_iter, _Unwrapped __iter) {
   return std::__rewrap_iter(std::move(__orig_iter), std::move(__iter));
 }
 #endif // _LIBCPP_STD_VER >= 20

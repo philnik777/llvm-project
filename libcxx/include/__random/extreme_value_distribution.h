@@ -61,18 +61,12 @@ private:
 
 public:
     // constructor and reset functions
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     extreme_value_distribution() : extreme_value_distribution(0) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit extreme_value_distribution(result_type __a, result_type __b = 1)
         : __p_(param_type(__a, __b)) {}
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    explicit extreme_value_distribution(result_type __a = 0,
-                                        result_type __b = 1)
-        : __p_(param_type(__a, __b)) {}
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     explicit extreme_value_distribution(const param_type& __p)
         : __p_(__p) {}

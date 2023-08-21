@@ -15,7 +15,7 @@
 // template <typename K>
 // pair<const_iterator, const_iterator> equal_range(const K& k) const;
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 #include <unordered_set>
 

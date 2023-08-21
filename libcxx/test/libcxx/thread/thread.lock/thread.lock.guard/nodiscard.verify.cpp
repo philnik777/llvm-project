@@ -9,7 +9,6 @@
 // UNSUPPORTED: no-threads
 
 // [[nodiscard]] isn't supported in C++03 (not even as an extension)
-// UNSUPPORTED: c++03
 
 // <mutex>
 

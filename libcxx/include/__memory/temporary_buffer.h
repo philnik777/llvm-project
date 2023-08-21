@@ -25,7 +25,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 template <class _Tp>
 _LIBCPP_NODISCARD_EXT _LIBCPP_HIDE_FROM_ABI _LIBCPP_NO_CFI _LIBCPP_DEPRECATED_IN_CXX17
 pair<_Tp*, ptrdiff_t>
-get_temporary_buffer(ptrdiff_t __n) _NOEXCEPT
+get_temporary_buffer(ptrdiff_t __n) noexcept
 {
     pair<_Tp*, ptrdiff_t> __r(0, 0);
     const ptrdiff_t __m = (~ptrdiff_t(0) ^
@@ -36,7 +36,7 @@ get_temporary_buffer(ptrdiff_t __n) _NOEXCEPT
     while (__n > 0)
     {
 #if !defined(_LIBCPP_HAS_NO_ALIGNED_ALLOCATION)
-    if (__is_overaligned_for_new(_LIBCPP_ALIGNOF(_Tp)))
+    if (__is_overaligned_for_new(alignof(_Tp)))
         {
             align_val_t __al =
                 align_val_t(alignment_of<_Tp>::value);
@@ -47,7 +47,7 @@ get_temporary_buffer(ptrdiff_t __n) _NOEXCEPT
                 __n * sizeof(_Tp), nothrow));
         }
 #else
-    if (__is_overaligned_for_new(_LIBCPP_ALIGNOF(_Tp)))
+    if (__is_overaligned_for_new(alignof(_Tp)))
         {
             // Since aligned operator new is unavailable, return an empty
             // buffer rather than one with invalid alignment.
@@ -69,9 +69,9 @@ get_temporary_buffer(ptrdiff_t __n) _NOEXCEPT
 
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_DEPRECATED_IN_CXX17
-void return_temporary_buffer(_Tp* __p) _NOEXCEPT
+void return_temporary_buffer(_Tp* __p) noexcept
 {
-  _VSTD::__libcpp_deallocate_unsized((void*)__p, _LIBCPP_ALIGNOF(_Tp));
+  _VSTD::__libcpp_deallocate_unsized((void*)__p, alignof(_Tp));
 }
 
 struct __return_temporary_buffer

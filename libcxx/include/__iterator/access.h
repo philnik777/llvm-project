@@ -35,8 +35,6 @@ end(_Tp (&__array)[_Np])
     return __array + _Np;
 }
 
-#if !defined(_LIBCPP_CXX03_LANG)
-
 template <class _Cp>
 _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX17
 auto
@@ -86,43 +84,6 @@ auto cend(const _Cp& __c) -> decltype(_VSTD::end(__c))
 }
 
 #endif
-
-
-#else  // defined(_LIBCPP_CXX03_LANG)
-
-template <class _Cp>
-_LIBCPP_INLINE_VISIBILITY
-typename _Cp::iterator
-begin(_Cp& __c)
-{
-    return __c.begin();
-}
-
-template <class _Cp>
-_LIBCPP_INLINE_VISIBILITY
-typename _Cp::const_iterator
-begin(const _Cp& __c)
-{
-    return __c.begin();
-}
-
-template <class _Cp>
-_LIBCPP_INLINE_VISIBILITY
-typename _Cp::iterator
-end(_Cp& __c)
-{
-    return __c.end();
-}
-
-template <class _Cp>
-_LIBCPP_INLINE_VISIBILITY
-typename _Cp::const_iterator
-end(const _Cp& __c)
-{
-    return __c.end();
-}
-
-#endif // !defined(_LIBCPP_CXX03_LANG)
 
 _LIBCPP_END_NAMESPACE_STD
 

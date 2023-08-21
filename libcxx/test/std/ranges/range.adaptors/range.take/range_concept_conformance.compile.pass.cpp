@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // Range concept conformance tests for take_view.
 
@@ -22,4 +22,3 @@ static_assert(std::ranges::forward_range<std::ranges::take_view<test_view<forwar
 static_assert(std::ranges::bidirectional_range<std::ranges::take_view<test_view<bidirectional_iterator>>>);
 static_assert(std::ranges::random_access_range<std::ranges::take_view<test_view<random_access_iterator>>>);
 static_assert(std::ranges::contiguous_range<std::ranges::take_view<test_view<contiguous_iterator>>>);
-

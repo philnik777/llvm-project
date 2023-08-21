@@ -16,7 +16,7 @@
 // inline constexpr parallel_unsequenced_policy par_unseq = implementation-defined;
 // inline constexpr unsequenced_policy unseq = implementation-defined; // since C++20
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // UNSUPPORTED: libcpp-has-no-incomplete-pstl
 

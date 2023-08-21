@@ -859,7 +859,7 @@ enum syntax_option_type
     multiline  = 1 << 10
 };
 
-_LIBCPP_HIDE_FROM_ABI inline _LIBCPP_CONSTEXPR
+_LIBCPP_HIDE_FROM_ABI inline constexpr
 syntax_option_type __get_grammar(syntax_option_type __g)
 {
 #ifdef _LIBCPP_ABI_REGEX_CONSTANTS_NONZERO
@@ -870,7 +870,7 @@ syntax_option_type __get_grammar(syntax_option_type __g)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator~(syntax_option_type __x)
 {
@@ -878,7 +878,7 @@ operator~(syntax_option_type __x)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator&(syntax_option_type __x, syntax_option_type __y)
 {
@@ -886,7 +886,7 @@ operator&(syntax_option_type __x, syntax_option_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator|(syntax_option_type __x, syntax_option_type __y)
 {
@@ -894,7 +894,7 @@ operator|(syntax_option_type __x, syntax_option_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 syntax_option_type
 operator^(syntax_option_type __x, syntax_option_type __y)
 {
@@ -947,7 +947,7 @@ enum match_flag_type
 };
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator~(match_flag_type __x)
 {
@@ -955,7 +955,7 @@ operator~(match_flag_type __x)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator&(match_flag_type __x, match_flag_type __y)
 {
@@ -963,7 +963,7 @@ operator&(match_flag_type __x, match_flag_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator|(match_flag_type __x, match_flag_type __y)
 {
@@ -971,7 +971,7 @@ operator|(match_flag_type __x, match_flag_type __y)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR
+constexpr
 match_flag_type
 operator^(match_flag_type __x, match_flag_type __y)
 {
@@ -1031,14 +1031,14 @@ class _LIBCPP_EXPORTED_FROM_ABI regex_error
     regex_constants::error_type __code_;
 public:
     explicit regex_error(regex_constants::error_type __ecode);
-    _LIBCPP_HIDE_FROM_ABI regex_error(const regex_error&) _NOEXCEPT = default;
-    ~regex_error() _NOEXCEPT override;
+    _LIBCPP_HIDE_FROM_ABI regex_error(const regex_error&) noexcept = default;
+    ~regex_error() noexcept override;
     _LIBCPP_INLINE_VISIBILITY
     regex_constants::error_type code() const {return __code_;}
 };
 
 template <regex_constants::error_type _Ev>
-_LIBCPP_NORETURN inline _LIBCPP_INLINE_VISIBILITY
+[[noreturn]] inline _LIBCPP_INLINE_VISIBILITY
 void __throw_regex_error()
 {
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS
@@ -2086,7 +2086,7 @@ __word_boundary<_CharT, _Traits>::__exec(__state& __s) const
 // __l_anchor
 
 template <class _CharT>
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool __is_eol(_CharT __c)
 {
     return __c == '\r' || __c == '\n';
@@ -2727,7 +2727,7 @@ public:
         {
         __init(__first, __last);
         }
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     basic_regex(initializer_list<value_type> __il,
                 flag_type __f = regex_constants::ECMAScript)
@@ -2736,7 +2736,6 @@ public:
         {
         __init(__il.begin(), __il.end());
         }
-#endif // _LIBCPP_CXX03_LANG
 
 //    ~basic_regex() = default;
 
@@ -2745,11 +2744,11 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     basic_regex& operator=(const value_type* __p)
         {return assign(__p);}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     basic_regex& operator=(initializer_list<value_type> __il)
         {return assign(__il);}
-#endif // _LIBCPP_CXX03_LANG
+
     template <class _ST, class _SA>
         _LIBCPP_INLINE_VISIBILITY
         basic_regex& operator=(const basic_string<value_type, _ST, _SA>& __p)
@@ -2759,11 +2758,11 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     basic_regex& assign(const basic_regex& __that)
         {return *this = __that;}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
-    basic_regex& assign(basic_regex&& __that) _NOEXCEPT
+    basic_regex& assign(basic_regex&& __that) noexcept
         {return *this = _VSTD::move(__that);}
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     basic_regex& assign(const value_type* __p, flag_type __f = regex_constants::ECMAScript)
         {return assign(__p, __p + __traits_.length(__p), __f);}
@@ -2778,12 +2777,16 @@ public:
 
     template <class _InputIterator>
         _LIBCPP_INLINE_VISIBILITY
-        typename enable_if<__has_exactly_input_iterator_category<_InputIterator>::value, basic_regex&>::type
+        typename enable_if<__has_input_iterator_category<_InputIterator>::value, basic_regex&>::type
         assign(_InputIterator __first, _InputIterator __last,
                             flag_type __f = regex_constants::ECMAScript)
         {
-            basic_string<_CharT> __t(__first, __last);
-            return assign(__t.begin(), __t.end(), __f);
+            if constexpr (__has_forward_iterator_category<_InputIterator>::value) {
+                return assign(basic_regex(__first, __last, __f));
+            } else {
+                basic_string<_CharT> __t(__first, __last);
+                return assign(__t.begin(), __t.end(), __f);
+            }
         }
 
 private:
@@ -2798,27 +2801,10 @@ private:
     }
 public:
 
-    template <class _ForwardIterator>
-        _LIBCPP_INLINE_VISIBILITY
-        typename enable_if
-        <
-            __has_forward_iterator_category<_ForwardIterator>::value,
-            basic_regex&
-        >::type
-        assign(_ForwardIterator __first, _ForwardIterator __last,
-                            flag_type __f = regex_constants::ECMAScript)
-        {
-            return assign(basic_regex(__first, __last, __f));
-        }
-
-#ifndef _LIBCPP_CXX03_LANG
-
     _LIBCPP_INLINE_VISIBILITY
     basic_regex& assign(initializer_list<value_type> __il,
                         flag_type __f = regex_constants::ECMAScript)
         {return assign(__il.begin(), __il.end(), __f);}
-
-#endif // _LIBCPP_CXX03_LANG
 
     // const operations:
     _LIBCPP_INLINE_VISIBILITY
@@ -5016,7 +5002,7 @@ public:
     bool matched;
 
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR sub_match() : matched() {}
+    constexpr sub_match() : matched() {}
 
     _LIBCPP_INLINE_VISIBILITY
     difference_type length() const
@@ -5040,9 +5026,7 @@ public:
 
     _LIBCPP_HIDE_FROM_ABI
     void swap(sub_match& __s)
-#ifndef _LIBCPP_CXX03_LANG
-    _NOEXCEPT(__is_nothrow_swappable<_BidirectionalIterator>::value)
-#endif // _LIBCPP_CXX03_LANG
+    noexcept(__is_nothrow_swappable<_BidirectionalIterator>::value)
     {
         this->pair<_BidirectionalIterator, _BidirectionalIterator>::swap(__s);
         std::swap(matched, __s.matched);
@@ -5506,12 +5490,8 @@ public:
     typedef basic_string<char_type>                           string_type;
 
     // construct/copy/destroy:
-#ifndef _LIBCPP_CXX03_LANG
     match_results() : match_results(allocator_type()) {}
     explicit match_results(const allocator_type& __a);
-#else
-    explicit match_results(const allocator_type& __a = allocator_type());
-#endif
 
 //    match_results(const match_results&) = default;
 //    match_results& operator=(const match_results&) = default;
@@ -5524,11 +5504,11 @@ public:
 
     // size:
     _LIBCPP_INLINE_VISIBILITY
-    size_type size() const _NOEXCEPT {return __matches_.size();}
+    size_type size() const noexcept {return __matches_.size();}
     _LIBCPP_INLINE_VISIBILITY
-    size_type max_size() const _NOEXCEPT {return __matches_.max_size();}
+    size_type max_size() const noexcept {return __matches_.max_size();}
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
-    bool empty() const _NOEXCEPT {return size() == 0;}
+    bool empty() const noexcept {return size() == 0;}
 
     // element access:
     _LIBCPP_INLINE_VISIBILITY
@@ -6581,7 +6561,6 @@ public:
                                      regex_constants::match_default) = delete;
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
     regex_token_iterator(_BidirectionalIterator __a, _BidirectionalIterator __b,
                          const regex_type& __re,
                          initializer_list<int> __submatches,
@@ -6595,7 +6574,7 @@ public:
                          regex_constants::match_flag_type __m =
                                        regex_constants::match_default) = delete;
 #endif
-#endif // _LIBCPP_CXX03_LANG
+
     template <size_t _Np>
         regex_token_iterator(_BidirectionalIterator __a,
                              _BidirectionalIterator __b,
@@ -6702,8 +6681,6 @@ regex_token_iterator<_BidirectionalIterator, _CharT, _Traits>::
     __init(__a, __b);
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _BidirectionalIterator, class _CharT, class _Traits>
 regex_token_iterator<_BidirectionalIterator, _CharT, _Traits>::
     regex_token_iterator(_BidirectionalIterator __a, _BidirectionalIterator __b,
@@ -6716,8 +6693,6 @@ regex_token_iterator<_BidirectionalIterator, _CharT, _Traits>::
 {
     __init(__a, __b);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _BidirectionalIterator, class _CharT, class _Traits>
 template <size_t _Np>

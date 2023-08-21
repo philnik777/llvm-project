@@ -17,7 +17,7 @@
 // The test also works as a reference list of unimplemented functions.
 //
 // REQUIRES: gcc
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 #include <cmath>
 #include <cstdlib>

@@ -89,23 +89,23 @@ class _LIBCPP_EXPORTED_FROM_ABI type_info
       const char __decorated_name[1];
     } __data;
 
-    int __compare(const type_info &__rhs) const _NOEXCEPT;
+    int __compare(const type_info &__rhs) const noexcept;
 
 public:
     _LIBCPP_AVAILABILITY_TYPEINFO_VTABLE
     virtual ~type_info();
 
-    const char *name() const _NOEXCEPT;
+    const char *name() const noexcept;
 
     _LIBCPP_INLINE_VISIBILITY
-    bool before(const type_info& __arg) const _NOEXCEPT {
+    bool before(const type_info& __arg) const noexcept {
       return __compare(__arg) < 0;
     }
 
-    size_t hash_code() const _NOEXCEPT;
+    size_t hash_code() const noexcept;
 
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX23
-    bool operator==(const type_info& __arg) const _NOEXCEPT {
+    bool operator==(const type_info& __arg) const noexcept {
       // When evaluated in a constant expression, both type infos simply can't come
       // from different translation units, so it is sufficient to compare their addresses.
       if (__libcpp_is_constant_evaluated()) {
@@ -116,7 +116,7 @@ public:
 
 #if _LIBCPP_STD_VER <= 17
     _LIBCPP_INLINE_VISIBILITY
-    bool operator!=(const type_info& __arg) const _NOEXCEPT
+    bool operator!=(const type_info& __arg) const noexcept
     { return !operator==(__arg); }
 #endif
 };
@@ -196,44 +196,44 @@ struct __type_info_implementations {
   struct __string_impl_base {
     typedef const char* __type_name_t;
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    _LIBCPP_CONSTEXPR static const char* __type_name_to_string(__type_name_t __v) _NOEXCEPT {
+    constexpr static const char* __type_name_to_string(__type_name_t __v) noexcept {
       return __v;
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    _LIBCPP_CONSTEXPR static __type_name_t __string_to_type_name(const char* __v) _NOEXCEPT {
+    constexpr static __type_name_t __string_to_type_name(const char* __v) noexcept {
       return __v;
     }
   };
 
   struct __unique_impl : __string_impl_base {
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static size_t __hash(__type_name_t __v) _NOEXCEPT {
+    static size_t __hash(__type_name_t __v) noexcept {
       return reinterpret_cast<size_t>(__v);
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static bool __eq(__type_name_t __lhs, __type_name_t __rhs) _NOEXCEPT {
+    static bool __eq(__type_name_t __lhs, __type_name_t __rhs) noexcept {
       return __lhs == __rhs;
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static bool __lt(__type_name_t __lhs, __type_name_t __rhs) _NOEXCEPT {
+    static bool __lt(__type_name_t __lhs, __type_name_t __rhs) noexcept {
       return __lhs < __rhs;
     }
   };
 
   struct __non_unique_impl : __string_impl_base {
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static size_t __hash(__type_name_t __ptr) _NOEXCEPT {
+    static size_t __hash(__type_name_t __ptr) noexcept {
       size_t __hash = 5381;
       while (unsigned char __c = static_cast<unsigned char>(*__ptr++))
         __hash = (__hash * 33) ^ __c;
       return __hash;
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static bool __eq(__type_name_t __lhs, __type_name_t __rhs) _NOEXCEPT {
+    static bool __eq(__type_name_t __lhs, __type_name_t __rhs) noexcept {
       return __lhs == __rhs || __builtin_strcmp(__lhs, __rhs) == 0;
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static bool __lt(__type_name_t __lhs, __type_name_t __rhs) _NOEXCEPT {
+    static bool __lt(__type_name_t __lhs, __type_name_t __rhs) noexcept {
       return __builtin_strcmp(__lhs, __rhs) < 0;
     }
   };
@@ -242,23 +242,23 @@ struct __type_info_implementations {
     typedef uintptr_t __type_name_t;
 
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static const char* __type_name_to_string(__type_name_t __v) _NOEXCEPT {
+    static const char* __type_name_to_string(__type_name_t __v) noexcept {
       return reinterpret_cast<const char*>(__v &
           ~__non_unique_rtti_bit::value);
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static __type_name_t __string_to_type_name(const char* __v) _NOEXCEPT {
+    static __type_name_t __string_to_type_name(const char* __v) noexcept {
       return reinterpret_cast<__type_name_t>(__v);
     }
 
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static size_t __hash(__type_name_t __v) _NOEXCEPT {
+    static size_t __hash(__type_name_t __v) noexcept {
       if (__is_type_name_unique(__v))
         return __v;
       return __non_unique_impl::__hash(__type_name_to_string(__v));
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static bool __eq(__type_name_t __lhs, __type_name_t __rhs) _NOEXCEPT {
+    static bool __eq(__type_name_t __lhs, __type_name_t __rhs) noexcept {
       if (__lhs == __rhs)
         return true;
       if (__is_type_name_unique(__lhs) || __is_type_name_unique(__rhs))
@@ -268,7 +268,7 @@ struct __type_info_implementations {
       return __builtin_strcmp(__type_name_to_string(__lhs), __type_name_to_string(__rhs)) == 0;
     }
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_ALWAYS_INLINE
-    static bool __lt(__type_name_t __lhs, __type_name_t __rhs) _NOEXCEPT {
+    static bool __lt(__type_name_t __lhs, __type_name_t __rhs) noexcept {
       if (__is_type_name_unique(__lhs) || __is_type_name_unique(__rhs))
         return __lhs < __rhs;
       return __builtin_strcmp(__type_name_to_string(__lhs), __type_name_to_string(__rhs)) < 0;
@@ -281,7 +281,7 @@ struct __type_info_implementations {
       (1ULL << ((__CHAR_BIT__ * sizeof(__type_name_t)) - 1))> __non_unique_rtti_bit;
 
     _LIBCPP_INLINE_VISIBILITY
-    static bool __is_type_name_unique(__type_name_t __lhs) _NOEXCEPT {
+    static bool __is_type_name_unique(__type_name_t __lhs) noexcept {
       return !(__lhs & __non_unique_rtti_bit::value);
     }
   };
@@ -318,25 +318,25 @@ public:
     virtual ~type_info();
 
     _LIBCPP_INLINE_VISIBILITY
-    const char* name() const _NOEXCEPT
+    const char* name() const noexcept
     {
       return __impl::__type_name_to_string(__type_name);
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    bool before(const type_info& __arg) const _NOEXCEPT
+    bool before(const type_info& __arg) const noexcept
     {
       return __impl::__lt(__type_name, __arg.__type_name);
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    size_t hash_code() const _NOEXCEPT
+    size_t hash_code() const noexcept
     {
       return __impl::__hash(__type_name);
     }
 
     _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX23
-    bool operator==(const type_info& __arg) const _NOEXCEPT
+    bool operator==(const type_info& __arg) const noexcept
     {
       // When evaluated in a constant expression, both type infos simply can't come
       // from different translation units, so it is sufficient to compare their addresses.
@@ -348,7 +348,7 @@ public:
 
 #if _LIBCPP_STD_VER <= 17
     _LIBCPP_INLINE_VISIBILITY
-    bool operator!=(const type_info& __arg) const _NOEXCEPT
+    bool operator!=(const type_info& __arg) const noexcept
     { return !operator==(__arg); }
 #endif
 };
@@ -358,19 +358,19 @@ class _LIBCPP_EXPORTED_FROM_ABI bad_cast
     : public exception
 {
  public:
-  bad_cast() _NOEXCEPT;
-  _LIBCPP_HIDE_FROM_ABI bad_cast(const bad_cast&) _NOEXCEPT = default;
-  ~bad_cast() _NOEXCEPT override;
-  const char* what() const _NOEXCEPT override;
+  bad_cast() noexcept;
+  _LIBCPP_HIDE_FROM_ABI bad_cast(const bad_cast&) noexcept = default;
+  ~bad_cast() noexcept override;
+  const char* what() const noexcept override;
 };
 
 class _LIBCPP_EXPORTED_FROM_ABI bad_typeid
     : public exception
 {
  public:
-  bad_typeid() _NOEXCEPT;
-  ~bad_typeid() _NOEXCEPT override;
-  const char* what() const _NOEXCEPT override;
+  bad_typeid() noexcept;
+  ~bad_typeid() noexcept override;
+  const char* what() const noexcept override;
 };
 
 } // namespace std
@@ -383,18 +383,18 @@ namespace std {
 
 class bad_cast : public exception {
 public:
-  bad_cast() _NOEXCEPT : exception("bad cast") {}
+  bad_cast() noexcept : exception("bad cast") {}
 
 private:
-  bad_cast(const char* const __message) _NOEXCEPT : exception(__message) {}
+  bad_cast(const char* const __message) noexcept : exception(__message) {}
 };
 
 class bad_typeid : public exception {
 public:
-  bad_typeid() _NOEXCEPT : exception("bad typeid") {}
+  bad_typeid() noexcept : exception("bad typeid") {}
 
 private:
-  bad_typeid(const char* const __message) _NOEXCEPT : exception(__message) {}
+  bad_typeid(const char* const __message) noexcept : exception(__message) {}
 };
 
 } // namespace std
@@ -402,7 +402,7 @@ private:
 #endif // defined(_LIBCPP_ABI_VCRUNTIME) && _HAS_EXCEPTIONS == 0
 
 _LIBCPP_BEGIN_NAMESPACE_STD
-_LIBCPP_NORETURN inline _LIBCPP_INLINE_VISIBILITY
+[[noreturn]] inline _LIBCPP_INLINE_VISIBILITY
 void __throw_bad_cast()
 {
 #ifndef _LIBCPP_HAS_NO_EXCEPTIONS

@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // template<class C, input_range R, class... Args> requires (!view<C>)
 //   constexpr C to(R&& r, Args&&... args);     // Since C++23

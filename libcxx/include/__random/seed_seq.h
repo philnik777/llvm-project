@@ -35,14 +35,13 @@ public:
 
     // constructors
     _LIBCPP_INLINE_VISIBILITY
-    seed_seq() _NOEXCEPT {}
-#ifndef _LIBCPP_CXX03_LANG
+    seed_seq() noexcept {}
+
     template<class _Tp, __enable_if_t<is_integral<_Tp>::value>* = nullptr>
     _LIBCPP_INLINE_VISIBILITY
     seed_seq(initializer_list<_Tp> __il) {
         __init(__il.begin(), __il.end());
     }
-#endif // _LIBCPP_CXX03_LANG
 
     template<class _InputIterator>
     _LIBCPP_INLINE_VISIBILITY
@@ -58,7 +57,7 @@ public:
 
     // property functions
     _LIBCPP_INLINE_VISIBILITY
-    size_t size() const _NOEXCEPT {return __v_.size();}
+    size_t size() const noexcept {return __v_.size();}
     template<class _OutputIterator>
         _LIBCPP_INLINE_VISIBILITY
         void param(_OutputIterator __dest) const

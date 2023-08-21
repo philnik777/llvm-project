@@ -9,7 +9,7 @@
 // test <ctime>
 // std::timespec and std::timespec_get
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // XFAIL: LIBCXX-AIX-FIXME
 

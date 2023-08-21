@@ -291,7 +291,6 @@ operator<=>(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>&
 }
 #endif // _LIBCPP_STD_VER >= 20
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Iter1, class _Iter2>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX17
 auto
@@ -300,15 +299,6 @@ operator-(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& _
 {
     return __y.base() - __x.base();
 }
-#else
-template <class _Iter1, class _Iter2>
-inline _LIBCPP_INLINE_VISIBILITY
-typename reverse_iterator<_Iter1>::difference_type
-operator-(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& __y)
-{
-    return __y.base() - __x.base();
-}
-#endif
 
 template <class _Iter>
 inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX17
@@ -487,13 +477,13 @@ struct __unwrap_reverse_iter_impl {
   using _UnwrappedIter = decltype(__unwrap_iter_impl<_Iter>::__unwrap(std::declval<_Iter>()));
   using _ReverseWrapper = _RevIter1<_RevIter2<_Iter> >;
 
-  static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _ReverseWrapper
+  static _LIBCPP_HIDE_FROM_ABI constexpr _ReverseWrapper
   __rewrap(_ReverseWrapper __orig_iter, _UnwrappedIter __unwrapped_iter) {
     return _ReverseWrapper(
         _RevIter2<_Iter>(__unwrap_iter_impl<_Iter>::__rewrap(__orig_iter.base().base(), __unwrapped_iter)));
   }
 
-  static _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _UnwrappedIter __unwrap(_ReverseWrapper __i) _NOEXCEPT {
+  static _LIBCPP_HIDE_FROM_ABI constexpr _UnwrappedIter __unwrap(_ReverseWrapper __i) noexcept {
     return __unwrap_iter_impl<_Iter>::__unwrap(__i.base().base());
   }
 };

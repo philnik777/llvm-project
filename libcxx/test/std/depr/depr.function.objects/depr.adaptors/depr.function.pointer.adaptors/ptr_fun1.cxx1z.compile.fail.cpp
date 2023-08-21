@@ -12,7 +12,7 @@
 // pointer_to_unary_function<Arg, Result>
 // ptr_fun(Result (*f)(Arg));
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 // ADDITIONAL_COMPILE_FLAGS: -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>

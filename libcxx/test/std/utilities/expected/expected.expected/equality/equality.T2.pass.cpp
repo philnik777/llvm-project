@@ -5,7 +5,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 
 // template<class T2> friend constexpr bool operator==(const expected& x, const T2& v);
 

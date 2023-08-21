@@ -9,7 +9,7 @@
 // template<class T, class Alloc, ...>
 // constexpr auto uses_allocator_construction_args(const Alloc& alloc, ...) noexcept;
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 
 // test_memory_resource requires RTTI for dynamic_cast
 // UNSUPPORTED: no-rtti

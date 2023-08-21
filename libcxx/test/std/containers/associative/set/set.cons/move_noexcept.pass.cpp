@@ -14,7 +14,6 @@
 
 // This tests a conforming extension
 
-// UNSUPPORTED: c++03
 
 #include <set>
 #include <cassert>

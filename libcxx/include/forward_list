@@ -361,14 +361,14 @@ class _LIBCPP_TEMPLATE_VIS __forward_list_iterator
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    explicit __forward_list_iterator(nullptr_t) _NOEXCEPT : __ptr_(nullptr) {}
+    explicit __forward_list_iterator(nullptr_t) noexcept : __ptr_(nullptr) {}
 
     _LIBCPP_INLINE_VISIBILITY
-    explicit __forward_list_iterator(__begin_node_pointer __p) _NOEXCEPT
+    explicit __forward_list_iterator(__begin_node_pointer __p) noexcept
         : __ptr_(__traits::__as_iter_node(__p)) {}
 
     _LIBCPP_INLINE_VISIBILITY
-    explicit __forward_list_iterator(__node_pointer __p) _NOEXCEPT
+    explicit __forward_list_iterator(__node_pointer __p) noexcept
         : __ptr_(__traits::__as_iter_node(__p)) {}
 
     template<class, class> friend class _LIBCPP_TEMPLATE_VIS forward_list;
@@ -383,7 +383,7 @@ public:
     typedef __rebind_pointer_t<__node_pointer, value_type> pointer;
 
     _LIBCPP_INLINE_VISIBILITY
-    __forward_list_iterator() _NOEXCEPT : __ptr_(nullptr) {}
+    __forward_list_iterator() noexcept : __ptr_(nullptr) {}
 
     _LIBCPP_INLINE_VISIBILITY
     reference operator*() const {return __get_unsafe_node_pointer()->__value_;}
@@ -441,15 +441,15 @@ class _LIBCPP_TEMPLATE_VIS __forward_list_const_iterator
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    explicit __forward_list_const_iterator(nullptr_t) _NOEXCEPT
+    explicit __forward_list_const_iterator(nullptr_t) noexcept
         : __ptr_(nullptr) {}
 
     _LIBCPP_INLINE_VISIBILITY
-    explicit __forward_list_const_iterator(__begin_node_pointer __p) _NOEXCEPT
+    explicit __forward_list_const_iterator(__begin_node_pointer __p) noexcept
         : __ptr_(__traits::__as_iter_node(__p)) {}
 
     _LIBCPP_INLINE_VISIBILITY
-    explicit __forward_list_const_iterator(__node_pointer __p) _NOEXCEPT
+    explicit __forward_list_const_iterator(__node_pointer __p) noexcept
         : __ptr_(__traits::__as_iter_node(__p)) {}
 
 
@@ -465,9 +465,9 @@ public:
                                                               pointer;
 
     _LIBCPP_INLINE_VISIBILITY
-    __forward_list_const_iterator() _NOEXCEPT : __ptr_(nullptr) {}
+    __forward_list_const_iterator() noexcept : __ptr_(nullptr) {}
     _LIBCPP_INLINE_VISIBILITY
-    __forward_list_const_iterator(__forward_list_iterator<__node_pointer> __p) _NOEXCEPT
+    __forward_list_const_iterator(__forward_list_iterator<__node_pointer> __p) noexcept
         : __ptr_(__p.__ptr_) {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -521,17 +521,17 @@ protected:
     __compressed_pair<__begin_node, __node_allocator> __before_begin_;
 
     _LIBCPP_INLINE_VISIBILITY
-    __begin_node_pointer        __before_begin() _NOEXCEPT
+    __begin_node_pointer        __before_begin() noexcept
         {return pointer_traits<__begin_node_pointer>::pointer_to(__before_begin_.first());}
     _LIBCPP_INLINE_VISIBILITY
-    __begin_node_pointer __before_begin() const _NOEXCEPT
+    __begin_node_pointer __before_begin() const noexcept
         {return pointer_traits<__begin_node_pointer>::pointer_to(const_cast<__begin_node&>(__before_begin_.first()));}
 
     _LIBCPP_INLINE_VISIBILITY
-          __node_allocator& __alloc() _NOEXCEPT
+          __node_allocator& __alloc() noexcept
             {return __before_begin_.second();}
     _LIBCPP_INLINE_VISIBILITY
-    const __node_allocator& __alloc() const _NOEXCEPT
+    const __node_allocator& __alloc() const noexcept
         {return __before_begin_.second();}
 
     typedef __forward_list_iterator<__node_pointer>             iterator;
@@ -539,7 +539,7 @@ protected:
 
     _LIBCPP_INLINE_VISIBILITY
     __forward_list_base()
-        _NOEXCEPT_(is_nothrow_default_constructible<__node_allocator>::value)
+        noexcept(is_nothrow_default_constructible<__node_allocator>::value)
         : __before_begin_(__begin_node(), __default_init_tag()) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit __forward_list_base(const allocator_type& __a)
@@ -547,14 +547,13 @@ protected:
     _LIBCPP_INLINE_VISIBILITY
     explicit __forward_list_base(const __node_allocator& __a)
         : __before_begin_(__begin_node(), __a) {}
-#ifndef _LIBCPP_CXX03_LANG
+
 public:
     _LIBCPP_INLINE_VISIBILITY
     __forward_list_base(__forward_list_base&& __x)
-        _NOEXCEPT_(is_nothrow_move_constructible<__node_allocator>::value);
+        noexcept(is_nothrow_move_constructible<__node_allocator>::value);
     _LIBCPP_INLINE_VISIBILITY
     __forward_list_base(__forward_list_base&& __x, const allocator_type& __a);
-#endif // _LIBCPP_CXX03_LANG
 
 private:
     __forward_list_base(const __forward_list_base&);
@@ -571,7 +570,7 @@ protected:
 
     _LIBCPP_INLINE_VISIBILITY
     void __move_assign_alloc(__forward_list_base& __x)
-        _NOEXCEPT_(!__node_traits::propagate_on_container_move_assignment::value ||
+        noexcept(!__node_traits::propagate_on_container_move_assignment::value ||
                    is_nothrow_move_assignable<__node_allocator>::value)
         {__move_assign_alloc(__x, integral_constant<bool,
               __node_traits::propagate_on_container_move_assignment::value>());}
@@ -580,13 +579,13 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void swap(__forward_list_base& __x)
 #if _LIBCPP_STD_VER >= 14
-        _NOEXCEPT;
+        noexcept;
 #else
-        _NOEXCEPT_(!__node_traits::propagate_on_container_swap::value ||
+        noexcept(!__node_traits::propagate_on_container_swap::value ||
                     __is_nothrow_swappable<__node_allocator>::value);
 #endif
 protected:
-    _LIBCPP_HIDE_FROM_ABI void clear() _NOEXCEPT;
+    _LIBCPP_HIDE_FROM_ABI void clear() noexcept;
 
 private:
     _LIBCPP_INLINE_VISIBILITY
@@ -600,20 +599,18 @@ private:
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    void __move_assign_alloc(__forward_list_base&, false_type) _NOEXCEPT
+    void __move_assign_alloc(__forward_list_base&, false_type) noexcept
         {}
     _LIBCPP_INLINE_VISIBILITY
     void __move_assign_alloc(__forward_list_base& __x, true_type)
-        _NOEXCEPT_(is_nothrow_move_assignable<__node_allocator>::value)
+        noexcept(is_nothrow_move_assignable<__node_allocator>::value)
         {__alloc() = _VSTD::move(__x.__alloc());}
 };
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 inline
 __forward_list_base<_Tp, _Alloc>::__forward_list_base(__forward_list_base&& __x)
-        _NOEXCEPT_(is_nothrow_move_constructible<__node_allocator>::value)
+        noexcept(is_nothrow_move_constructible<__node_allocator>::value)
     : __before_begin_(_VSTD::move(__x.__before_begin_))
 {
     __x.__before_begin()->__next_ = nullptr;
@@ -632,8 +629,6 @@ __forward_list_base<_Tp, _Alloc>::__forward_list_base(__forward_list_base&& __x,
     }
 }
 
-#endif // _LIBCPP_CXX03_LANG
-
 template <class _Tp, class _Alloc>
 __forward_list_base<_Tp, _Alloc>::~__forward_list_base()
 {
@@ -645,9 +640,9 @@ inline
 void
 __forward_list_base<_Tp, _Alloc>::swap(__forward_list_base& __x)
 #if _LIBCPP_STD_VER >= 14
-        _NOEXCEPT
+        noexcept
 #else
-        _NOEXCEPT_(!__node_traits::propagate_on_container_swap::value ||
+        noexcept(!__node_traits::propagate_on_container_swap::value ||
                     __is_nothrow_swappable<__node_allocator>::value)
 #endif
 {
@@ -659,7 +654,7 @@ __forward_list_base<_Tp, _Alloc>::swap(__forward_list_base& __x)
 
 template <class _Tp, class _Alloc>
 void
-__forward_list_base<_Tp, _Alloc>::clear() _NOEXCEPT
+__forward_list_base<_Tp, _Alloc>::clear() noexcept
 {
     __node_allocator& __a = __alloc();
     for (__node_pointer __p = __before_begin()->__next_; __p != nullptr;)
@@ -715,7 +710,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     forward_list()
-        _NOEXCEPT_(is_nothrow_default_constructible<__node_allocator>::value)
+        noexcept(is_nothrow_default_constructible<__node_allocator>::value)
         {} // = default;
     _LIBCPP_INLINE_VISIBILITY
     explicit forward_list(const allocator_type& __a);
@@ -752,10 +747,9 @@ public:
 
     _LIBCPP_HIDE_FROM_ABI forward_list& operator=(const forward_list& __x);
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     forward_list(forward_list&& __x)
-        _NOEXCEPT_(is_nothrow_move_constructible<base>::value)
+        noexcept(is_nothrow_move_constructible<base>::value)
         : base(_VSTD::move(__x)) {}
     _LIBCPP_HIDE_FROM_ABI forward_list(forward_list&& __x, const __type_identity_t<allocator_type>& __a);
 
@@ -764,7 +758,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     forward_list& operator=(forward_list&& __x)
-        _NOEXCEPT_(
+        noexcept(
              __node_traits::propagate_on_container_move_assignment::value &&
              is_nothrow_move_assignable<allocator_type>::value);
 
@@ -773,7 +767,6 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void assign(initializer_list<value_type> __il);
-#endif // _LIBCPP_CXX03_LANG
 
     // ~forward_list() = default;
 
@@ -792,44 +785,44 @@ public:
     _LIBCPP_HIDE_FROM_ABI void assign(size_type __n, const value_type& __v);
 
     _LIBCPP_INLINE_VISIBILITY
-    allocator_type get_allocator() const _NOEXCEPT
+    allocator_type get_allocator() const noexcept
         {return allocator_type(base::__alloc());}
 
     _LIBCPP_INLINE_VISIBILITY
-    iterator       begin() _NOEXCEPT
+    iterator       begin() noexcept
         {return       iterator(base::__before_begin()->__next_);}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator begin() const _NOEXCEPT
+    const_iterator begin() const noexcept
         {return const_iterator(base::__before_begin()->__next_);}
     _LIBCPP_INLINE_VISIBILITY
-    iterator       end() _NOEXCEPT
+    iterator       end() noexcept
         {return       iterator(nullptr);}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator end() const _NOEXCEPT
+    const_iterator end() const noexcept
         {return const_iterator(nullptr);}
 
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator cbegin() const _NOEXCEPT
+    const_iterator cbegin() const noexcept
         {return const_iterator(base::__before_begin()->__next_);}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator cend() const _NOEXCEPT
+    const_iterator cend() const noexcept
         {return const_iterator(nullptr);}
 
     _LIBCPP_INLINE_VISIBILITY
-    iterator       before_begin() _NOEXCEPT
+    iterator       before_begin() noexcept
         {return       iterator(base::__before_begin());}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator before_begin() const _NOEXCEPT
+    const_iterator before_begin() const noexcept
         {return const_iterator(base::__before_begin());}
     _LIBCPP_INLINE_VISIBILITY
-    const_iterator cbefore_begin() const _NOEXCEPT
+    const_iterator cbefore_begin() const noexcept
         {return const_iterator(base::__before_begin());}
 
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
-    bool empty() const _NOEXCEPT
+    bool empty() const noexcept
         {return base::__before_begin()->__next_ == nullptr;}
     _LIBCPP_INLINE_VISIBILITY
-    size_type max_size() const _NOEXCEPT {
+    size_type max_size() const noexcept {
         return _VSTD::min<size_type>(
             __node_traits::max_size(base::__alloc()),
             numeric_limits<difference_type>::max());
@@ -840,7 +833,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     const_reference front() const {return base::__before_begin()->__next_->__value_;}
 
-#ifndef _LIBCPP_CXX03_LANG
 #if _LIBCPP_STD_VER >= 17
     template <class... _Args>
     _LIBCPP_HIDE_FROM_ABI reference emplace_front(_Args&&... __args);
@@ -849,7 +841,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI void      emplace_front(_Args&&... __args);
 #endif
     _LIBCPP_HIDE_FROM_ABI void push_front(value_type&& __v);
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_HIDE_FROM_ABI void push_front(const value_type& __v);
 
 #if _LIBCPP_STD_VER >= 23
@@ -862,14 +854,13 @@ public:
 
     _LIBCPP_HIDE_FROM_ABI void pop_front();
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class... _Args>
     _LIBCPP_HIDE_FROM_ABI iterator emplace_after(const_iterator __p, _Args&&... __args);
 
     _LIBCPP_HIDE_FROM_ABI iterator insert_after(const_iterator __p, value_type&& __v);
     _LIBCPP_HIDE_FROM_ABI iterator insert_after(const_iterator __p, initializer_list<value_type> __il)
         {return insert_after(__p, __il.begin(), __il.end());}
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_HIDE_FROM_ABI iterator insert_after(const_iterator __p, const value_type& __v);
     _LIBCPP_HIDE_FROM_ABI iterator insert_after(const_iterator __p, size_type __n, const value_type& __v);
     template <class _InputIterator>
@@ -895,9 +886,9 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void swap(forward_list& __x)
 #if _LIBCPP_STD_VER >= 14
-        _NOEXCEPT
+        noexcept
 #else
-        _NOEXCEPT_(!__node_traits::propagate_on_container_swap::value ||
+        noexcept(!__node_traits::propagate_on_container_swap::value ||
                    __is_nothrow_swappable<__node_allocator>::value)
 #endif
         {base::swap(__x);}
@@ -905,7 +896,7 @@ public:
     _LIBCPP_HIDE_FROM_ABI void resize(size_type __n);
     _LIBCPP_HIDE_FROM_ABI void resize(size_type __n, const value_type& __v);
     _LIBCPP_INLINE_VISIBILITY
-    void clear() _NOEXCEPT {base::clear();}
+    void clear() noexcept {base::clear();}
 
     _LIBCPP_INLINE_VISIBILITY
     void splice_after(const_iterator __p, forward_list&& __x);
@@ -925,14 +916,14 @@ public:
     __remove_return_type unique() { return unique(__equal_to()); }
     template <class _BinaryPredicate>
     _LIBCPP_HIDE_FROM_ABI __remove_return_type unique(_BinaryPredicate __binary_pred);
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     void merge(forward_list&& __x) {merge(__x, __less<>());}
     template <class _Compare>
         _LIBCPP_INLINE_VISIBILITY
         void merge(forward_list&& __x, _Compare __comp)
         {merge(__x, _VSTD::move(__comp));}
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     void merge(forward_list& __x) {merge(__x, __less<>());}
     template <class _Compare>
@@ -940,15 +931,12 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void sort() {sort(__less<>());}
     template <class _Compare> _LIBCPP_INLINE_VISIBILITY void sort(_Compare __comp);
-    _LIBCPP_HIDE_FROM_ABI void reverse() _NOEXCEPT;
+    _LIBCPP_HIDE_FROM_ABI void reverse() noexcept;
 
 private:
-
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_HIDE_FROM_ABI void __move_assign(forward_list& __x, true_type)
-        _NOEXCEPT_(is_nothrow_move_assignable<allocator_type>::value);
+        noexcept(is_nothrow_move_assignable<allocator_type>::value);
     _LIBCPP_HIDE_FROM_ABI void __move_assign(forward_list& __x, false_type);
-#endif // _LIBCPP_CXX03_LANG
 
     template <class _Iter, class _Sent>
     _LIBCPP_HIDE_FROM_ABI
@@ -1094,7 +1082,6 @@ forward_list<_Tp, _Alloc>::operator=(const forward_list& __x)
     return *this;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Tp, class _Alloc>
 forward_list<_Tp, _Alloc>::forward_list(forward_list&& __x,
                                         const __type_identity_t<allocator_type>& __a)
@@ -1124,7 +1111,7 @@ forward_list<_Tp, _Alloc>::forward_list(initializer_list<value_type> __il,
 template <class _Tp, class _Alloc>
 void
 forward_list<_Tp, _Alloc>::__move_assign(forward_list& __x, true_type)
-    _NOEXCEPT_(is_nothrow_move_assignable<allocator_type>::value)
+    noexcept(is_nothrow_move_assignable<allocator_type>::value)
 {
     clear();
     base::__move_assign_alloc(__x);
@@ -1149,7 +1136,7 @@ template <class _Tp, class _Alloc>
 inline
 forward_list<_Tp, _Alloc>&
 forward_list<_Tp, _Alloc>::operator=(forward_list&& __x)
-    _NOEXCEPT_(
+    noexcept(
              __node_traits::propagate_on_container_move_assignment::value &&
              is_nothrow_move_assignable<allocator_type>::value)
 {
@@ -1166,8 +1153,6 @@ forward_list<_Tp, _Alloc>::operator=(initializer_list<value_type> __il)
     assign(__il.begin(), __il.end());
     return *this;
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 template <class _InputIterator>
@@ -1206,8 +1191,6 @@ forward_list<_Tp, _Alloc>::assign(size_type __n, const value_type& __v)
     else
         erase_after(__i, __e);
 }
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 inline
@@ -1250,8 +1233,6 @@ forward_list<_Tp, _Alloc>::push_front(value_type&& __v)
     base::__before_begin()->__next_ = __h.release();
 }
 
-#endif // _LIBCPP_CXX03_LANG
-
 template <class _Tp, class _Alloc>
 void
 forward_list<_Tp, _Alloc>::push_front(const value_type& __v)
@@ -1274,8 +1255,6 @@ forward_list<_Tp, _Alloc>::pop_front()
     __node_traits::destroy(__a, _VSTD::addressof(__p->__value_));
     __node_traits::deallocate(__a, __p, 1);
 }
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 template <class... _Args>
@@ -1306,8 +1285,6 @@ forward_list<_Tp, _Alloc>::insert_after(const_iterator __p, value_type&& __v)
     __r->__next_ = __h.release();
     return iterator(__r->__next_);
 }
-
-#endif // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Alloc>
 typename forward_list<_Tp, _Alloc>::iterator
@@ -1800,7 +1777,7 @@ forward_list<_Tp, _Alloc>::__sort(__node_pointer __f1, difference_type __sz,
 
 template <class _Tp, class _Alloc>
 void
-forward_list<_Tp, _Alloc>::reverse() _NOEXCEPT
+forward_list<_Tp, _Alloc>::reverse() noexcept
 {
     __node_pointer __p = base::__before_begin()->__next_;
     if (__p != nullptr)
@@ -1893,7 +1870,7 @@ template <class _Tp, class _Alloc>
 inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(forward_list<_Tp, _Alloc>& __x, forward_list<_Tp, _Alloc>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }

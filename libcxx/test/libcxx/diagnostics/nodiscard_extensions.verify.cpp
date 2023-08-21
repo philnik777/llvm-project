@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // Test that entities declared [[nodiscard]] as an extension by libc++, are
 // actually declared as such when _LIBCPP_DISABLE_NODISCARD_EXT is not specified.

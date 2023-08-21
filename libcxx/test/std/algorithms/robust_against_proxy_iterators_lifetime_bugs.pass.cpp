@@ -7,7 +7,6 @@
 //===----------------------------------------------------------------------===//
 
 // Making this test file support C++03 is difficult; the lack of support for initializer lists is a major issue.
-// UNSUPPORTED: c++03
 
 // <algorithm>
 

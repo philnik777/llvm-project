@@ -19,8 +19,6 @@
 #  pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 class _LIBCPP_EXPORTED_FROM_ABI file_status {
@@ -70,7 +68,5 @@ private:
 };
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // _LIBCPP_CXX03_LANG
 
 #endif // _LIBCPP___FILESYSTEM_FILE_STATUS_H

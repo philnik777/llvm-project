@@ -10,7 +10,6 @@
 
 // template <class... Types> class tuple;
 
-// UNSUPPORTED: c++03
 
 // This is not a portable test
 

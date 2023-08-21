@@ -35,7 +35,7 @@ std::string __libcpp_debug_info::what() const {
   return msg;
 }
 
-_LIBCPP_NORETURN _LIBCPP_EXPORTED_FROM_ABI void __libcpp_abort_debug_function(__libcpp_debug_info const& info) {
+[[noreturn]] _LIBCPP_EXPORTED_FROM_ABI void __libcpp_abort_debug_function(__libcpp_debug_info const& info) {
   std::fprintf(stderr, "%s\n", info.what().c_str());
   std::abort();
 }

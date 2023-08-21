@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // This test ensures that std::tuple is lazy when it comes to checking whether
 // the elements it is assigned from can be used to assign to the types in

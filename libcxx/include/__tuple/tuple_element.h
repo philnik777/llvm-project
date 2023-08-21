@@ -43,8 +43,6 @@ struct _LIBCPP_TEMPLATE_VIS tuple_element<_Ip, const volatile _Tp>
     typedef _LIBCPP_NODEBUG typename add_cv<typename tuple_element<_Ip, _Tp>::type>::type type;
 };
 
-#ifndef _LIBCPP_CXX03_LANG
-
 #if !__has_builtin(__type_pack_element)
 
 namespace __indexer_detail {
@@ -85,8 +83,6 @@ struct _LIBCPP_TEMPLATE_VIS tuple_element<_Ip, __tuple_types<_Types...> >
 template <size_t _Ip, class ..._Tp>
 using tuple_element_t _LIBCPP_NODEBUG = typename tuple_element <_Ip, _Tp...>::type;
 #endif
-
-#endif // _LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_STD
 

@@ -10,7 +10,7 @@
 
 // Test that we can replace the operator by replacing `operator new(std::size_t, std::align_val_t)` (the non-array version).
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 // UNSUPPORTED: sanitizer-new-delete
 
 // XFAIL: LIBCXX-AIX-FIXME

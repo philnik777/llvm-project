@@ -16,7 +16,6 @@
 // shared_ptr<T>
 // atomic_load_explicit(const shared_ptr<T>* p, memory_order mo)
 
-// UNSUPPORTED: c++03
 
 #include <memory>
 

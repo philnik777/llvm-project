@@ -10,7 +10,7 @@
 // After C++17, those are not provided in the primary template and the
 // explicit specialization doesn't exist anymore, so this test is moot.
 
-// REQUIRES: c++03 || c++11 || c++14 || c++17
+// REQUIRES: c++11 || c++14 || c++17
 
 // template <>
 // class allocator<void>

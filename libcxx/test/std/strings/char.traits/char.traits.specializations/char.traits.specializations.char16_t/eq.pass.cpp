@@ -12,7 +12,6 @@
 
 // static constexpr bool eq(char_type c1, char_type c2);
 
-// UNSUPPORTED: c++03
 
 #include <string>
 #include <cassert>

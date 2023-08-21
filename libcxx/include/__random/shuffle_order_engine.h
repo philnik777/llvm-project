@@ -32,23 +32,23 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 template <uint64_t _Xp, uint64_t _Yp>
 struct __ugcd
 {
-    static _LIBCPP_CONSTEXPR const uint64_t value = __ugcd<_Yp, _Xp % _Yp>::value;
+    static constexpr const uint64_t value = __ugcd<_Yp, _Xp % _Yp>::value;
 };
 
 template <uint64_t _Xp>
 struct __ugcd<_Xp, 0>
 {
-    static _LIBCPP_CONSTEXPR const uint64_t value = _Xp;
+    static constexpr const uint64_t value = _Xp;
 };
 
 template <uint64_t _Np, uint64_t _Dp>
 class __uratio
 {
     static_assert(_Dp != 0, "__uratio divide by 0");
-    static _LIBCPP_CONSTEXPR const uint64_t __gcd = __ugcd<_Np, _Dp>::value;
+    static constexpr const uint64_t __gcd = __ugcd<_Np, _Dp>::value;
 public:
-    static _LIBCPP_CONSTEXPR const uint64_t num = _Np / __gcd;
-    static _LIBCPP_CONSTEXPR const uint64_t den = _Dp / __gcd;
+    static constexpr const uint64_t num = _Np / __gcd;
+    static constexpr const uint64_t den = _Dp / __gcd;
 
     typedef __uratio<num, den> type;
 };
@@ -68,22 +68,18 @@ private:
 
 public:
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const size_t table_size = __k;
+    static constexpr const size_t table_size = __k;
 
-#ifdef _LIBCPP_CXX03_LANG
-    static const result_type _Min = _Engine::_Min;
-    static const result_type _Max = _Engine::_Max;
-#else
-    static _LIBCPP_CONSTEXPR const result_type _Min = _Engine::min();
-    static _LIBCPP_CONSTEXPR const result_type _Max = _Engine::max();
-#endif
+    static constexpr const result_type _Min = _Engine::min();
+    static constexpr const result_type _Max = _Engine::max();
+
     static_assert(_Min < _Max, "shuffle_order_engine invalid parameters");
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min; }
+    static constexpr result_type min() { return _Min; }
     _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max; }
+    static constexpr result_type max() { return _Max; }
 
-    static _LIBCPP_CONSTEXPR const unsigned long long _Rp = _Max - _Min + 1ull;
+    static constexpr const unsigned long long _Rp = _Max - _Min + 1ull;
 
     // constructors and seeding functions
     _LIBCPP_INLINE_VISIBILITY
@@ -91,11 +87,11 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     explicit shuffle_order_engine(const _Engine& __e)
         : __e_(__e) {__init();}
-#ifndef _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit shuffle_order_engine(_Engine&& __e)
         : __e_(_VSTD::move(__e)) {__init();}
-#endif // _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit shuffle_order_engine(result_type __sd) : __e_(__sd) {__init();}
     template<class _Sseq>
@@ -125,7 +121,7 @@ public:
 
     // property functions
     _LIBCPP_INLINE_VISIBILITY
-    const _Engine& base() const _NOEXCEPT {return __e_;}
+    const _Engine& base() const noexcept {return __e_;}
 
 private:
     template<class _Eng, size_t _Kp>
@@ -215,7 +211,7 @@ private:
 };
 
 template<class _Engine, size_t __k>
-    _LIBCPP_CONSTEXPR const size_t shuffle_order_engine<_Engine, __k>::table_size;
+    constexpr const size_t shuffle_order_engine<_Engine, __k>::table_size;
 
 template<class _Eng, size_t _Kp>
 _LIBCPP_HIDE_FROM_ABI bool

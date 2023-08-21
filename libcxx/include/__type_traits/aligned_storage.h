@@ -51,7 +51,7 @@ typedef __type_list<__align_type<unsigned char>,
 // clang-format on
 
 template <size_t _Align>
-struct _ALIGNAS(_Align) __fallback_overaligned {};
+struct alignas(_Align) __fallback_overaligned {};
 
 template <class _TL, size_t _Align>
 struct __find_pod;
@@ -107,7 +107,7 @@ _LIBCPP_SUPPRESS_DEPRECATED_POP
 #define _CREATE_ALIGNED_STORAGE_SPECIALIZATION(n)                                                                      \
   template <size_t _Len>                                                                                               \
   struct _LIBCPP_DEPRECATED_IN_CXX23 _LIBCPP_TEMPLATE_VIS aligned_storage<_Len, n> {                                   \
-    struct _ALIGNAS(n) type {                                                                                          \
+    struct alignas(n) type {                                                                                          \
       unsigned char __lx[(_Len + n - 1) / n * n];                                                                      \
     };                                                                                                                 \
   }

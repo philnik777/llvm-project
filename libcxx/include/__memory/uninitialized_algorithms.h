@@ -48,7 +48,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 // language mode.
 struct __unreachable_sentinel {
   template <class _Iter>
-  _LIBCPP_HIDE_FROM_ABI friend _LIBCPP_CONSTEXPR bool operator!=(const _Iter&, __unreachable_sentinel) _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator!=(const _Iter&, __unreachable_sentinel) noexcept {
     return true;
   }
 };

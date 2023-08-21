@@ -11,7 +11,7 @@
 // Note that sized delete operator definitions below are simply ignored
 // when sized deallocation is not supported, e.g., prior to C++14.
 
-// REQUIRES: c++03 || c++11
+// REQUIRES: c++11
 // UNSUPPORTED: sanitizer-new-delete
 
 #include <new>

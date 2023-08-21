@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03
 
 // This test makes sure that we can copy/move a std::tuple containing a type
 // that checks for copy constructibility itself, like std::any.

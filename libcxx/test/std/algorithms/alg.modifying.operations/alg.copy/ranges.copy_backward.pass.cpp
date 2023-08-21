@@ -8,7 +8,7 @@
 
 // <algorithm>
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++11, c++14, c++17
 // TODO: make `join_view` non-experimental once D2770 is implemented.
 // UNSUPPORTED: !c++experimental
 // UNSUPPORTED: GCC-ALWAYS_INLINE-FIXME

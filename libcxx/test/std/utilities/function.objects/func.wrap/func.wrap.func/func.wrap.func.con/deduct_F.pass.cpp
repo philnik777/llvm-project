@@ -12,7 +12,7 @@
 // template<class F>
 // function(F) -> function<see-below>;
 
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 #include <functional>
 #include <type_traits>

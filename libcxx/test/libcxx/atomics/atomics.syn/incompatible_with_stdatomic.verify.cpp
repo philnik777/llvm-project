@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: no-threads
-// REQUIRES: c++03 || c++11 || c++14 || c++17 || c++20
+// REQUIRES: c++11 || c++14 || c++17 || c++20
 
 // This test ensures that we issue a reasonable diagnostic when including <atomic> after
 // <stdatomic.h> has been included. Before C++23, this otherwise leads to obscure errors

@@ -10,7 +10,6 @@
 
 // ~multimap() // implied noexcept;
 
-// UNSUPPORTED: c++03
 
 #include <map>
 #include <cassert>

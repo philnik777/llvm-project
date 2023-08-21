@@ -99,9 +99,9 @@ public:
         return *this;
     }
 
-    _LIBCPP_HIDE_FROM_ABI ostream_joiner& operator*()     _NOEXCEPT { return *this; }
-    _LIBCPP_HIDE_FROM_ABI ostream_joiner& operator++()    _NOEXCEPT { return *this; }
-    _LIBCPP_HIDE_FROM_ABI ostream_joiner& operator++(int) _NOEXCEPT { return *this; }
+    _LIBCPP_HIDE_FROM_ABI ostream_joiner& operator*()     noexcept { return *this; }
+    _LIBCPP_HIDE_FROM_ABI ostream_joiner& operator++()    noexcept { return *this; }
+    _LIBCPP_HIDE_FROM_ABI ostream_joiner& operator++(int) noexcept { return *this; }
 
 private:
     ostream_type*   __output_iter_;

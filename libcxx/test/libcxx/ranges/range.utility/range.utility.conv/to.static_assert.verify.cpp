@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++03, c++11, c++14, c++17, c++20
+// UNSUPPORTED: c++11, c++14, c++17, c++20
 // ADDITIONAL_COMPILE_FLAGS: -Wno-deprecated-volatile
 
 // Test that the "mandates" requirements on the given container are checked using `static_assert`.

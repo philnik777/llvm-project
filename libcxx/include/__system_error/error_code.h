@@ -45,81 +45,81 @@ class _LIBCPP_EXPORTED_FROM_ABI error_code {
   const error_category* __cat_;
 
 public:
-  _LIBCPP_HIDE_FROM_ABI error_code() _NOEXCEPT : __val_(0), __cat_(&system_category()) {}
+  _LIBCPP_HIDE_FROM_ABI error_code() noexcept : __val_(0), __cat_(&system_category()) {}
 
-  _LIBCPP_HIDE_FROM_ABI error_code(int __val, const error_category& __cat) _NOEXCEPT : __val_(__val), __cat_(&__cat) {}
+  _LIBCPP_HIDE_FROM_ABI error_code(int __val, const error_category& __cat) noexcept : __val_(__val), __cat_(&__cat) {}
 
   template <class _Ep>
   _LIBCPP_HIDE_FROM_ABI
-  error_code(_Ep __e, typename enable_if<is_error_code_enum<_Ep>::value>::type* = nullptr) _NOEXCEPT {
+  error_code(_Ep __e, typename enable_if<is_error_code_enum<_Ep>::value>::type* = nullptr) noexcept {
     using __adl_only::make_error_code;
     *this = make_error_code(__e);
   }
 
-  _LIBCPP_HIDE_FROM_ABI void assign(int __val, const error_category& __cat) _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI void assign(int __val, const error_category& __cat) noexcept {
     __val_ = __val;
     __cat_ = &__cat;
   }
 
   template <class _Ep>
   _LIBCPP_HIDE_FROM_ABI typename enable_if< is_error_code_enum<_Ep>::value, error_code& >::type
-  operator=(_Ep __e) _NOEXCEPT {
+  operator=(_Ep __e) noexcept {
     using __adl_only::make_error_code;
     *this = make_error_code(__e);
     return *this;
   }
 
-  _LIBCPP_HIDE_FROM_ABI void clear() _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI void clear() noexcept {
     __val_ = 0;
     __cat_ = &system_category();
   }
 
-  _LIBCPP_HIDE_FROM_ABI int value() const _NOEXCEPT { return __val_; }
+  _LIBCPP_HIDE_FROM_ABI int value() const noexcept { return __val_; }
 
-  _LIBCPP_HIDE_FROM_ABI const error_category& category() const _NOEXCEPT { return *__cat_; }
+  _LIBCPP_HIDE_FROM_ABI const error_category& category() const noexcept { return *__cat_; }
 
-  _LIBCPP_HIDE_FROM_ABI error_condition default_error_condition() const _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI error_condition default_error_condition() const noexcept {
     return __cat_->default_error_condition(__val_);
   }
 
   string message() const;
 
-  _LIBCPP_HIDE_FROM_ABI explicit operator bool() const _NOEXCEPT { return __val_ != 0; }
+  _LIBCPP_HIDE_FROM_ABI explicit operator bool() const noexcept { return __val_ != 0; }
 };
 
-inline _LIBCPP_HIDE_FROM_ABI error_code make_error_code(errc __e) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI error_code make_error_code(errc __e) noexcept {
   return error_code(static_cast<int>(__e), generic_category());
 }
 
-inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_code& __x, const error_code& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_code& __x, const error_code& __y) noexcept {
   return __x.category() == __y.category() && __x.value() == __y.value();
 }
 
-inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_code& __x, const error_condition& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_code& __x, const error_condition& __y) noexcept {
   return __x.category().equivalent(__x.value(), __y) || __y.category().equivalent(__x, __y.value());
 }
 
 #if _LIBCPP_STD_VER <= 17
-inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_condition& __x, const error_code& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_condition& __x, const error_code& __y) noexcept {
   return __y == __x;
 }
 #endif
 
 #if _LIBCPP_STD_VER <= 17
 
-inline _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_code& __x, const error_code& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_code& __x, const error_code& __y) noexcept {
   return !(__x == __y);
 }
 
-inline _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_code& __x, const error_condition& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_code& __x, const error_condition& __y) noexcept {
   return !(__x == __y);
 }
 
-inline _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_condition& __x, const error_code& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI bool operator!=(const error_condition& __x, const error_code& __y) noexcept {
   return !(__x == __y);
 }
 
-inline _LIBCPP_HIDE_FROM_ABI bool operator<(const error_code& __x, const error_code& __y) _NOEXCEPT {
+inline _LIBCPP_HIDE_FROM_ABI bool operator<(const error_code& __x, const error_code& __y) noexcept {
   return __x.category() < __y.category() || (__x.category() == __y.category() && __x.value() < __y.value());
 }
 
@@ -135,7 +135,7 @@ inline _LIBCPP_HIDE_FROM_ABI strong_ordering operator<=>(const error_code& __x, 
 
 template <>
 struct _LIBCPP_TEMPLATE_VIS hash<error_code> : public __unary_function<error_code, size_t> {
-  _LIBCPP_HIDE_FROM_ABI size_t operator()(const error_code& __ec) const _NOEXCEPT {
+  _LIBCPP_HIDE_FROM_ABI size_t operator()(const error_code& __ec) const noexcept {
     return static_cast<size_t>(__ec.value());
   }
 };

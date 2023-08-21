@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // <list>
-// UNSUPPORTED: c++03, c++11, c++14
+// UNSUPPORTED: c++11, c++14
 
 // template <class InputIterator, class Allocator = allocator<typename iterator_traits<InputIterator>::value_type>>
 //    list(InputIterator, InputIterator, Allocator = Allocator())

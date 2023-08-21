@@ -13,7 +13,6 @@
 // template <class Alloc>
 //   tuple(allocator_arg_t, const Alloc& a, tuple&&);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <cassert>

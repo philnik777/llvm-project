@@ -14,7 +14,6 @@
 // constexpr                                        // since c++20
 //   tuple(allocator_arg_t, const Alloc& a, const tuple<UTypes...>&);
 
-// UNSUPPORTED: c++03
 
 #include <tuple>
 #include <memory>

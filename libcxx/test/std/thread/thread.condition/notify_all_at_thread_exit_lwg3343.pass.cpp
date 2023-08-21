@@ -9,7 +9,6 @@
 // UNSUPPORTED: no-threads
 
 // notify_all_at_thread_exit(...) requires move semantics to transfer the unique_lock.
-// UNSUPPORTED: c++03
 
 // The fix of LWG3343 is done in the dylib. That means Apple backdeployment
 // targets remain broken. Due to the nature of the test, testing on a broken
