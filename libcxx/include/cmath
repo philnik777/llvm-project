@@ -306,6 +306,7 @@ constexpr long double lerp(long double a, long double b, long double t) noexcept
 
 #include <__assert> // all public C++ headers provide the assertion handler
 #include <__config>
+#include <__math/special_functions.h>
 #include <__type_traits/enable_if.h>
 #include <__type_traits/is_arithmetic.h>
 #include <__type_traits/is_constant_evaluated.h>

@@ -38,6 +38,7 @@ What's New in Libc++ XX.YY.ZZ?
 
 Implemented Papers
 ------------------
+- P0226R1 - Mathematical Special Functions for C++17
 
 
 Improvements and New Features
