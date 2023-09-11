@@ -16563,6 +16563,15 @@ void Sema::AddKnownFunctionAttributes(FunctionDecl *FD) {
     default:
       break;
     }
+
+    switch (BuiltinID) {
+    case Builtin::BIas_const:
+    case Builtin::BIforward:
+    case Builtin::BIforward_like:
+    case Builtin::BImove:
+    case Builtin::BImove_if_noexcept:
+      FD->addAttr(IntrinsicAttr::CreateImplicit(Context, IntrinsicAttr::ReferenceCast));
+    }
   }
 
   AddKnownFunctionAttributesForReplaceableGlobalAllocationFunction(FD);

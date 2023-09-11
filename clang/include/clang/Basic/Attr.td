@@ -1455,6 +1455,15 @@ def EnableIf : InheritableAttr {
   let Documentation = [EnableIfDocs];
 }
 
+def Intrinsic : InheritableAttr {
+  let Spellings = [Clang<"intrinsic", 0>];
+  let Subjects = SubjectList<[Function]>;
+  let Args = [EnumArgument<"IntrinsicType", "Type",
+              ["static_cast", "__fake_trivial_bit_cast"],
+              ["ReferenceCast", "TrivialBitCast"], 1>];
+  let Documentation = [IntrinsicDocs];
+}
+
 def ExtVectorType : Attr {
   // This is an OpenCL-related attribute and does not receive a [[]] spelling.
   let Spellings = [GNU<"ext_vector_type">];

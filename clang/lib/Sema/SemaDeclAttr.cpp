@@ -7807,6 +7807,72 @@ static void handleInterruptAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   }
 }
 
+static void handleIntrinsicAttr(Sema& S, Decl *D, const ParsedAttr &AL) {
+  if (AL.getNumArgs() != 1) {
+    S.Diag(AL.getLoc(), diag::err_attribute_wrong_number_arguments) << AL << 1;
+    return;
+  }
+
+  const auto* FD = D->getAsFunction();
+  assert(FD);
+
+  StringRef Str;
+  if (!S.checkStringLiteralArgumentAttr(AL, 0, Str))
+    return;
+
+  IntrinsicAttr::Type IT;
+  if (!IntrinsicAttr::ConvertStrToType(Str, IT) ||
+      IT == IntrinsicAttr::TrivialBitCast) {
+    S.Diag(AL.getArgAsExpr(0)->getBeginLoc(), diag::err_intrinsic_invalid_kind);
+    return;
+  }
+
+  if (const auto* IA = D->getAttr<IntrinsicAttr>()) {
+    if (IA->getIntrinsicType() != IT) {
+      S.Diag(FD->getLocation(), diag::err_intrinsic_multiple_kinds);
+      return;
+    }
+  }
+
+  if (FD->getNumParams() != 1) {
+    S.Diag(FD->getLocation(), diag::err_intrinsic_wrong_argument_count) << IT;
+    return;
+  }
+
+  const QualType To = FD->getReturnType();
+  const QualType From = FD->getParamDecl(0)->getType();
+
+  if (!To->isDependentType() && !From->isDependentType()) {
+    switch (IT) {
+      case IntrinsicAttr::TrivialBitCast:
+        llvm_unreachable("unexpected intrinsic type");
+      case IntrinsicAttr::ReferenceCast: {
+
+        if (To->isReferenceType() != From->isReferenceType())
+          return;
+
+        if (To->isReferenceType()) {
+          if (To.getUnqualifiedType() != From.getUnqualifiedType() ||
+              !To.getNonReferenceType().isAtLeastAsQualifiedAs(
+                  From.getNonReferenceType())) {
+            return;
+          }
+        } else {
+          if (!To.isTriviallyCopyableType(S.getASTContext()) ||
+              !From.isTriviallyCopyableType(S.getASTContext()) ||
+              From.getUnqualifiedType() != To.getUnqualifiedType()) {
+            return;
+          }
+          IT = IntrinsicAttr::TrivialBitCast;
+        }
+        break;
+      }
+    }
+  }
+
+  D->addAttr(::new (S.Context) IntrinsicAttr(S.Context, AL, IT));
+}
+
 static bool
 checkAMDGPUFlatWorkGroupSizeArguments(Sema &S, Expr *MinExpr, Expr *MaxExpr,
                                       const AMDGPUFlatWorkGroupSizeAttr &Attr) {
@@ -8836,6 +8902,9 @@ ProcessDeclAttribute(Sema &S, Scope *scope, Decl *D, const ParsedAttr &AL,
     break;
   case ParsedAttr::AT_Interrupt:
     handleInterruptAttr(S, D, AL);
+    break;
+  case ParsedAttr::AT_Intrinsic:
+    handleIntrinsicAttr(S, D, AL);
     break;
   case ParsedAttr::AT_X86ForceAlignArgPointer:
     handleX86ForceAlignArgPointerAttr(S, D, AL);

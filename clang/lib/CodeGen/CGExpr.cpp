@@ -4979,6 +4979,17 @@ RValue CodeGenFunction::EmitCallExpr(const CallExpr *E,
           dyn_cast_or_null<CXXMethodDecl>(CE->getCalleeDecl()))
       return EmitCXXOperatorMemberCallExpr(CE, MD, ReturnValue);
 
+  if (const auto *CD = E->getCalleeDecl()) {
+    if (const auto *Attr = CD->getAttr<IntrinsicAttr>()) {
+      switch (Attr->getIntrinsicType()) {
+      case IntrinsicAttr::ReferenceCast:
+        return RValue::get(EmitLValue(E->getArg(0)).getPointer(*this));
+      case IntrinsicAttr::TrivialBitCast:
+        return EmitAnyExprToTemp(E->getArg(0));
+      }
+    }
+  }
+
   CGCallee callee = EmitCallee(E->getCallee());
 
   if (callee.isBuiltin()) {

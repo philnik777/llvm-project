@@ -8446,17 +8446,15 @@ bool LValueExprEvaluator::VisitCallExpr(const CallExpr *E) {
   if (!IsConstantEvaluatedBuiltinCall(E))
     return ExprEvaluatorBaseTy::VisitCallExpr(E);
 
-  switch (E->getBuiltinCallee()) {
-  default:
-    return false;
-  case Builtin::BIas_const:
-  case Builtin::BIforward:
-  case Builtin::BIforward_like:
-  case Builtin::BImove:
-  case Builtin::BImove_if_noexcept:
-    if (cast<FunctionDecl>(E->getCalleeDecl())->isConstexpr())
-      return Visit(E->getArg(0));
-    break;
+  if (const auto* Func = E->getCalleeDecl()->getAsFunction(); Func && Func->isConstexpr()) {
+    if (auto* Attr = Func->getAttr<IntrinsicAttr>()) {
+      switch (Attr->getIntrinsicType()) {
+        case IntrinsicAttr::Type::ReferenceCast:
+          return Visit(E->getArg(0));
+        case IntrinsicAttr::TrivialBitCast:
+          break; // TODO: It should be possible to just replace this with a bit cast
+      }
+    }
   }
 
   return ExprEvaluatorBaseTy::VisitCallExpr(E);

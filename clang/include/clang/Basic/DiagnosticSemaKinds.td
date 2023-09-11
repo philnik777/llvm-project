@@ -2834,6 +2834,20 @@ def err_attr_cond_never_constant_expr : Error<
 def err_diagnose_if_invalid_diagnostic_type : Error<
   "invalid diagnostic type for 'diagnose_if'; use \"error\" or \"warning\" "
   "instead">;
+def err_intrinsic_multiple_kinds : Error<
+  "one function cannot be equivalent to multiple intrinsics at the same time">;
+def err_intrinsic_invalid_kind : Error<
+  "invalid intrinsic kind; use 'reference_cast' or 'trivial_bit_cast' instead">;
+def err_intrinsic_invalid_type : Error<
+  "%select{return type|parameter}0 has to be a %select{reference|value}1 type">;
+def err_intrinsic_cannot_cast : Error<
+  "cannot cast %1 to %0">;
+def err_intrinsic_wrong_argument_count : Error<
+  "%select{reference_cast|trivial_bit_cast}0 instrinsic takes exactly one argument">;
+def err_intrinsic_type_not_trivially_copyable : Error<
+  "%select{return type|parameter}0 has to be trivially copyable">;
+def err_intrinsic_type_size_mismatch : Error<
+  "The return type and parameter do not have the same size">;
 def err_constexpr_body_no_return : Error<
   "no return statement in %select{constexpr|consteval}0 function">;
 def err_constexpr_return_missing_expr : Error<

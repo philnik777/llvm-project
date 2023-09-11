@@ -966,6 +966,22 @@ Query for this feature with ``__has_attribute(diagnose_if)``.
   }];
 }
 
+def IntrinsicDocs : Documentation {
+  let Category = DocCatFunction;
+  let Content = [{
+The ``intrinsic`` attribute informs clang that a function is equivalent to some
+specific builtin functionality. This allows clang to avoid instantiations and
+can generate better code with optimizations disabled. Currently, clang supports
+the following intrinsics:
+  - "reference_cast":
+.. code-block:: c++
+    template <class T>
+    // This function is known to be a static_cast from a (possibly ref-qualified) T to T&&
+    [[clang::intrinsic("reference_cast")]]
+    std::remove_reference_t<T>&& move(T&& v);
+  }];
+}
+
 def PassObjectSizeDocs : Documentation {
   let Category = DocCatVariable; // Technically it's a parameter doc, but eh.
   let Heading = "pass_object_size, pass_dynamic_object_size";

@@ -13,6 +13,7 @@
 
 #include "clang/Analysis/BodyFarm.h"
 #include "clang/AST/ASTContext.h"
+#include "clang/AST/Attr.h"
 #include "clang/AST/CXXInheritance.h"
 #include "clang/AST/Decl.h"
 #include "clang/AST/Expr.h"
@@ -713,16 +714,12 @@ Stmt *BodyFarm::getBody(const FunctionDecl *D) {
 
   FunctionFarmer FF;
 
-  if (unsigned BuiltinID = D->getBuiltinID()) {
-    switch (BuiltinID) {
-    case Builtin::BIas_const:
-    case Builtin::BIforward:
-    case Builtin::BIforward_like:
-    case Builtin::BImove:
-    case Builtin::BImove_if_noexcept:
+  if (IntrinsicAttr* Attr = D->getAttr<IntrinsicAttr>()) {
+    switch (Attr->getIntrinsicType()) {
+    case IntrinsicAttr::ReferenceCast:
       FF = create_std_move_forward;
       break;
-    default:
+    case IntrinsicAttr::TrivialBitCast:
       FF = nullptr;
       break;
     }
