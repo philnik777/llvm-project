@@ -13,8 +13,8 @@
 #include <__config>
 #include <__functional/binary_function.h>
 #include <__functional/unary_function.h>
+#include <__type_traits/desugars_to.h>
 #include <__type_traits/integral_constant.h>
-#include <__type_traits/operation_traits.h>
 #include <__type_traits/predicate_traits.h>
 #include <__utility/forward.h>
 
@@ -41,12 +41,12 @@ struct _LIBCPP_TEMPLATE_VIS plus
 };
 _LIBCPP_CTAD_SUPPORTED_FOR_TYPE(plus);
 
-template <class _Tp>
-struct __is_trivial_plus_operation<plus<_Tp>, _Tp, _Tp> : true_type {};
+#if _LIBCPP_STD_VER >= 17
+template <class _Lhs, class _Rhs>
+inline constexpr bool __desugars_to_v<plus<>, plus<>, _Lhs, _Rhs> = true;
 
-#if _LIBCPP_STD_VER >= 14
-template <class _Tp, class _Up>
-struct __is_trivial_plus_operation<plus<>, _Tp, _Up> : true_type {};
+template <class _Tp>
+inline constexpr bool __desugars_to_v<plus<_Tp>, plus<>, _Tp, _Tp> = true;
 #endif
 
 #if _LIBCPP_STD_VER >= 14

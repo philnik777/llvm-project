@@ -6,8 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP___TYPE_TRAITS_OPERATION_TRAITS_H
-#define _LIBCPP___TYPE_TRAITS_OPERATION_TRAITS_H
+#ifndef _LIBCPP___TYPE_TRAITS_DESUGARS_TO_H
+#define _LIBCPP___TYPE_TRAITS_DESUGARS_TO_H
 
 #include <__config>
 #include <__type_traits/integral_constant.h>
@@ -16,11 +16,15 @@
 #  pragma GCC system_header
 #endif
 
+#if _LIBCPP_STD_VER >= 17
+
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-template <class _Pred, class _Lhs, class _Rhs>
-struct __is_trivial_plus_operation : false_type {};
+template <class _From, class _To, class... _Args>
+inline constexpr bool __desugars_to_v = false;
 
 _LIBCPP_END_NAMESPACE_STD
 
-#endif // _LIBCPP___TYPE_TRAITS_OPERATION_TRAITS_H
+#endif // _LIBCPP_STD_VER >= 17
+
+#endif // _LIBCPP___TYPE_TRAITS_DESUGARS_TO_H
