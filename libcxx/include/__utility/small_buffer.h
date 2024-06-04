@@ -10,6 +10,7 @@
 #define _LIBCPP___UTILITY_SMALL_BUFFER_H
 
 #include <__config>
+#include <__bit/has_single_bit.h>
 #include <__cstddef/byte.h>
 #include <__cstddef/size_t.h>
 #include <__memory/construct_at.h>
@@ -38,8 +39,10 @@
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <size_t _BufferSize, size_t _BufferAlignment>
-  requires(_BufferSize > 0 && _BufferAlignment > 0)
 class __small_buffer {
+  static_assert(std::has_single_bit(_BufferAlignment), "Alignment is invalid.");
+  static_assert(_BufferSize >= sizeof(byte*), "Buffer has to be capable of storing a pointer for heap allocations!");
+
 public:
   template <class _Tp, class _Decayed = decay_t<_Tp>>
   static constexpr bool __fits_in_buffer =

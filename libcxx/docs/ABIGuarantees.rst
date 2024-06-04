@@ -157,6 +157,10 @@ This flag adds ``[[clang::trivial_abi]]`` to ``unique_ptr``, which makes it triv
 ---------------------------------------------
 This flag adds ``[[clang::trivial_abi]]`` to ``shared_ptr``, which makes it trivial for the purpose of calls.
 
+``_LIBCPP_ABI_MOVE_ONLY_FUNCTION_TRIVIAL_ABI``
+---------------------------------------------
+This flag adds ``[[clang::trivial_abi]]`` to ``move_only_function``, which makes it trivial for the purpose of calls.
+
 
 Types that public aliases reference
 ===================================
