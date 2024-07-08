@@ -105,6 +105,9 @@ private:
   friend class _LIBCPP_TEMPLATE_VIS span;
   template <class _Tp, size_t _Size>
   friend struct array;
+
+  template <class, size_t>
+  friend class inplace_vector;
 };
 
 template <class _Iter1>

@@ -1,0 +1,1066 @@
+//===----------------------------------------------------------------------===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+
+#ifndef _LIBCPP_INPLACE_VECTOR
+#define _LIBCPP_INPLACE_VECTOR
+
+#include <__algorithm/equal.h>
+#include <__algorithm/for_each.h>
+#include <__algorithm/lexicographical_compare_three_way.h>
+#include <__algorithm/remove.h>
+#include <__algorithm/remove_if.h>
+#include <__algorithm/rotate.h>
+#include <__compare/synth_three_way.h>
+#include <__config>
+#include <__iterator/bounded_iter.h>
+#include <__iterator/reverse_iterator.h>
+#include <__iterator/wrap_iter.h>
+#include <__memory/ranges_uninitialized_algorithms.h>
+#include <__memory/uninitialized_algorithms.h>
+#include <__ranges/as_rvalue_view.h>
+#include <__ranges/container_compatible_range.h>
+#include <__ranges/from_range.h>
+#include <__ranges/repeat_view.h>
+#include <__ranges/take_view.h>
+#include <__ranges/views.h>
+#include <__type_traits/is_trivial.h>
+#include <cstddef>
+#include <cstdint>
+#include <new>
+#include <stdexcept>
+
+// standard-mandated includes
+
+// [iterator.range]
+#include <__iterator/access.h>
+#include <__iterator/data.h>
+#include <__iterator/empty.h>
+#include <__iterator/reverse_access.h>
+#include <__iterator/size.h>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+#if _LIBCPP_STD_VER >= 26
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+// [inplace.vector]
+template <class _Tp, size_t _Np>
+class inplace_vector {
+public:
+  using value_type             = _Tp;
+  using pointer                = _Tp*;
+  using const_pointer          = const _Tp*;
+  using reference              = value_type&;
+  using const_reference        = const value_type&;
+  using size_type              = size_t;
+  using difference_type        = ptrdiff_t;
+  using iterator               = __wrap_iter<pointer>;
+  using const_iterator         = __wrap_iter<const_pointer>;
+  using reverse_iterator       = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+  using __internal_size_type =
+      __conditional_t<_Np <= numeric_limits<uint8_t>::max(),
+                      uint8_t,
+                      __conditional_t<_Np <= numeric_limits<uint16_t>::max(), uint16_t, size_t>>;
+
+private:
+  union {
+    _Tp __buffer_[_Np];
+  };
+  __internal_size_type __size_;
+
+public:
+  _LIBCPP_HIDE_FROM_ABI constexpr void __constexpr_init_trivial_buffer() { ::new (__buffer_) _Tp[_Np]; }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector() noexcept : __size_(0) { __constexpr_init_trivial_buffer(); }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr explicit inplace_vector(size_type __size) : __size_(__size) {
+    if (__size > _Np)
+      std::__throw_bad_alloc();
+    std::uninitialized_default_construct_n(__buffer_, __size);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(size_type __size, const _Tp& __value) : __size_(__size) {
+    if (__size > _Np)
+      std::__throw_bad_alloc();
+    std::uninitialized_fill_n(__buffer_, __size, __value);
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(_InputIterator __first, _InputIterator __last) {
+    // TODO: Check input size
+    auto __res = std::uninitialized_copy(__first, __last, __buffer_);
+    __size_    = __res - __buffer_;
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(from_range_t, _Range&& __range) {
+    // TODO: Check input size
+    std::ranges::uninitialized_copy(__range, __buffer_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(const inplace_vector&)
+    requires is_trivially_copy_constructible_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(const inplace_vector& __other) noexcept(
+      is_nothrow_copy_constructible_v<_Tp>)
+      : __size_(__other.__size_) {
+    std::uninitialized_copy_n(__other.__buffer_, __other.__size_, __buffer_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector(inplace_vector&&)
+    requires is_trivially_move_constructible_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(inplace_vector&& __other) noexcept(
+      is_nothrow_move_constructible_v<_Tp>)
+      : __size_(__other.__size_) {
+    std::uninitialized_move_n(__other.__buffer_, __other.__size_, __buffer_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(initializer_list<_Tp> __il)
+      : inplace_vector(__il.begin(), __il.end()) {}
+
+  _LIBCPP_HIDE_FROM_ABI ~inplace_vector()
+    requires is_trivially_destructible_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr ~inplace_vector() { std::destroy_n(__buffer_, __size_); }
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(const inplace_vector&)
+    requires is_trivially_destructible_v<_Tp> && is_trivially_copy_constructible_v<_Tp> &&
+                 is_trivially_copy_assignable_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(const inplace_vector& __other) {
+    if (this != &__other) {
+      assign_range(__other);
+    }
+    return *this;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(inplace_vector&&)
+    requires is_trivially_destructible_v<_Tp> && is_trivially_move_constructible_v<_Tp> &&
+                 is_trivially_move_assignable_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector& operator=(inplace_vector&& __other) {
+    if (this != &__other) {
+      assign_range(__other | views::as_rvalue);
+    }
+    return *this;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector& operator=(initializer_list<_Tp> __il) { assign_range(__il); }
+
+  template <class _InIter, class _Sent>
+  _LIBCPP_HIDE_FROM_ABI constexpr void __assign_with_sentinel(_InIter __first, _Sent __last) {
+    for (size_t __i = 0; __i != __size_; ++__i) {
+      if (__first == __last)
+        break;
+      __buffer_[__i] = *__first;
+      ++__first;
+    }
+
+    for (; __first != __last; ++__first) {
+      push_back(*__first);
+    }
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(_InputIterator __first, _InputIterator __last) {
+    __assign_with_sentinel(__first, __last);
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign_range(_Range&& __range) {
+    __assign_with_sentinel(ranges::begin(__range), ranges::end(__range));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(size_type __count, const _Tp& __value) {
+    assign_range(views::repeat(__value) | views::take(__count));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(initializer_list<_Tp> __il) { assign_range(__il); }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr iterator begin() noexcept { return iterator(__buffer_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator begin() const noexcept {
+    return const_iterator(__buffer_);
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr iterator end() noexcept { return iterator(__buffer_ + __size_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator end() const noexcept {
+    return const_iterator(__buffer_ + __size_);
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reverse_iterator rbegin() noexcept { return reverse_iterator(end()); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator rbegin() const noexcept {
+    return const_reverse_iterator(end());
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reverse_iterator rend() noexcept { return reverse_iterator(begin()); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator rend() const noexcept {
+    return const_reverse_iterator(begin());
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator cbegin() const noexcept { return begin(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator cend() const noexcept { return end(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator crbegin() const noexcept { return rbegin(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator crend() const noexcept { return rend(); }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr bool empty() const noexcept { return __size_ == 0; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type size() const noexcept { return __size_; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type max_size() const noexcept { return _Np; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type capacity() const noexcept { return _Np; }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void resize(size_type __size) const noexcept {
+    if (__size > __size_) {
+      std::uninitialized_default_construct_n(__buffer_ + __size_, __size - __size_);
+    } else {
+      std::destroy_n(__buffer_ + __size, __size_ - __size);
+    }
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void resize(size_type __size, const _Tp& __value) const noexcept {
+    if (__size > __size_) {
+      std::uninitialized_fill_n(__buffer_ + __size_, __size - __size_, __value);
+    } else {
+      std::destroy_n(__buffer_ + __size, __size_ - __size);
+    }
+  }
+
+  _LIBCPP_HIDE_FROM_ABI static constexpr void reserve(size_type __size) {
+    if (__size > _Np)
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI static constexpr void shrink_to_fit() noexcept {}
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference operator[](size_type __n) noexcept { return __buffer_[__n]; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference operator[](size_type __n) const noexcept {
+    return __buffer_[__n];
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference at(size_type __n) noexcept {
+    if (__n > __size_)
+      std::__throw_out_of_range("inplace_vector");
+    return __buffer_[__n];
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference at(size_type __n) const noexcept {
+    if (__n > __size_)
+      std::__throw_out_of_range("inplace_vector");
+    return __buffer_[__n];
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference front() noexcept { return __buffer_[0]; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference front() const noexcept { return __buffer_[0]; }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference back() noexcept { return __buffer_[__size_ - 1]; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference back() const noexcept { return __buffer_[__size_ - 1]; }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr _Tp* data() noexcept { return __buffer_; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const _Tp* data() const noexcept { return __buffer_; }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr reference emplace_back(_Args&&... __args) {
+    auto __res = try_emplace_back(std::forward<_Args>(__args)...);
+    if (__res == nullptr)
+      std::__throw_bad_alloc();
+    return *__res;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference push_back(const _Tp& __value) { return emplace_back(__value); }
+  _LIBCPP_HIDE_FROM_ABI constexpr reference push_back(_Tp&& __value) { return emplace_back(std::move(__value)); }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr void append_range(_Range&& __range) {
+    for (auto&& __el : __range)
+      push_back(std::forward<decltype(__el)>(__el));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void pop_back() noexcept {
+    --__size_;
+    std::destroy_at(__buffer_ + __size_);
+  }
+
+  template <class... _Args>
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_emplace_back(_Args&&... __args) {
+    if (__size_ >= _Np)
+      return nullptr;
+    std::construct_at(__buffer_ + __size_, std::forward<_Args>(__args)...);
+    ++__size_;
+    return &back();
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_push_back(const _Tp& __value) {
+    return try_emplace_back(__value);
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_push_back(_Tp&& __value) {
+    return try_emplace_back(std::move(__value));
+  }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_emplace_back(_Args&&... __args) {
+    return *try_emplace_back(std::forward<_Args>(__args)...);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_push_back(const _Tp& __value) {
+    return *try_emplace_back(__value);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_push_back(_Tp&& __value) {
+    return *try_emplace_back(std::move(__value));
+  }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator emplace(const_iterator __position, _Args&&... __args) {
+    emplace_back(std::forward<_Args>(__args)...);
+    auto __offset = __position - begin();
+    std::rotate(__buffer_ + __offset, __buffer_ + __size_, __buffer_ + __size_ + 1);
+    ++__size_;
+    return iterator(__buffer_ + __offset);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, const _Tp& __value) {
+    return emplace(__position, __value);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, _Tp&& __value) {
+    return emplace(__position, std::move(__value));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, size_type __count, const _Tp& __value) {
+    if (__count == 0)
+      return begin() + (__position - begin());
+    for (size_t __i = 0; __i != __count - 1; ++__i)
+      emplace(__position, __value);
+    return emplace(__position, __value);
+  }
+
+  template <class _InIter, class _Sent>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator
+  __insert_with_sentinel(const_iterator __position, _InIter __first, _Sent __last) {
+    auto __ret = begin() + (__position() - begin());
+    for (; __first != __last; ++__first) {
+      insert(__position++, *__first);
+    }
+    return __ret;
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator
+  insert(const_iterator __position, _InputIterator __first, _InputIterator __last) {
+    return __insert_with_sentinel(__position, __first, __last);
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert_range(const_iterator __position, _Range&& __range) {
+    return __insert_with_sentinel(__position, ranges::begin(__range), ranges::end(__range));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, initializer_list<_Tp> __il) {
+    return insert_range(__position, __il.begin(), __il.end());
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator erase(const_iterator __position) {
+    auto __to_remove = begin() + (__position - begin());
+    std::move(__to_remove + 1, end(), __to_remove);
+    std::destroy_at(end() - 1);
+    --__size_;
+    return __to_remove;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator erase(const_iterator __first, const_iterator __last) {
+    auto __mfirst = begin() + (__first - begin());
+    auto __mlast  = begin() + (__last - begin());
+    std::move(__mlast, end(), __mfirst);
+    std::destroy_n(end() - (__last - __first), __last - __first);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void
+  swap(inplace_vector& __other) noexcept(is_nothrow_swappable_v<_Tp> && is_nothrow_move_constructible_v<_Tp>) {
+    auto [__self_iter, __other_iter] = std::__swap_ranges(begin(), end(), __other.begin(), __other.end());
+    if (__self_iter != end()) {
+      __other.insert(__other.end(), __self_iter, end());
+    } else {
+      insert(end(), __other_iter, __other.end());
+    }
+  }
+
+  _LIBCPP_HIDE_FROM_ABI void clear() noexcept {
+    std::destroy_n(__buffer_, __size_);
+    __size_ = 0;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const inplace_vector& __lhs, const inplace_vector& __rhs) {
+    return std::equal(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
+  }
+
+  template <class _T2 = _Tp> // FIXME: This seems to be instantiated too eagerly.
+  _LIBCPP_HIDE_FROM_ABI friend constexpr __synth_three_way_result<_T2>
+  operator<=>(const inplace_vector& __lhs, const inplace_vector& __rhs) {
+    return std::lexicographical_compare_three_way(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
+  }
+
+  // FIXME: Is this meant to be a hideen friend?
+  _LIBCPP_HIDE_FROM_ABI friend constexpr void
+  swap(inplace_vector& __lhs,
+       inplace_vector& __rhs) noexcept(is_nothrow_swappable_v<_Tp> && is_nothrow_move_constructible_v<_Tp>) {
+    return __lhs.swap(__rhs);
+  }
+};
+
+template <class _Tp, size_t _Np>
+  requires is_trivial_v<_Tp>
+class inplace_vector<_Tp, _Np> {
+public:
+  using value_type             = _Tp;
+  using pointer                = _Tp*;
+  using const_pointer          = const _Tp*;
+  using reference              = value_type&;
+  using const_reference        = const value_type&;
+  using size_type              = size_t;
+  using difference_type        = ptrdiff_t;
+  using iterator               = __wrap_iter<pointer>;
+  using const_iterator         = __wrap_iter<const_pointer>;
+  using reverse_iterator       = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+  using __internal_size_type =
+      __conditional_t<_Np <= numeric_limits<uint8_t>::max(),
+                      uint8_t,
+                      __conditional_t<_Np <= numeric_limits<uint16_t>::max(), uint16_t, size_t>>;
+
+private:
+  _Tp __buffer_[_Np];
+  __internal_size_type __size_;
+
+public:
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector() noexcept : __size_(0) {}
+
+  _LIBCPP_HIDE_FROM_ABI constexpr explicit inplace_vector(size_type __size) : __size_(__size) {
+    if (__size > _Np)
+      std::__throw_bad_alloc();
+    std::uninitialized_value_construct_n(__buffer_, __size);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(size_type __size, const _Tp& __value) : __size_(__size) {
+    if (__size > _Np)
+      std::__throw_bad_alloc();
+    std::uninitialized_fill_n(__buffer_, __size, __value);
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(_InputIterator __first, _InputIterator __last) {
+    // TODO: Check input size
+    auto __res = std::uninitialized_copy(__first, __last, __buffer_);
+    __size_    = __res - __buffer_;
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(from_range_t, _Range&& __range) {
+    // TODO: Check input size
+    std::ranges::uninitialized_copy(__range, __buffer_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(const inplace_vector&)
+    requires is_trivially_copy_constructible_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(const inplace_vector& __other) noexcept(
+      is_nothrow_copy_constructible_v<_Tp>)
+      : __size_(__other.__size_) {
+    std::uninitialized_copy_n(__other.__buffer_, __other.__size_, __buffer_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector(inplace_vector&&)
+    requires is_trivially_move_constructible_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(inplace_vector&& __other) noexcept(
+      is_nothrow_move_constructible_v<_Tp>)
+      : __size_(__other.__size_) {
+    std::uninitialized_move_n(__other.__buffer_, __other.__size_, __buffer_);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(initializer_list<_Tp> __il)
+      : inplace_vector(__il.begin(), __il.end()) {}
+
+  _LIBCPP_HIDE_FROM_ABI ~inplace_vector()
+    requires is_trivially_destructible_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr ~inplace_vector() { std::destroy_n(__buffer_, __size_); }
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(const inplace_vector&)
+    requires is_trivially_destructible_v<_Tp> && is_trivially_copy_constructible_v<_Tp> &&
+                 is_trivially_copy_assignable_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(const inplace_vector& __other) {
+    if (this != &__other) {
+      assign_range(__other);
+    }
+    return *this;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(inplace_vector&&)
+    requires is_trivially_destructible_v<_Tp> && is_trivially_move_constructible_v<_Tp> &&
+                 is_trivially_move_assignable_v<_Tp>
+  = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector& operator=(inplace_vector&& __other) {
+    if (this != &__other) {
+      assign_range(__other | views::as_rvalue);
+    }
+    return *this;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector& operator=(initializer_list<_Tp> __il) { assign_range(__il); }
+
+  template <class _InIter, class _Sent>
+  _LIBCPP_HIDE_FROM_ABI constexpr void __assign_with_sentinel(_InIter __first, _Sent __last) {
+    for (size_t __i = 0; __i != __size_; ++__i) {
+      if (__first == __last)
+        break;
+      __buffer_[__i] = *__first;
+      ++__first;
+    }
+
+    for (; __first != __last; ++__first) {
+      push_back(*__first);
+    }
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(_InputIterator __first, _InputIterator __last) {
+    __assign_with_sentinel(__first, __last);
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign_range(_Range&& __range) {
+    __assign_with_sentinel(ranges::begin(__range), ranges::end(__range));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(size_type __count, const _Tp& __value) {
+    assign_range(views::repeat(__value) | views::take(__count));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(initializer_list<_Tp> __il) { assign_range(__il); }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr iterator begin() noexcept { return iterator(__buffer_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator begin() const noexcept {
+    return const_iterator(__buffer_);
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr iterator end() noexcept { return iterator(__buffer_ + __size_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator end() const noexcept {
+    return const_iterator(__buffer_ + __size_);
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reverse_iterator rbegin() noexcept { return reverse_iterator(end()); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator rbegin() const noexcept {
+    return const_reverse_iterator(end());
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reverse_iterator rend() noexcept { return reverse_iterator(begin()); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator rend() const noexcept {
+    return const_reverse_iterator(begin());
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator cbegin() const noexcept { return begin(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator cend() const noexcept { return end(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator crbegin() const noexcept { return rbegin(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator crend() const noexcept { return rend(); }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr bool empty() const noexcept { return __size_ == 0; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type size() const noexcept { return __size_; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type max_size() const noexcept { return _Np; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type capacity() const noexcept { return _Np; }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void resize(size_type __size) const noexcept {
+    if (__size > __size_) {
+      std::uninitialized_default_construct_n(__buffer_ + __size_, __size - __size_);
+    } else {
+      std::destroy_n(__buffer_ + __size, __size_ - __size);
+    }
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void resize(size_type __size, const _Tp& __value) const noexcept {
+    if (__size > __size_) {
+      std::uninitialized_fill_n(__buffer_ + __size_, __size - __size_, __value);
+    } else {
+      std::destroy_n(__buffer_ + __size, __size_ - __size);
+    }
+  }
+
+  _LIBCPP_HIDE_FROM_ABI static constexpr void reserve(size_type __size) {
+    if (__size > _Np)
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI static constexpr void shrink_to_fit() noexcept {}
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference operator[](size_type __n) noexcept { return __buffer_[__n]; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference operator[](size_type __n) const noexcept {
+    return __buffer_[__n];
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference at(size_type __n) noexcept {
+    if (__n > __size_)
+      std::__throw_out_of_range("inplace_vector");
+    return __buffer_[__n];
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference at(size_type __n) const noexcept {
+    if (__n > __size_)
+      std::__throw_out_of_range("inplace_vector");
+    return __buffer_[__n];
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference front() noexcept { return __buffer_[0]; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference front() const noexcept { return __buffer_[0]; }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference back() noexcept { return __buffer_[__size_ - 1]; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference back() const noexcept { return __buffer_[__size_ - 1]; }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr _Tp* data() noexcept { return __buffer_; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const _Tp* data() const noexcept { return __buffer_; }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr reference emplace_back(_Args&&... __args) {
+    auto __res = try_emplace_back(std::forward<_Args>(__args)...);
+    if (__res == nullptr)
+      std::__throw_bad_alloc();
+    return *__res;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference push_back(const _Tp& __value) { return emplace_back(__value); }
+  _LIBCPP_HIDE_FROM_ABI constexpr reference push_back(_Tp&& __value) { return emplace_back(std::move(__value)); }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr void append_range(_Range&& __range) {
+    for (auto&& __el : __range)
+      push_back(std::forward<decltype(__el)>(__el));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void pop_back() noexcept {
+    --__size_;
+    std::destroy_at(__buffer_ + __size_);
+  }
+
+  template <class... _Args>
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_emplace_back(_Args&&... __args) {
+    if (__size_ >= _Np)
+      return nullptr;
+    std::construct_at(__buffer_ + __size_, std::forward<_Args>(__args)...);
+    ++__size_;
+    return &back();
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_push_back(const _Tp& __value) {
+    return try_emplace_back(__value);
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_push_back(_Tp&& __value) {
+    return try_emplace_back(std::move(__value));
+  }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_emplace_back(_Args&&... __args) {
+    return *try_emplace_back(std::forward<_Args>(__args)...);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_push_back(const _Tp& __value) {
+    return *try_emplace_back(__value);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_push_back(_Tp&& __value) {
+    return *try_emplace_back(std::move(__value));
+  }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator emplace(const_iterator __position, _Args&&... __args) {
+    emplace_back(std::forward<_Args>(__args)...);
+    auto __offset = __position - begin();
+    std::rotate(__buffer_ + __offset, __buffer_ + __size_, __buffer_ + __size_ + 1);
+    ++__size_;
+    return iterator(__buffer_ + __offset);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, const _Tp& __value) {
+    return emplace(__position, __value);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, _Tp&& __value) {
+    return emplace(__position, std::move(__value));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, size_type __count, const _Tp& __value) {
+    if (__count == 0)
+      return begin() + (__position - begin());
+    for (size_t __i = 0; __i != __count - 1; ++__i)
+      emplace(__position, __value);
+    return emplace(__position, __value);
+  }
+
+  template <class _InIter, class _Sent>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator
+  __insert_with_sentinel(const_iterator __position, _InIter __first, _Sent __last) {
+    auto __ret = begin() + (__position() - begin());
+    for (; __first != __last; ++__first) {
+      insert(__position++, *__first);
+    }
+    return __ret;
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator
+  insert(const_iterator __position, _InputIterator __first, _InputIterator __last) {
+    return __insert_with_sentinel(__position, __first, __last);
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert_range(const_iterator __position, _Range&& __range) {
+    return __insert_with_sentinel(__position, ranges::begin(__range), ranges::end(__range));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, initializer_list<_Tp> __il) {
+    return insert_range(__position, __il.begin(), __il.end());
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator erase(const_iterator __position) {
+    auto __to_remove = begin() + (__position - begin());
+    std::move(__to_remove + 1, end(), __to_remove);
+    std::destroy_at(end() - 1);
+    --__size_;
+    return __to_remove;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator erase(const_iterator __first, const_iterator __last) {
+    auto __mfirst = begin() + (__first - begin());
+    auto __mlast  = begin() + (__last - begin());
+    std::move(__mlast, end(), __mfirst);
+    std::destroy_n(end() - (__last - __first), __last - __first);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void
+  swap(inplace_vector& __other) noexcept(is_nothrow_swappable_v<_Tp> && is_nothrow_move_constructible_v<_Tp>) {
+    auto [__self_iter, __other_iter] = std::__swap_ranges(begin(), end(), __other.begin(), __other.end());
+    if (__self_iter != end()) {
+      __other.insert(__other.end(), __self_iter, end());
+    } else {
+      insert(end(), __other_iter, __other.end());
+    }
+  }
+
+  _LIBCPP_HIDE_FROM_ABI void clear() noexcept {
+    std::destroy_n(__buffer_, __size_);
+    __size_ = 0;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const inplace_vector& __lhs, const inplace_vector& __rhs) {
+    return std::equal(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
+  }
+
+  template <class _T2 = _Tp> // FIXME: This seems to be instantiated too eagerly.
+  _LIBCPP_HIDE_FROM_ABI friend constexpr __synth_three_way_result<_T2>
+  operator<=>(const inplace_vector& __lhs, const inplace_vector& __rhs) {
+    return std::lexicographical_compare_three_way(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
+  }
+
+  // FIXME: Is this meant to be a hideen friend?
+  _LIBCPP_HIDE_FROM_ABI friend constexpr void
+  swap(inplace_vector& __lhs,
+       inplace_vector& __rhs) noexcept(is_nothrow_swappable_v<_Tp> && is_nothrow_move_constructible_v<_Tp>) {
+    return __lhs.swap(__rhs);
+  }
+};
+
+template <class _Tp>
+class inplace_vector<_Tp, 0> {
+public:
+  using value_type             = _Tp;
+  using pointer                = _Tp*;
+  using const_pointer          = const _Tp*;
+  using reference              = value_type&;
+  using const_reference        = const value_type&;
+  using size_type              = size_t;
+  using difference_type        = ptrdiff_t;
+  using iterator               = __wrap_iter<pointer>;
+  using const_iterator         = __wrap_iter<const_pointer>;
+  using reverse_iterator       = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+public:
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector() noexcept = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr explicit inplace_vector(size_type __size) {
+    if (__size > 0)
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(size_type __size, const _Tp& __value) {
+    if (__size > 0)
+      std::__throw_bad_alloc();
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(_InputIterator __first, _InputIterator __last) {
+    if (__first != __last)
+      std::__throw_bad_alloc();
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(from_range_t, _Range&& __range) {
+    if (ranges::begin(__range) != ranges::end(__range))
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(const inplace_vector&) = default;
+  _LIBCPP_HIDE_FROM_ABI inplace_vector(inplace_vector&&)                = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector(initializer_list<_Tp> __il)
+      : inplace_vector(__il.begin(), __il.end()) {}
+
+  _LIBCPP_HIDE_FROM_ABI constexpr ~inplace_vector() = default;
+
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(const inplace_vector&) = default;
+  _LIBCPP_HIDE_FROM_ABI inplace_vector& operator=(inplace_vector&&)      = default;
+
+  _LIBCPP_HIDE_FROM_ABI constexpr inplace_vector& operator=(initializer_list<_Tp> __il) { assign_range(__il); }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(_InputIterator __first, _InputIterator __last) {
+    __assign_with_sentinel(__first, __last);
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign_range(_Range&& __range) {
+    __assign_with_sentinel(ranges::begin(__range), ranges::end(__range));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(size_type __count, const _Tp& __value) {
+    assign_range(views::repeat(__value) | views::take(__count));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void assign(initializer_list<_Tp> __il) { assign_range(__il); }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr iterator begin() noexcept { return nullptr; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator begin() const noexcept { return nullptr; }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr iterator end() noexcept { return nullptr; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator end() const noexcept { return nullptr; }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reverse_iterator rbegin() noexcept { return reverse_iterator(end()); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator rbegin() const noexcept {
+    return const_reverse_iterator(end());
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reverse_iterator rend() noexcept { return reverse_iterator(begin()); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator rend() const noexcept {
+    return const_reverse_iterator(begin());
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator cbegin() const noexcept { return begin(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_iterator cend() const noexcept { return end(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator crbegin() const noexcept { return rbegin(); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reverse_iterator crend() const noexcept { return rend(); }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr bool empty() const noexcept { return true; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type size() const noexcept { return 0; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type max_size() const noexcept { return 0; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr size_type capacity() const noexcept { return 0; }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void resize(size_type __size) const noexcept {
+    if (__size != 0)
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void resize(size_type __size, const _Tp& __value) const noexcept {
+    if (__size != 0)
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI static constexpr void reserve(size_type __size) {
+    if (__size != 0)
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI static constexpr void shrink_to_fit() noexcept {}
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference operator[](size_type __n) noexcept {
+    _LIBCPP_ASSERT_VALID_ELEMENT_ACCESS(false, "Invalid index");
+  }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference operator[](size_type __n) const noexcept {
+    _LIBCPP_ASSERT_VALID_ELEMENT_ACCESS(false, "Invalid index");
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference at(size_type __n) noexcept {
+    std::__throw_out_of_range("inplace_vector");
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference at(size_type __n) const noexcept {
+    std::__throw_out_of_range("inplace_vector");
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference front() noexcept {
+    _LIBCPP_ASSERT_VALID_ELEMENT_ACCESS(false, "Invalid index");
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference front() const noexcept {
+    _LIBCPP_ASSERT_VALID_ELEMENT_ACCESS(false, "Invalid index");
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr reference back() noexcept {
+    _LIBCPP_ASSERT_VALID_ELEMENT_ACCESS(false, "Invalid index");
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const_reference back() const noexcept {
+    _LIBCPP_ASSERT_VALID_ELEMENT_ACCESS(false, "Invalid index");
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr _Tp* data() noexcept { return nullptr; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const _Tp* data() const noexcept { return nullptr; }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr reference emplace_back(_Args&&... __args) {
+    auto __res = try_emplace_back(std::forward<_Args>(__args)...);
+    if (__res == nullptr)
+      std::__throw_bad_alloc();
+    return *__res;
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference push_back(const _Tp& __value) { std::__throw_bad_alloc(); }
+  _LIBCPP_HIDE_FROM_ABI constexpr reference push_back(_Tp&& __value) { std::__throw_bad_alloc(); }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr void append_range(_Range&& __range) {
+    if (ranges::begin(__range) != ranges::end(__range))
+      std::__throw_bad_alloc();
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void pop_back() noexcept { std::unreachable(); }
+
+  template <class... _Args>
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_emplace_back(_Args&&... __args) {
+    return nullptr;
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_push_back(const _Tp& __value) {
+    return try_emplace_back(__value);
+  }
+
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr pointer try_push_back(_Tp&& __value) {
+    return try_emplace_back(std::move(__value));
+  }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_emplace_back(_Args&&... __args) {
+    return *try_emplace_back(std::forward<_Args>(__args)...);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_push_back(const _Tp& __value) {
+    return *try_emplace_back(__value);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr reference unchecked_push_back(_Tp&& __value) {
+    return *try_emplace_back(std::move(__value));
+  }
+
+  template <class... _Args>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator emplace(const_iterator __position, _Args&&... __args) {
+    emplace_back(std::forward<_Args>(__args)...);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, const _Tp& __value) {
+    return emplace(__position, __value);
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, _Tp&& __value) {
+    return emplace(__position, std::move(__value));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, size_type __count, const _Tp& __value) {
+    if (__count != 0)
+      std::__throw_bad_alloc();
+  }
+
+  template <class _InIter, class _Sent>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator
+  __insert_with_sentinel(const_iterator __position, _InIter __first, _Sent __last) {
+    if (__first != __last)
+      std::__throw_bad_alloc();
+  }
+
+  template <class _InputIterator>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator
+  insert(const_iterator __position, _InputIterator __first, _InputIterator __last) {
+    return __insert_with_sentinel(__position, __first, __last);
+  }
+
+  template <_ContainerCompatibleRange<_Tp> _Range>
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert_range(const_iterator __position, _Range&& __range) {
+    return __insert_with_sentinel(__position, ranges::begin(__range), ranges::end(__range));
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator insert(const_iterator __position, initializer_list<_Tp> __il) {
+    return insert_range(__position, __il.begin(), __il.end());
+  }
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator erase(const_iterator __position) {}
+
+  _LIBCPP_HIDE_FROM_ABI constexpr iterator erase(const_iterator __first, const_iterator __last) {}
+
+  _LIBCPP_HIDE_FROM_ABI constexpr void swap(inplace_vector& __other) noexcept {}
+
+  _LIBCPP_HIDE_FROM_ABI void clear() noexcept {}
+
+  _LIBCPP_HIDE_FROM_ABI friend constexpr bool
+  operator==(const inplace_vector& __lhs, const inplace_vector& __rhs) = default;
+
+  _LIBCPP_HIDE_FROM_ABI friend constexpr __synth_three_way_result<_Tp>
+  operator<=>(const inplace_vector& __lhs, const inplace_vector& __rhs) = default;
+
+  // FIXME: Is this meant to be a hideen friend?
+  _LIBCPP_HIDE_FROM_ABI friend constexpr void
+  swap(inplace_vector& __lhs,
+       inplace_vector& __rhs) noexcept(is_nothrow_swappable_v<_Tp> && is_nothrow_move_constructible_v<_Tp>) {
+    return __lhs.swap(__rhs);
+  }
+};
+
+// [inplace.vector.erasure]
+template <class _Tp, size_t _Np, class _Up>
+_LIBCPP_HIDE_FROM_ABI constexpr typename inplace_vector<_Tp, _Np>::size_type
+erase(inplace_vector<_Tp, _Np>& __container, const _Up& __value) {
+  auto __old_size = __container.size();
+  __container.erase(std::remove(__container.begin(), __container.end(), __value), __container.end());
+  return __old_size - __container.size();
+}
+
+template <class _Tp, size_t _Np, class _Pred>
+_LIBCPP_HIDE_FROM_ABI constexpr typename inplace_vector<_Tp, _Np>::size_type
+erase_if(inplace_vector<_Tp, _Np>& __container, _Pred __pred) {
+  auto __old_size = __container.size();
+  __container.erase(std::remove_if(__container.begin(), __container.end(), __pred), __container.end());
+  return __old_size - __container.size();
+}
+
+_LIBCPP_END_NAMESPACE_STD
+
+#endif // _LIBCPP_STD_VER >= 26
+
+#endif // _LIBCPP_INPLACE_VECTOR
