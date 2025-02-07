@@ -19,26 +19,30 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#if _LIBCPP_STD_VER >= 23
-
-template <class _Alloc>
-[[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr auto __allocate_at_least(_Alloc& __alloc, size_t __n) {
-  return std::allocator_traits<_Alloc>::allocate_at_least(__alloc, __n);
-}
-
-#else
-
 template <class _Pointer>
 struct __allocation_result {
   _Pointer ptr;
   size_t count;
+
+  _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR __allocation_result(_Pointer __ptr, size_t __count)
+      : ptr(__ptr), count(__count) {}
 };
+
+#if _LIBCPP_STD_VER >= 23
+
+template <class _Alloc>
+[[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr auto __allocate_at_least(_Alloc& __alloc, size_t __n) {
+  auto __res = std::allocator_traits<_Alloc>::allocate_at_least(__alloc, __n);
+  return __allocation_result<typename allocator_traits<_Alloc>::pointer>{__res.ptr, __res.count};
+}
+
+#else
 
 template <class _Alloc>
 [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI
 _LIBCPP_CONSTEXPR __allocation_result<typename allocator_traits<_Alloc>::pointer>
 __allocate_at_least(_Alloc& __alloc, size_t __n) {
-  return {__alloc.allocate(__n), __n};
+  return __allocation_result<typename allocator_traits<_Alloc>::pointer>(__alloc.allocate(__n), __n);
 }
 
 #endif // _LIBCPP_STD_VER >= 23
