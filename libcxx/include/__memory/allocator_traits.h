@@ -49,50 +49,38 @@ using __pointer_member _LIBCPP_NODEBUG = typename _Tp::pointer;
 template <class _Tp, class _Alloc>
 using __pointer _LIBCPP_NODEBUG = __detected_or_t<_Tp*, __pointer_member, __libcpp_remove_reference_t<_Alloc> >;
 
-// __const_pointer
-_LIBCPP_ALLOCATOR_TRAITS_HAS_XXX(__has_const_pointer, const_pointer);
-template <class _Tp, class _Ptr, class _Alloc, bool = __has_const_pointer<_Alloc>::value>
-struct __const_pointer {
-  using type _LIBCPP_NODEBUG = typename _Alloc::const_pointer;
+template <class _Ptr, class _Alloc, class _Tp, template <class> class _Alias, class = void>
+struct __rebind_or_alias_pointer {
+#ifdef _LIBCPP_CXX03_LANG
+  using type = typename pointer_traits<_Ptr>::template rebind<_Tp>::other;
+#else
+  using type = typename pointer_traits<_Ptr>::template rebind<_Tp>;
+#endif
 };
+
+template <class _Ptr, class _Alloc, class _Tp, template <class> class _Alias>
+struct __rebind_or_alias_pointer<_Ptr, _Alloc, _Tp, _Alias, __void_t<_Alias<_Alloc> > > {
+  using type = _Alias<_Alloc>;
+};
+
+template <class _Alloc>
+using __const_pointer_member _LIBCPP_NODEBUG = typename _Alloc::const_pointer;
+
 template <class _Tp, class _Ptr, class _Alloc>
-struct __const_pointer<_Tp, _Ptr, _Alloc, false> {
-#ifdef _LIBCPP_CXX03_LANG
-  using type _LIBCPP_NODEBUG = typename pointer_traits<_Ptr>::template rebind<const _Tp>::other;
-#else
-  using type _LIBCPP_NODEBUG = typename pointer_traits<_Ptr>::template rebind<const _Tp>;
-#endif
-};
+using __const_pointer _LIBCPP_NODEBUG = __rebind_or_alias_pointer<_Ptr, _Alloc, const _Tp, __const_pointer_member>;
 
-// __void_pointer
-_LIBCPP_ALLOCATOR_TRAITS_HAS_XXX(__has_void_pointer, void_pointer);
-template <class _Ptr, class _Alloc, bool = __has_void_pointer<_Alloc>::value>
-struct __void_pointer {
-  using type _LIBCPP_NODEBUG = typename _Alloc::void_pointer;
-};
-template <class _Ptr, class _Alloc>
-struct __void_pointer<_Ptr, _Alloc, false> {
-#ifdef _LIBCPP_CXX03_LANG
-  using type _LIBCPP_NODEBUG = typename pointer_traits<_Ptr>::template rebind<void>::other;
-#else
-  using type _LIBCPP_NODEBUG = typename pointer_traits<_Ptr>::template rebind<void>;
-#endif
-};
+template <class _Alloc>
+using __void_pointer_member _LIBCPP_NODEBUG = typename _Alloc::void_pointer;
 
-// __const_void_pointer
-_LIBCPP_ALLOCATOR_TRAITS_HAS_XXX(__has_const_void_pointer, const_void_pointer);
-template <class _Ptr, class _Alloc, bool = __has_const_void_pointer<_Alloc>::value>
-struct __const_void_pointer {
-  using type _LIBCPP_NODEBUG = typename _Alloc::const_void_pointer;
-};
 template <class _Ptr, class _Alloc>
-struct __const_void_pointer<_Ptr, _Alloc, false> {
-#ifdef _LIBCPP_CXX03_LANG
-  using type _LIBCPP_NODEBUG = typename pointer_traits<_Ptr>::template rebind<const void>::other;
-#else
-  using type _LIBCPP_NODEBUG = typename pointer_traits<_Ptr>::template rebind<const void>;
-#endif
-};
+using __void_pointer _LIBCPP_NODEBUG = __rebind_or_alias_pointer<_Ptr, _Alloc, void, __void_pointer_member>;
+
+template <class _Alloc>
+using __const_void_pointer_member _LIBCPP_NODEBUG = typename _Alloc::const_void_pointer;
+
+template <class _Ptr, class _Alloc>
+using __const_void_pointer _LIBCPP_NODEBUG =
+    __rebind_or_alias_pointer<_Ptr, _Alloc, const void, __const_void_pointer_member>;
 
 // __size_type
 template <class _Tp>
