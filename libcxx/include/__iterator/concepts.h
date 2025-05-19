@@ -33,6 +33,7 @@
 #include <__memory/pointer_traits.h>
 #include <__type_traits/add_pointer.h>
 #include <__type_traits/common_reference.h>
+#include <__type_traits/disjunction.h>
 #include <__type_traits/integral_constant.h>
 #include <__type_traits/invoke.h>
 #include <__type_traits/is_pointer.h>
@@ -150,6 +151,42 @@ concept sized_sentinel_for =
       { __s - __i } -> same_as<iter_difference_t<_Ip>>;
       { __i - __s } -> same_as<iter_difference_t<_Ip>>;
     };
+
+template <class _Iter>
+struct __iter_traits_cache {
+  using type _LIBCPP_NODEBUG =
+      _If<__is_primary_template<iterator_traits<_Iter> >::value, _Iter, iterator_traits<_Iter> >;
+};
+template <class _Iter>
+using _ITER_TRAITS _LIBCPP_NODEBUG = typename __iter_traits_cache<_Iter>::type;
+
+struct __iter_concept_concept_test {
+  template <class _Iter>
+  using _Apply _LIBCPP_NODEBUG = typename _ITER_TRAITS<_Iter>::iterator_concept;
+};
+struct __iter_concept_category_test {
+  template <class _Iter>
+  using _Apply _LIBCPP_NODEBUG = typename _ITER_TRAITS<_Iter>::iterator_category;
+};
+struct __iter_concept_random_fallback {
+  template <class _Iter>
+  using _Apply _LIBCPP_NODEBUG =
+      __enable_if_t<__is_primary_template<iterator_traits<_Iter> >::value, random_access_iterator_tag>;
+};
+
+template <class _Iter, class _Tester>
+struct __test_iter_concept : _IsValidExpansion<_Tester::template _Apply, _Iter>, _Tester {};
+
+template <class _Iter>
+struct __iter_concept_cache {
+  using type _LIBCPP_NODEBUG =
+      _Or<__test_iter_concept<_Iter, __iter_concept_concept_test>,
+          __test_iter_concept<_Iter, __iter_concept_category_test>,
+          __test_iter_concept<_Iter, __iter_concept_random_fallback> >;
+};
+
+template <class _Iter>
+using _ITER_CONCEPT _LIBCPP_NODEBUG = typename __iter_concept_cache<_Iter>::type::template _Apply<_Iter>;
 
 // [iterator.concept.input]
 template <class _Ip>
