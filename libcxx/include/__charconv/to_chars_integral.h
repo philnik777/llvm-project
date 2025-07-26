@@ -11,6 +11,7 @@
 #define _LIBCPP___CHARCONV_TO_CHARS_INTEGRAL_H
 
 #include <__algorithm/copy_n.h>
+#include <__algorithm/simd_utils.h>
 #include <__assert>
 #include <__bit/countl.h>
 #include <__charconv/tables.h>
@@ -27,6 +28,7 @@
 #include <__type_traits/make_32_64_or_128_bit.h>
 #include <__type_traits/make_unsigned.h>
 #include <__utility/unreachable.h>
+#include <climits>
 #include <cstdint>
 #include <limits>
 
@@ -118,6 +120,30 @@ struct _LIBCPP_HIDDEN __integral<2> {
     return numeric_limits<_Tp>::digits - std::__countl_zero(__value | 1);
   }
 
+  _LIBCPP_HIDE_FROM_ABI static char* to_chars_base_2_impl(char* out, uint32_t value) {
+    constexpr size_t __bit_count = CHAR_BIT * sizeof(uint32_t);
+
+    using vec     = __simd_vector<uint32_t, __bit_count>;
+    using bvec    = __simd_vector<bool, __bit_count>;
+    using charvec = __simd_vector<char, __bit_count>;
+
+    vec values = value;
+    charvec v      = __builtin_convertvector((values /
+             []<size_t... _Indices>(index_sequence<_Indices...>) {
+               return vec{(static_cast<uint32_t>(1) << (__bit_count - _Indices - 1))...};
+             }(make_index_sequence<__bit_count>())) %
+            2, charvec) + '0';
+    uint32_t is_not_zero   = (__builtin_bit_cast(uint32_t, __builtin_convertvector(v != '0', bvec)) | 1);
+    size_t first_nonzero   = __builtin_clzg(is_not_zero);
+    uint32_t compress_mask = ((uint32_t)-1) >> first_nonzero;
+
+    charvec result = __builtin_ia32_compressqi256_mask(v, {}, compress_mask);
+
+    uint32_t save_mask = ((uint32_t)-1) << first_nonzero;
+    __builtin_ia32_storedquqi256_mask((charvec*)out, result, save_mask);
+    return out + __builtin_popcountg(save_mask);
+  }
+
   template <typename _Tp>
   _LIBCPP_CONSTEXPR_SINCE_CXX23 _LIBCPP_HIDE_FROM_ABI static __to_chars_result
   __to_chars(char* __first, char* __last, _Tp __value) {
@@ -126,7 +152,13 @@ struct _LIBCPP_HIDDEN __integral<2> {
     if (__n > __cap)
       return {__last, errc::value_too_large};
 
-    __last                   = __first + __n;
+    __last = __first + __n;
+
+    if constexpr (__is_same(_Tp, uint32_t)) {
+      to_chars_base_2_impl(__first, __value);
+      return {__last, errc()};
+    }
+
     char* __p                = __last;
     const unsigned __divisor = 16;
     while (__value > __divisor) {

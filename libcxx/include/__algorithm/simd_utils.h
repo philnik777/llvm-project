@@ -120,6 +120,24 @@ template <class _Tp, size_t _Np>
 }
 
 template <class _Tp, size_t _Np>
+[[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI __simd_vector<_Tp, _Np>
+__compress(__simd_vector<bool, _Np> __mask,
+           __simd_vector<_Tp, _Np> __to_compress,
+           __type_identity_t<__simd_vector<_Tp, _Np>> __fallback = {}) {
+  if constexpr (sizeof(_Tp) == 1) {
+    if constexpr (_Np == 16) {
+      return __builtin_ia32_compressqi128_mask(__to_compress, __fallback, __builtin_bit_cast(uint16_t, __mask));
+    } else if constexpr (_Np == 32) {
+      return __builtin_ia32_compressqi256_mask(__to_compress, __fallback, __builtin_bit_cast(uint32_t, __mask));
+    } else if constexpr (_Np == 64) {
+      return __builtin_ia32_compressqi512_mask(__to_compress, __fallback, __builtin_bit_cast(uint64_t, __mask));
+    } else {
+      static_assert(false, "unexpected vector size");
+    }
+  }
+}
+
+template <class _Tp, size_t _Np>
 [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI size_t __find_first_set(__simd_vector<_Tp, _Np> __vec) noexcept {
   using __mask_vec = __simd_vector<bool, _Np>;
 
