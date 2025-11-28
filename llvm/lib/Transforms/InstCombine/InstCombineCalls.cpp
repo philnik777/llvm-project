@@ -3663,8 +3663,7 @@ Instruction *InstCombinerImpl::visitCallInst(CallInst &CI) {
     // call void @llvm.assume(i1 %A)
     // into
     // call void @llvm.assume(i1 true) [ "nonnull"(i32* %PTR) ]
-    if (EnableKnowledgeRetention &&
-        match(IIOperand,
+    if (match(IIOperand,
               m_SpecificICmp(ICmpInst::ICMP_NE, m_Value(A), m_Zero())) &&
         A->getType()->isPointerTy()) {
       if (auto *Replacement = buildAssumeFromKnowledge(
