@@ -67,6 +67,7 @@ _LIBCPP_PUSH_MACROS
 #include <__undef_macros>
 
 _LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_EXPLICIT_ABI_ANNOTATIONS
 
 struct NoTimeout {};
 
@@ -525,6 +526,7 @@ __libcpp_atomic_monitor(__cxx_atomic_contention_t const volatile* __location) no
 
 _LIBCPP_DIAGNOSTIC_POP
 
+_LIBCPP_END_EXPLICIT_ABI_ANNOTATIONS
 _LIBCPP_END_NAMESPACE_STD
 
 _LIBCPP_POP_MACROS
