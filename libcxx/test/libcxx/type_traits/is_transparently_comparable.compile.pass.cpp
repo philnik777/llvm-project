@@ -12,19 +12,21 @@
 #include <string>
 #include <__type_traits/desugars_to.h>
 
-static_assert(std::__is_transparently_comparable_v<std::less<std::string>, std::string, const char*>);
-static_assert(std::__is_transparently_comparable_v<std::less<std::string>, std::string, char*>);
-static_assert(std::__is_transparently_comparable_v<std::less<std::string>, std::string, char[5]>);
+static_assert(std::__is_transparently_comparable_v<std::less<std::string>, std::string, const char*>, "");
+static_assert(std::__is_transparently_comparable_v<std::less<std::string>, std::string, char*>, "");
+static_assert(std::__is_transparently_comparable_v<std::less<std::string>, std::string, char[5]>, "");
 
-static_assert(std::__is_transparently_comparable_v<std::less<std::string>, const char*, std::string>);
-static_assert(std::__is_transparently_comparable_v<std::less<std::string>, char*, std::string>);
-static_assert(std::__is_transparently_comparable_v<std::less<std::string>, char[5], std::string>);
+static_assert(std::__is_transparently_comparable_v<std::less<std::string>, const char*, std::string>, "");
+static_assert(std::__is_transparently_comparable_v<std::less<std::string>, char*, std::string>, "");
+static_assert(std::__is_transparently_comparable_v<std::less<std::string>, char[5], std::string>, "");
 
 static_assert(
-    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string>>, std::string, char[5]>);
+    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string> >, std::string, char[5]>, "");
 static_assert(
-    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string>>, char[5], std::string>);
+    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string> >, char[5], std::string>, "");
 static_assert(
-    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string>>, std::string, char const*>);
+    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string> >, std::string, char const*>,
+    "");
 static_assert(
-    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string>>, char const*, std::string>);
+    !std::__is_transparently_comparable_v<std::less<std::reference_wrapper<std::string> >, char const*, std::string>,
+    "");
