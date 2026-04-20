@@ -123,20 +123,14 @@ size_t wcsrtombs(char* restrict dst, const wchar_t** restrict src, size_t len,
 #    include <stddef.h>      // provide size_t
 
 // Determine whether we have const-correct overloads for wcschr and friends.
-#    if defined(_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_)
+#    if defined(_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_) || _LIBCPP_GLIBC_PREREQ(2, 10) || defined(_LIBCPP_MSVCRT)
 #      define _LIBCPP_WCHAR_H_HAS_CONST_OVERLOADS 1
-#    elif defined(__GLIBC_PREREQ)
-#      if __GLIBC_PREREQ(2, 10)
-#        define _LIBCPP_WCHAR_H_HAS_CONST_OVERLOADS 1
-#      endif
-#    elif defined(_LIBCPP_MSVCRT)
-#      if defined(_CRT_CONST_CORRECT_OVERLOADS)
-#        define _LIBCPP_WCHAR_H_HAS_CONST_OVERLOADS 1
-#      endif
+#    else
+#      define _LIBCPP_WCHAR_H_HAS_CONST_OVERLOADS 0
 #    endif
 
 #    if _LIBCPP_HAS_WIDE_CHARACTERS
-#      if defined(__cplusplus) && !defined(_LIBCPP_WCHAR_H_HAS_CONST_OVERLOADS) && defined(_LIBCPP_PREFERRED_OVERLOAD)
+#      if defined(__cplusplus) && !_LIBCPP_WCHAR_H_HAS_CONST_OVERLOADS && defined(_LIBCPP_PREFERRED_OVERLOAD)
 extern "C++" {
 inline _LIBCPP_HIDE_FROM_ABI wchar_t* __libcpp_wcschr(const wchar_t* __s, wchar_t __c) {
   return (wchar_t*)wcschr(__s, __c);
