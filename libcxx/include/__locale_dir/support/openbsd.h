@@ -32,6 +32,20 @@
 _LIBCPP_BEGIN_NAMESPACE_STD
 namespace __locale {
 
+struct __locale_guard {
+  _LIBCPP_HIDE_FROM_ABI __locale_guard(locale_t& __loc) : __old_loc_(::uselocale(__loc)) {}
+
+  _LIBCPP_HIDE_FROM_ABI ~__locale_guard() {
+    if (__old_loc_)
+      ::uselocale(__old_loc_);
+  }
+
+  locale_t __old_loc_;
+
+  __locale_guard(__locale_guard const&)            = delete;
+  __locale_guard& operator=(__locale_guard const&) = delete;
+};
+
 //
 // Locale management
 //
@@ -58,7 +72,10 @@ inline _LIBCPP_HIDE_FROM_ABI char* __setlocale(int __category, char const* __loc
   return ::setlocale(__category, __locale);
 }
 
-inline _LIBCPP_HIDE_FROM_ABI __lconv_t* __localeconv(__locale_t& __loc) { return ::localeconv_l(__loc); }
+inline _LIBCPP_HIDE_FROM_ABI __lconv_t* __localeconv(__locale_t& __loc) {
+  __locale_guard __current(__loc);
+  return ::localeconv(__loc);
+}
 #endif // _LIBCPP_BUILDING_LIBRARY
 
 //
@@ -138,7 +155,10 @@ inline _LIBCPP_HIDE_FROM_ABI _LIBCPP_ATTRIBUTE_FORMAT(__strftime__, 3, 0) size_t
 //
 // Other functions
 //
-inline _LIBCPP_HIDE_FROM_ABI decltype(MB_CUR_MAX) __mb_len_max(__locale_t __loc) { return MB_CUR_MAX_L(__loc); }
+inline _LIBCPP_HIDE_FROM_ABI decltype(MB_CUR_MAX) __mb_len_max(__locale_t __loc) {
+  __locale_guard __current(__loc);
+  return MB_CUR_MAX;
+}
 
 #  if _LIBCPP_HAS_WIDE_CHARACTERS
 inline _LIBCPP_HIDE_FROM_ABI wint_t __btowc(int __c, __locale_t __loc) { return ::btowc_l(__c, __loc); }
