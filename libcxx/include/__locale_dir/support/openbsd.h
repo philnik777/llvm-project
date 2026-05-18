@@ -161,32 +161,39 @@ inline int __wctob(wint_t __c, __locale_t __loc) {
 
 inline size_t
 __wcsnrtombs(char* __dest, const wchar_t** __src, size_t __nwc, size_t __len, mbstate_t* __ps, __locale_t __loc) {
-  return ::wcsnrtombs_l(__dest, __src, __nwc, __len, __ps, __loc); // wcsnrtombs is a POSIX extension
+  __locale_guard __current(__loc);
+  return wcsnrtombs(__dest, __src, __nwc, __len, __ps); // wcsnrtombs is a POSIX extension
 }
 
 inline size_t __wcrtomb(char* __s, wchar_t __wc, mbstate_t* __ps, __locale_t __loc) {
-  return ::wcrtomb_l(__s, __wc, __ps, __loc);
+  __locale_guard __current(__loc);
+  return wcrtomb(__s, __wc, __ps);
 }
 
 inline size_t
 __mbsnrtowcs(wchar_t* __dest, const char** __src, size_t __nms, size_t __len, mbstate_t* __ps, __locale_t __loc) {
-  return ::mbsnrtowcs_l(__dest, __src, __nms, __len, __ps, __loc); // mbsnrtowcs is a POSIX extension
+  __locale_guard __current(__loc);
+  return mbsnrtowcs(__dest, __src, __nms, __len, __ps); // mbsnrtowcs is a POSIX extension
 }
 
 inline size_t __mbrtowc(wchar_t* __pwc, const char* __s, size_t __n, mbstate_t* __ps, __locale_t __loc) {
-  return ::mbrtowc_l(__pwc, __s, __n, __ps, __loc);
+  __locale_guard __current(__loc);
+  return mbrtowc(__pwc, __s, __n, __ps);
 }
 
 inline int __mbtowc(wchar_t* __pwc, const char* __pmb, size_t __max, __locale_t __loc) {
-  return ::mbtowc_l(__pwc, __pmb, __max, __loc);
+  __locale_guard __current(__loc);
+  return mbtowc(__pwc, __pmb, __max);
 }
 
 inline size_t __mbrlen(const char* __s, size_t __n, mbstate_t* __ps, __locale_t __loc) {
-  return ::mbrlen_l(__s, __n, __ps, __loc);
+  __locale_guard __current(__loc);
+  return mbrlen(__s, __n, __ps);
 }
 
 inline size_t __mbsrtowcs(wchar_t* __dest, const char** __src, size_t __len, mbstate_t* __ps, __locale_t __loc) {
-  return ::mbsrtowcs_l(__dest, __src, __len, __ps, __loc);
+  __locale_guard __current(__loc);
+  return mbsrtowcs(__dest, __src, __len, __ps);
 }
 #  endif // _LIBCPP_HAS_WIDE_CHARACTERS
 #endif   // _LIBCPP_BUILDING_LIBRARY
@@ -203,13 +210,15 @@ _LIBCPP_GCC_DIAGNOSTIC_IGNORED("-Wformat-nonliteral") // GCC doesn't support [[g
 template <class... _Args>
 _LIBCPP_VARIADIC_ATTRIBUTE_FORMAT(__printf__, 4, 5)
 int __snprintf(char* __s, size_t __n, __locale_t __loc, const char* __format, _Args&&... __args) {
-  return ::snprintf_l(__s, __n, __loc, __format, std::forward<_Args>(__args)...);
+  __locale_guard __current(__loc);
+  return ::snprintf(__s, __n, __format, std::forward<_Args>(__args)...);
 }
 
 template <class... _Args>
 _LIBCPP_VARIADIC_ATTRIBUTE_FORMAT(__printf__, 3, 4)
 int __asprintf(char** __s, __locale_t __loc, const char* __format, _Args&&... __args) {
-  return ::asprintf_l(__s, __loc, __format, std::forward<_Args>(__args)...); // non-standard
+  __locale_guard __current(__loc);
+  return ::asprintf(__s, __loc, __format, std::forward<_Args>(__args)...); // non-standard
 }
 _LIBCPP_DIAGNOSTIC_POP
 #undef _LIBCPP_VARIADIC_ATTRIBUTE_FORMAT
