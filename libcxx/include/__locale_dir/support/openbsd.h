@@ -218,7 +218,7 @@ template <class... _Args>
 _LIBCPP_VARIADIC_ATTRIBUTE_FORMAT(__printf__, 3, 4)
 int __asprintf(char** __s, __locale_t __loc, const char* __format, _Args&&... __args) {
   __locale_guard __current(__loc);
-  return ::asprintf(__s, __loc, __format, std::forward<_Args>(__args)...); // non-standard
+  return ::asprintf(__s, __format, std::forward<_Args>(__args)...); // non-standard
 }
 _LIBCPP_DIAGNOSTIC_POP
 #undef _LIBCPP_VARIADIC_ATTRIBUTE_FORMAT
