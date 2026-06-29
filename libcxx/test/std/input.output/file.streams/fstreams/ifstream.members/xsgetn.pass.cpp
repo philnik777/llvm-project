@@ -68,6 +68,25 @@ int main(int, char**) {
     test_buffer.resize(24);
     assert(std::string(test_buffer.data(), 24) == "to test buffer behaviour");
   }
+  { // Ensure that read fails gracefully with an unopened ifstream
+    // See https://llvm.org/PR168628
+    char buf[10];
+    std::ifstream ifs;
+
+    assert(!ifs.is_open());
+    assert(!ifs.bad());
+    assert(!ifs.fail());
+    assert(!ifs.eof());
+    assert(ifs.good());
+
+    ifs.read(buf, sizeof(buf));
+
+    assert(!ifs.is_open());
+    assert(!ifs.bad());
+    assert(ifs.fail());
+    assert(ifs.eof());
+    assert(!ifs.good());
+  }
 
   return 0;
 }
