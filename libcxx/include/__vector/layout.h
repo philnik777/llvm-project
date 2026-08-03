@@ -114,12 +114,13 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 template <class _Tp, class _Allocator>
 class __vector_layout {
 public:
-  using value_type _LIBCPP_NODEBUG     = _Tp;
-  using allocator_type _LIBCPP_NODEBUG = _Allocator;
-  using __alloc_traits _LIBCPP_NODEBUG = allocator_traits<allocator_type>;
-  using size_type _LIBCPP_NODEBUG      = typename __alloc_traits::size_type;
-  using pointer _LIBCPP_NODEBUG        = typename __alloc_traits::pointer;
-  using const_pointer _LIBCPP_NODEBUG  = typename __alloc_traits::const_pointer;
+  using value_type _LIBCPP_NODEBUG      = _Tp;
+  using allocator_type _LIBCPP_NODEBUG  = _Allocator;
+  using __alloc_traits _LIBCPP_NODEBUG  = allocator_traits<allocator_type>;
+  using size_type _LIBCPP_NODEBUG       = typename __alloc_traits::size_type;
+  using difference_type _LIBCPP_NODEBUG = typename __alloc_traits::difference_type;
+  using pointer _LIBCPP_NODEBUG         = typename __alloc_traits::pointer;
+  using const_pointer _LIBCPP_NODEBUG   = typename __alloc_traits::const_pointer;
 #ifdef _LIBCPP_ABI_VECTOR_LAYOUT_SIZE_BASED
   using _SplitBuffer _LIBCPP_NODEBUG = __split_buffer<_Tp, _Allocator, __split_buffer_size_layout>;
   using __bound_type _LIBCPP_NODEBUG = size_type;
@@ -205,6 +206,8 @@ public:
   [[__nodiscard__]] _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI pointer __capacity_ptr() _NOEXCEPT;
   [[__nodiscard__]] _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI const_pointer __capacity_ptr() const _NOEXCEPT;
   [[__nodiscard__]] _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI bool __invariants() const _NOEXCEPT;
+
+  _LIBCPP_CONSTEXPR_SINCE_CXX20 void __offset_size(difference_type __offset) _NOEXCEPT;
 
 private:
   pointer __begin_ = nullptr;
@@ -349,6 +352,11 @@ _LIBCPP_CONSTEXPR_SINCE_CXX20 bool __vector_layout<_Tp, _Alloc>::__invariants() 
     return __size_ == 0 && __capacity_ == 0;
   return __size_ <= __capacity_;
 }
+
+template <class _Tp, class _Alloc>
+_LIBCPP_CONSTEXPR_SINCE_CXX20 void __vector_layout<_Tp, _Alloc>::__offset_size(difference_type __offset) _NOEXCEPT {
+  __size_ += __offset;
+}
 #else  // !defined(_LIBCPP_ABI_VECTOR_LAYOUT_SIZE_BASED)
 template <class _Tp, class _Alloc>
 _LIBCPP_CONSTEXPR_SINCE_CXX20 __vector_layout<_Tp, _Alloc>::__vector_layout(__vector_layout&& __other)
@@ -470,6 +478,12 @@ _LIBCPP_CONSTEXPR_SINCE_CXX20 bool __vector_layout<_Tp, _Alloc>::__invariants() 
     return false;
   return __end_ <= __capacity_;
 }
+
+template <class _Tp, class _Alloc>
+_LIBCPP_CONSTEXPR_SINCE_CXX20 void __vector_layout<_Tp, _Alloc>::__offset_size(difference_type __offset) _NOEXCEPT {
+  __end_ += __offset;
+}
+
 #endif // _LIBCPP_ABI_VECTOR_LAYOUT_SIZE_BASED
 
 _LIBCPP_END_NAMESPACE_STD
