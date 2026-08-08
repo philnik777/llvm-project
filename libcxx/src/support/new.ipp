@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <__memory/allocate_at_least.h>
 #include <cstddef>
 #include <cstdlib>
 #include <new>
@@ -23,6 +24,12 @@ void __throw_bad_alloc_shim();
 #  define _LIBCPP_ASSERT_SHIM
 #endif
 
+enum class on_failure {
+  return_null,
+  throw_bad_alloc,
+};
+
+template <on_failure failure_mode>
 static void* operator_new_impl(std::size_t size) {
   if (size == 0)
     size = 1;
@@ -36,14 +43,13 @@ static void* operator_new_impl(std::size_t size) {
     else
       break;
   }
+  if (failure_mode == on_failure::throw_bad_alloc && !p)
+    __throw_bad_alloc_shim();
   return p;
 }
 
 OVERRIDABLE_FUNCTION void* operator new(std::size_t size) _THROW_BAD_ALLOC {
-  void* p = operator_new_impl(size);
-  if (p == nullptr)
-    __throw_bad_alloc_shim();
-  return p;
+  return operator_new_impl<on_failure::throw_bad_alloc>(size);
 }
 
 [[gnu::weak]] void* operator new(size_t size, const std::nothrow_t&) noexcept {
@@ -59,7 +65,7 @@ OVERRIDABLE_FUNCTION void* operator new(std::size_t size) _THROW_BAD_ALLOC {
       "`operator new(size_t, nothrow_t)` as well.");
 #  endif
 
-  return operator_new_impl(size);
+  return operator_new_impl<on_failure::return_null>(size);
 #else
   void* p = nullptr;
   try {
@@ -85,7 +91,7 @@ OVERRIDABLE_FUNCTION void* operator new[](size_t size) _THROW_BAD_ALLOC { return
       "`operator new[](size_t, nothrow_t)` as well.");
 #  endif
 
-  return operator_new_impl(size);
+  return operator_new_impl<on_failure::return_null>(size);
 #else
   void* p = nullptr;
   try {
@@ -110,6 +116,7 @@ OVERRIDABLE_FUNCTION void* operator new[](size_t size) _THROW_BAD_ALLOC { return
 
 #if _LIBCPP_HAS_LIBRARY_ALIGNED_ALLOCATION
 
+template <on_failure failure_mode>
 static void* operator_new_aligned_impl(std::size_t size, std::align_val_t alignment) {
   if (size == 0)
     size = 1;
@@ -127,14 +134,13 @@ static void* operator_new_aligned_impl(std::size_t size, std::align_val_t alignm
     else
       break;
   }
+  if (failure_mode == on_failure::throw_bad_alloc && !p)
+    __throw_bad_alloc_shim();
   return p;
 }
 
 OVERRIDABLE_FUNCTION void* operator new(std::size_t size, std::align_val_t alignment) _THROW_BAD_ALLOC {
-  void* p = operator_new_aligned_impl(size, alignment);
-  if (p == nullptr)
-    __throw_bad_alloc_shim();
-  return p;
+  return operator_new_aligned_impl<on_failure::throw_bad_alloc>(size, alignment);
 }
 
 [[gnu::weak]] void* operator new(size_t size, std::align_val_t alignment, const std::nothrow_t&) noexcept {
@@ -150,7 +156,7 @@ OVERRIDABLE_FUNCTION void* operator new(std::size_t size, std::align_val_t align
       "`operator new(size_t, align_val_t, nothrow_t)` as well.");
 #    endif
 
-  return operator_new_aligned_impl(size, alignment);
+  return operator_new_aligned_impl<on_failure::return_null>(size, alignment);
 #  else
   void* p = nullptr;
   try {
@@ -178,7 +184,7 @@ OVERRIDABLE_FUNCTION void* operator new[](size_t size, std::align_val_t alignmen
       "override `operator new[](size_t, align_val_t, nothrow_t)` as well.");
 #    endif
 
-  return operator_new_aligned_impl(size, alignment);
+  return operator_new_aligned_impl<on_failure::return_null>(size, alignment);
 #  else
   void* p = nullptr;
   try {
@@ -211,3 +217,80 @@ OVERRIDABLE_FUNCTION void* operator new[](size_t size, std::align_val_t alignmen
   ::operator delete[](ptr, alignment);
 }
 #endif // _LIBCPP_HAS_LIBRARY_ALIGNED_ALLOCATION
+
+#ifdef __APPLE__
+#  include <malloc/malloc.h>
+#elifdef __FreeBSD__
+#  include <malloc_np.h>
+#endif
+
+// FIXME: Clang should really accept functions in [[gnu::ifunc]] (or possibly [[clang::ifunc]])
+using std::__allocation_result;
+
+using new_t         = void*(std::size_t);
+using new_aligned_t = void*(std::size_t, std::align_val_t);
+
+using new_at_least_t         = __allocation_result<void*>(std::size_t);
+using new_at_least_aligned_t = __allocation_result<void*>(std::size_t, std::align_val_t);
+
+[[maybe_unused]] static new_at_least_t* new_at_least_resolver() {
+  if (std::__is_function_overridden < new_t, operator new>()) {
+    return [](std::size_t size) -> __allocation_result<void*> { return {::operator new(size), size}; };
+  } else {
+    return [](std::size_t size) -> __allocation_result<void*> {
+#ifdef __APPLE__
+      auto good_size = ::malloc_good_size(size);
+      return {operator_new_impl<on_failure::throw_bad_alloc>(good_size), good_size};
+#elifdef __FreeBSD__
+      auto good_size = ::nallocx(size, 0);
+      return {operator_new_impl<on_failure::throw_bad_alloc>(good_size), good_size};
+#else
+      // Other platforms should specialize this for their system allocator
+      return {operator_new_impl<on_failure::throw_bad_alloc>(size), size};
+#endif
+    };
+  }
+}
+
+[[maybe_unused]] static new_at_least_aligned_t* new_at_least_aligned_resolver() {
+  if (std::__is_function_overridden < new_aligned_t, operator new>()) {
+    return [](std::size_t size, std::align_val_t align) -> __allocation_result<void*> {
+      return {::operator new(size, align), size};
+    };
+  } else {
+    return [](std::size_t size, std::align_val_t align) -> __allocation_result<void*> {
+#ifdef __APPLE__
+      auto good_size = malloc_good_size(size);
+      return {operator_new_aligned_impl<on_failure::throw_bad_alloc>(good_size, align), good_size};
+#elifdef __FreeBSD__
+      auto good_size = ::nallocx(size, MALLOCX_ALIGN(static_cast<size_t>(align)));
+      return {operator_new_aligned_impl<on_failure::throw_bad_alloc>(good_size), good_size};
+#else
+      return {operator_new_aligned_impl<on_failure::throw_bad_alloc>(size, align), size};
+#endif
+    };
+  }
+}
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_EXPLICIT_ABI_ANNOTATIONS
+
+#if __has_cpp_attribute(gnu::ifunc)
+
+[[gnu::ifunc("_ZL21new_at_least_resolverv")]] new_at_least_t __new_at_least;
+[[gnu::ifunc("_ZL29new_at_least_aligned_resolverv")]] new_at_least_aligned_t __new_at_least;
+
+#else
+
+std::__allocation_result<void*> __new_at_least(std::size_t size) { return {::operator new(size), size}; }
+
+#  if _LIBCPP_HAS_LIBRARY_ALIGNED_ALLOCATION
+std::__allocation_result<void*> __new_at_least(std::size_t size, std::align_val_t align) {
+  return {::operator new(size, align), size};
+}
+#  endif
+
+#endif
+
+_LIBCPP_END_EXPLICIT_ABI_ANNOTATIONS
+_LIBCPP_END_NAMESPACE_STD

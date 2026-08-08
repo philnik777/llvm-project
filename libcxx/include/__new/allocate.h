@@ -13,6 +13,7 @@
 #include <__cstddef/max_align_t.h>
 #include <__cstddef/size_t.h>
 #include <__new/align_val_t.h>
+#include <__new/new_at_least.h>
 #include <__type_traits/type_identity.h>
 #include <__utility/element_count.h>
 
@@ -40,6 +41,24 @@ __libcpp_allocate(__element_count __n, [[__maybe_unused__]] size_t __align = _LI
 #endif
 
   return static_cast<_Tp*>(__builtin_operator_new(__size));
+}
+
+template <class _Tp>
+_LIBCPP_NO_CFI __allocation_result<_Tp*>
+__libcpp_allocate_at_least(__element_count __n, [[__maybe_unused__]] size_t __align = _LIBCPP_ALIGNOF(_Tp)) {
+#if _LIBCPP_AVAILABILITY_HAS_NEW_AT_LEAST
+  size_t __size = static_cast<size_t>(__n) * sizeof(_Tp);
+#  if _LIBCPP_HAS_ALIGNED_ALLOCATION
+  if (__is_overaligned_for_new(__align)) {
+    auto [__ptr, __count] = std::__new_at_least(__size, static_cast<align_val_t>(__align));
+    return {static_cast<_Tp*>(__ptr), __count / sizeof(_Tp)};
+  }
+#  endif
+  auto [__ptr, __count] = std::__new_at_least(__size);
+  return __allocation_result<_Tp*>(static_cast<_Tp*>(__ptr), __count / sizeof(_Tp));
+#else
+  return __allocation_result<_Tp*>(std::__libcpp_allocate<_Tp>(__n, __align), __n);
+#endif
 }
 
 #if defined(__cpp_sized_deallocation) && __cpp_sized_deallocation >= 201309L

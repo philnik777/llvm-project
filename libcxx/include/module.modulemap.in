@@ -1701,7 +1701,7 @@ module std {
     module noexcept_move_assign_container     { header "__memory/noexcept_move_assign_container.h" }
     module out_ptr                            { header "__memory/out_ptr.h" }
     module pointer_traits                     { header "__memory/pointer_traits.h" }
-    module pstl                               { header "__memory/pstl.h" }    
+    module pstl                               { header "__memory/pstl.h" }
     module ranges_construct_at                { header "__memory/ranges_construct_at.h" }
     module ranges_destroy                     { header "__memory/ranges_destroy.h" }
     module ranges_uninitialized_algorithms {
@@ -1787,6 +1787,7 @@ module std {
     }
     module interference_size    { header "__new/interference_size.h" }
     module launder              { header "__new/launder.h" }
+    module new_at_least         { header "__new/new_at_least.h" }
     module new_handler          { header "__new/new_handler.h" }
     module nothrow_t            { header "__new/nothrow_t.h" }
     module placement_new_delete { header "__new/placement_new_delete.h" }
