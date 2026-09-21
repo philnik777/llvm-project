@@ -98,7 +98,45 @@ void PrettyDeclStackTraceEntry::print(raw_ostream &OS) const {
 
 // Defined here so that it can be inlined into its direct callers.
 bool Decl::isOutOfLine() const {
-  return !getLexicalDeclContext()->Equals(getDeclContext());
+  if (!getLexicalDeclContext()->Equals(getDeclContext()))
+    return true;
+
+  if (const VarDecl *VD = dyn_cast<VarDecl>(this)) {
+    if (!VD->isStaticDataMember())
+      return false;
+
+    // If this static data member was instantiated from a static data member of
+    // a class template, check whether that static data member was defined
+    // out-of-line.
+    if (const VarDecl *InstantiatedVD =
+            VD->getInstantiatedFromStaticDataMember())
+      return InstantiatedVD->isOutOfLine();
+
+    return false;
+  }
+  if (const FunctionDecl *FD = dyn_cast<FunctionDecl>(this)) {
+    // If this function was instantiated from a member function of a
+    // class template, check whether that member function was defined
+    // out-of-line.
+    if (const FunctionDecl *InstantiatedFD =
+            FD->getInstantiatedFromMemberFunction()) {
+      const FunctionDecl *Definition;
+      if (InstantiatedFD->hasBody(Definition))
+        return Definition->isOutOfLine();
+    }
+
+    // If this function was instantiated from a function template,
+    // check whether that function template was defined out-of-line.
+    if (FunctionTemplateDecl *FunTmpl = FD->getPrimaryTemplate()) {
+      const FunctionDecl *Definition;
+      if (FunTmpl->getTemplatedDecl()->hasBody(Definition))
+        return Definition->isOutOfLine();
+    }
+
+    return false;
+  }
+
+  return false;
 }
 
 TranslationUnitDecl::TranslationUnitDecl(ASTContext &ctx)
@@ -2438,22 +2476,6 @@ bool VarDecl::hasInitWithSideEffects() const {
   return ES->HasSideEffects;
 }
 
-bool VarDecl::isOutOfLine() const {
-  if (Decl::isOutOfLine())
-    return true;
-
-  if (!isStaticDataMember())
-    return false;
-
-  // If this static data member was instantiated from a static data member of
-  // a class template, check whether that static data member was defined
-  // out-of-line.
-  if (VarDecl *VD = getInstantiatedFromStaticDataMember())
-    return VD->isOutOfLine();
-
-  return false;
-}
-
 void VarDecl::setInit(Expr *I) {
   if (auto *Eval = dyn_cast_if_present<EvaluatedStmt *>(Init)) {
     Eval->~EvaluatedStmt();
@@ -4580,29 +4602,6 @@ SourceLocation FunctionDecl::getPointOfInstantiation() const {
     return MSInfo->getPointOfInstantiation();
 
   return SourceLocation();
-}
-
-bool FunctionDecl::isOutOfLine() const {
-  if (Decl::isOutOfLine())
-    return true;
-
-  // If this function was instantiated from a member function of a
-  // class template, check whether that member function was defined out-of-line.
-  if (FunctionDecl *FD = getInstantiatedFromMemberFunction()) {
-    const FunctionDecl *Definition;
-    if (FD->hasBody(Definition))
-      return Definition->isOutOfLine();
-  }
-
-  // If this function was instantiated from a function template,
-  // check whether that function template was defined out-of-line.
-  if (FunctionTemplateDecl *FunTmpl = getPrimaryTemplate()) {
-    const FunctionDecl *Definition;
-    if (FunTmpl->getTemplatedDecl()->hasBody(Definition))
-      return Definition->isOutOfLine();
-  }
-
-  return false;
 }
 
 SourceRange FunctionDecl::getSourceRange() const {

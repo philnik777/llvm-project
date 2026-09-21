@@ -943,7 +943,7 @@ public:
 
   /// Determine whether this declaration is declared out of line (outside its
   /// semantic context).
-  virtual bool isOutOfLine() const;
+  bool isOutOfLine() const;
 
   /// setDeclContext - Set both the semantic and lexical DeclContext
   /// to DC.
