@@ -1105,6 +1105,20 @@ DeclContext *Decl::castToDeclContext(const Decl *D) {
   }
 }
 
+Stmt *Decl::getBody() const {
+  if (const auto *FD = dyn_cast<FunctionDecl>(this))
+    return FD->getBody();
+  if (const auto *BD = dyn_cast<BlockDecl>(this))
+    return BD->getBody();
+  if (const auto *OFD = dyn_cast<OutlinedFunctionDecl>(this))
+    return OFD->getBody();
+  if (const auto *CD = dyn_cast<CapturedDecl>(this))
+    return CD->getBody();
+  if (const auto *MD = dyn_cast<ObjCMethodDecl>(this))
+    return MD->getBody();
+  return nullptr;
+}
+
 SourceLocation Decl::getBodyRBrace() const {
   // Special handling of FunctionDecl to avoid de-serializing the body from PCH.
   // FunctionDecl stores EndRangeLoc for this purpose.

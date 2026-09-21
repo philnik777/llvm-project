@@ -526,7 +526,7 @@ public:
   bool hasBody() const override { return Body.isValid(); }
 
   /// Retrieve the body of this method, if it has one.
-  Stmt *getBody() const override;
+  Stmt *getBody() const;
 
   void setLazyBody(uint64_t Offset) { Body = Offset; }
 

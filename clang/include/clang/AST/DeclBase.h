@@ -1101,7 +1101,7 @@ public:
   /// getBody - If this Decl represents a declaration for a body of code,
   ///  such as a function or method definition, this method returns the
   ///  top-level Stmt* of that body.  Otherwise this method returns null.
-  virtual Stmt* getBody() const { return nullptr; }
+  Stmt* getBody() const;
 
   /// Returns true if this \c Decl represents a declaration for a body of
   /// code, such as a function or method definition.
