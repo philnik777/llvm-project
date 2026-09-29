@@ -150,8 +150,8 @@ private:
     shrinkSlow(Size);
   }
 
-  /// Allocate stack space in 1Mb chunks.
-  static constexpr size_t ChunkSize = 1024 * 1024;
+  /// Allocate stack space in 4Kb chunks.
+  static constexpr size_t ChunkSize = 4096;
 
   /// Metadata for each stack chunk.
   ///
