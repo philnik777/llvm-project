@@ -13,7 +13,6 @@
 #include "llvm/IR/Instruction.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/IntrinsicInst.h"
-#include "llvm/IR/PatternMatch.h"
 #include "llvm/Support/DebugCounter.h"
 
 #define DEBUG_TYPE "assume-queries"
@@ -115,27 +114,6 @@ bool llvm::isAssumeWithEmptyBundle(const AssumeInst &Assume) {
                  [](const CallBase::BundleOpInfo &BOI) {
                    return BOI.Tag->getKey() != IgnoreBundleTag;
                  });
-}
-
-static CallInst::BundleOpInfo *getBundleFromUse(const Use *U) {
-  if (!match(U->getUser(),
-             m_Intrinsic<Intrinsic::assume>(m_Unless(m_Specific(U->get())))))
-    return nullptr;
-  auto *Intr = cast<IntrinsicInst>(U->getUser());
-  return &Intr->getBundleOpInfoForOperand(U->getOperandNo());
-}
-
-RetainedKnowledge
-llvm::getKnowledgeFromUse(const Use *U,
-                          ArrayRef<Attribute::AttrKind> AttrKinds) {
-  CallInst::BundleOpInfo* Bundle = getBundleFromUse(U);
-  if (!Bundle)
-    return RetainedKnowledge::none();
-  RetainedKnowledge RK =
-      getKnowledgeFromBundle(*cast<AssumeInst>(U->getUser()), *Bundle);
-  if (llvm::is_contained(AttrKinds, RK.AttrKind))
-    return RK;
-  return RetainedKnowledge::none();
 }
 
 RetainedKnowledge
